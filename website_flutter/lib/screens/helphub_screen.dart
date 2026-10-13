@@ -18,6 +18,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
   String _selectedCategory = 'All';
   String _selectedStatus = 'All';
   String _searchQuery = '';
+  bool _emergencyOnly = false;
 
   final _searchController = TextEditingController();
 
@@ -52,6 +53,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
       final requests = await client.helpRequest.getHelpRequests(
         category: _selectedCategory,
         status: _selectedStatus,
+        isEmergency: _emergencyOnly ? true : null,
         searchQuery: _searchQuery,
       );
 
@@ -219,6 +221,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
 
     String category = 'Borrow Item';
     String urgency = 'Normal';
+    bool isEmergency = false;
 
     return showDialog(
       context: context,
@@ -274,10 +277,31 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                         DropdownMenuItem(value: 'Low', child: Text('Low')),
                       ],
                       onChanged: (val) {
-                        if (val != null) setDialogState(() => urgency = val);
+                        if (val != null) {
+                          setDialogState(() {
+                            urgency = val;
+                            if (val == 'Urgent') isEmergency = true;
+                          });
+                        }
                       },
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
+                    SwitchListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text(
+                        '⚡ SOS Emergency Mode',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                      value: isEmergency,
+                      onChanged: (val) =>
+                          setDialogState(() => isEmergency = val),
+                    ),
+                    const SizedBox(height: 8),
                     TextField(
                       controller: locationController,
                       decoration: const InputDecoration(
@@ -333,6 +357,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                       location: locationController.text.trim(),
                       urgency: urgency,
                       rewardPoints: points,
+                      isEmergency: isEmergency,
                       creatorEmail: 'user@helphub.com',
                     );
 
@@ -354,6 +379,15 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    int targetMilestone = 5;
+    if ((_profile?.completedCount ?? 0) >= 10) {
+      targetMilestone = 25;
+    } else if ((_profile?.completedCount ?? 0) >= 5) {
+      targetMilestone = 10;
+    }
+    final milestonePct = (((_profile?.completedCount ?? 0) / targetMilestone))
+        .clamp(0.05, 1.0);
 
     return Scaffold(
       appBar: AppBar(
@@ -388,62 +422,101 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Row(
+                    child: Column(
                       children: [
-                        CircleAvatar(
-                          radius: 24,
-                          backgroundColor: Colors.indigo.shade100,
-                          child: Text(
-                            _profile!.displayName.isNotEmpty
-                                ? _profile!.displayName[0].toUpperCase()
-                                : '👤',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: Colors.indigo,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _profile!.displayName,
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 24,
+                              backgroundColor: Colors.indigo.shade100,
+                              child: Text(
+                                _profile!.displayName.isNotEmpty
+                                    ? _profile!.displayName[0].toUpperCase()
+                                    : '👤',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                _profile!.avatarBadge,
-                                style: const TextStyle(
+                                  fontSize: 18,
                                   color: Colors.indigo,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              '🪙 ${_profile!.points} pts',
-                              style: const TextStyle(
-                                color: Colors.amber,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
                               ),
                             ),
-                            Text(
-                              '${_profile!.completedCount} done • ${_profile!.requestedCount} requested',
-                              style: const TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey,
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _profile!.displayName,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Text(
+                                    _profile!.avatarBadge,
+                                    style: const TextStyle(
+                                      color: Colors.indigo,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
                               ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  '🪙 ${_profile!.points} pts',
+                                  style: const TextStyle(
+                                    color: Colors.amber,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  '${_profile!.completedCount} done • ${_profile!.requestedCount} requested',
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Milestone Progress',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  '${_profile!.completedCount} / $targetMilestone Favors',
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.indigo,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            LinearProgressIndicator(
+                              value: milestonePct,
+                              borderRadius: BorderRadius.circular(8),
+                              backgroundColor: Colors.grey.shade200,
+                              color: Colors.indigo,
+                              minHeight: 6,
                             ),
                           ],
                         ),
@@ -593,38 +666,65 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
 
-              // Status Selector Chips
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: _statuses.map((status) {
-                    final isSelected = _selectedStatus == status;
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: ChoiceChip(
-                        label: Text(status),
-                        selected: isSelected,
-                        selectedColor: Colors.indigo,
-                        labelStyle: TextStyle(
-                          color: isSelected
-                              ? Colors.white
-                              : (isDark ? Colors.white70 : Colors.black87),
-                          fontWeight: isSelected
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
-                        onSelected: (selected) {
-                          if (selected) {
-                            setState(() => _selectedStatus = status);
-                            _loadData();
-                          }
-                        },
+              // Emergency Mode Toggle & Status Chips
+              Row(
+                children: [
+                  FilterChip(
+                    avatar: const Text('⚡'),
+                    label: const Text('SOS Emergency Only'),
+                    selected: _emergencyOnly,
+                    selectedColor: Colors.redAccent,
+                    labelStyle: TextStyle(
+                      color: _emergencyOnly ? Colors.white : Colors.redAccent,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 11,
+                    ),
+                    onSelected: (val) {
+                      setState(() => _emergencyOnly = val);
+                      _loadData();
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: _statuses.map((status) {
+                          final isSelected = _selectedStatus == status;
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: ChoiceChip(
+                              label: Text(
+                                status,
+                                style: const TextStyle(fontSize: 11),
+                              ),
+                              selected: isSelected,
+                              selectedColor: Colors.indigo,
+                              labelStyle: TextStyle(
+                                color: isSelected
+                                    ? Colors.white
+                                    : (isDark
+                                          ? Colors.white70
+                                          : Colors.black87),
+                                fontWeight: isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
+                              onSelected: (selected) {
+                                if (selected) {
+                                  setState(() => _selectedStatus = status);
+                                  _loadData();
+                                }
+                              },
+                            ),
+                          );
+                        }).toList(),
                       ),
-                    );
-                  }).toList(),
-                ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
 
@@ -708,6 +808,27 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                 ),
                 Row(
                   children: [
+                    if (req.isEmergency) ...[
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Text(
+                          '⚡ SOS',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                    ],
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
@@ -827,13 +948,45 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     child: const Text('Complete'),
                   )
                 else
-                  const Text(
-                    'Completed ✓',
-                    style: TextStyle(
-                      color: Colors.teal,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
+                  Row(
+                    children: [
+                      if (req.helperUserId != null)
+                        OutlinedButton.icon(
+                          icon: const Icon(Icons.card_giftcard, size: 14),
+                          label: const Text(
+                            'Tip',
+                            style: TextStyle(fontSize: 11),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            visualDensity: VisualDensity.compact,
+                          ),
+                          onPressed: () async {
+                            await client.helpRequest.tipHelper(
+                              helperUserId: req.helperUserId!,
+                              tipAmount: 15,
+                            );
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Tipped 15 bonus points to helper! 🎁',
+                                  ),
+                                ),
+                              );
+                            }
+                            _loadData();
+                          },
+                        ),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Completed ✓',
+                        style: TextStyle(
+                          color: Colors.teal,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                   ),
               ],
             ),

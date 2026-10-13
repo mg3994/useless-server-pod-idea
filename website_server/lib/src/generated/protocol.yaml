@@ -16,6 +16,7 @@ helpRequest:
   - createHelpRequest:
   - claimHelpRequest:
   - completeHelpRequest:
+  - tipHelper:
   - getUserProfile:
   - addComment:
   - getComments:

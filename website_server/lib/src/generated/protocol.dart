@@ -98,6 +98,12 @@ class Protocol extends _is.DatabaseSerializationManager {
           dartType: 'int',
         ),
         _isp.ColumnDefinition(
+          name: 'isEmergency',
+          columnType: _isp.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _isp.ColumnDefinition(
           name: 'creatorUserId',
           columnType: _isp.ColumnType.bigint,
           isNullable: false,

@@ -176,11 +176,13 @@ Component landingHero() {
             [
               div(
                 {
-                  'class': 'inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-semibold mb-4',
+                  'class': 'inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 text-xs font-semibold mb-4 border border-rose-200 dark:border-rose-800',
                 },
                 [
-                  span({'class': 'i-carbon-flash text-sm'}, []),
-                  Text('Real-Time Campus & Neighborhood Favor Exchange'),
+                  span({
+                    'class': 'w-2 h-2 rounded-full bg-rose-500 animate-ping',
+                  }, []),
+                  Text('🚨 Emergency SOS Favor Dispatch Active'),
                 ],
               ),
               h1(
@@ -241,7 +243,7 @@ Component landingHero() {
         [
           div(
             {
-              'class': 'p-5 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-sm flex flex-wrap items-center justify-between gap-4',
+              'class': 'p-5 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4',
             },
             [
               div(
@@ -273,6 +275,35 @@ Component landingHero() {
                   ]),
                 ],
               ),
+
+              // Milestone Progress Bar
+              div(
+                {'class': 'flex-1 max-w-xs'},
+                [
+                  div(
+                    {
+                      'class': 'flex justify-between text-[11px] font-semibold text-surface-500 mb-1',
+                    },
+                    [
+                      Text('Next Rank Progress'),
+                      span({'id': 'milestone-text'}, [Text('0 / 5 Favors')]),
+                    ],
+                  ),
+                  div(
+                    {
+                      'class': 'w-full bg-surface-100 dark:bg-surface-800 rounded-full h-2 overflow-hidden',
+                    },
+                    [
+                      div({
+                        'id': 'milestone-bar',
+                        'class': 'bg-indigo-600 h-2 rounded-full transition-all duration-500',
+                        'style': 'width: 20%',
+                      }, []),
+                    ],
+                  ),
+                ],
+              ),
+
               div(
                 {'class': 'flex items-center gap-6 text-center'},
                 [
@@ -430,12 +461,28 @@ Component landingHero() {
               div(
                 {'class': 'flex flex-wrap items-center gap-3'},
                 [
+                  // Emergency Mode Toggle Button
+                  button(
+                    {
+                      'id': 'toggle-emergency-btn',
+                      'type': 'button',
+                      'class': 'px-3 py-2 text-xs font-bold rounded-xl border border-rose-300 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 flex items-center gap-1.5 transition-all',
+                    },
+                    [
+                      span({'class': 'text-sm'}, [Text('🚨')]),
+                      span(
+                        {'id': 'emergency-toggle-text'},
+                        [Text('Emergency Only: OFF')],
+                      ),
+                    ],
+                  ),
+
                   // Search Bar
                   input({
                     'id': 'search-input',
                     'type': 'text',
                     'placeholder': 'Search requests...',
-                    'class': 'px-3.5 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 focus:outline-none focus:border-indigo-500 w-48 md:w-64',
+                    'class': 'px-3.5 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 focus:outline-none focus:border-indigo-500 w-48 md:w-56',
                   }),
 
                   // Category Filter Dropdown

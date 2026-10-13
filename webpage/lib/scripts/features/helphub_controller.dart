@@ -3,16 +3,10 @@ import 'dart:js_interop';
 import 'package:web/web.dart' as web;
 import 'package:website_client/website_client.dart' as wc;
 
-@JS('Element.prototype.insertAdjacentHTML')
-external void _insertAdjacentHTML(
-  web.Element element,
-  JSString position,
-  JSString text,
-);
-
+/// Extension to invoke insertAdjacentHTML safely on Element using web.Element.
 extension ElementInsertExtension on web.Element {
   void insertHtml(String position, String text) {
-    _insertAdjacentHTML(this, position.toJS, text.toJS);
+    insertAdjacentHTML(position, text.toJS);
   }
 }
 
@@ -23,6 +17,7 @@ class HelpHubController {
   String currentCategory = 'All';
   String currentStatus = 'All';
   String currentSearch = '';
+  bool emergencyOnly = false;
 
   int? activeCommentsRequestId;
 
@@ -36,6 +31,30 @@ class HelpHubController {
   }
 
   void _bindEvents() {
+    // Toggle emergency filter button
+    final emergencyBtn = web.document.querySelector('#toggle-emergency-btn');
+    emergencyBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        emergencyOnly = !emergencyOnly;
+        final labelEl = web.document.querySelector('#emergency-toggle-text');
+        if (labelEl != null) {
+          labelEl.textContent = emergencyOnly
+              ? 'Emergency Only: ON ⚡'
+              : 'Emergency Only: OFF';
+        }
+        if (emergencyOnly) {
+          emergencyBtn.classList.add('bg-rose-600');
+          emergencyBtn.classList.add('text-white');
+        } else {
+          emergencyBtn.classList.remove('bg-rose-600');
+          emergencyBtn.classList.remove('text-white');
+        }
+        loadHelpRequests();
+      }).toJS,
+    );
+
     // Open create modal
     final openBtn = web.document.querySelector('#open-create-modal-btn');
     openBtn?.addEventListener(
@@ -160,6 +179,21 @@ class HelpHubController {
           .requestedCount
           .toString();
 
+      // Update milestone progress bar
+      final done = profile.completedCount;
+      int target = 5;
+      if (done >= 10) {
+        target = 25;
+      } else if (done >= 5) {
+        target = 10;
+      }
+      final pct = ((done / target) * 100).clamp(5, 100).toInt();
+
+      web.document.querySelector('#milestone-text')?.textContent =
+          '$done / $target Favors';
+      final barEl = web.document.querySelector('#milestone-bar');
+      barEl?.setAttribute('style', 'width: $pct%');
+
       if (profile.displayName.isNotEmpty) {
         web.document.querySelector('#profile-avatar-char')?.textContent =
             profile.displayName[0].toUpperCase();
@@ -180,7 +214,7 @@ class HelpHubController {
       if (topUsers.isEmpty) {
         container.insertHtml(
           'beforeend',
-          '''<p class="text-xs text-surface-400 col-span-full">No leaderboard entries yet.</p>''',
+          '<p class="text-xs text-surface-400 col-span-full">No leaderboard entries yet.</p>',
         );
         return;
       }
@@ -214,6 +248,7 @@ class HelpHubController {
       final requests = await client.helpRequest.getHelpRequests(
         category: currentCategory,
         status: currentStatus,
+        isEmergency: emergencyOnly ? true : null,
         searchQuery: currentSearch,
       );
 
@@ -252,6 +287,13 @@ class HelpHubController {
           'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300';
     }
 
+    String emergencyBadge = '';
+    if (req.isEmergency) {
+      emergencyBadge = '''
+        <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-rose-600 text-white animate-pulse">⚡ SOS Emergency</span>
+      ''';
+    }
+
     String statusBadge = '🟢 Open';
     if (req.status == 'In Progress') {
       statusBadge = '🟡 In Progress';
@@ -275,8 +317,14 @@ class HelpHubController {
         </button>
       ''';
     } else {
-      actionButtonHtml = '''
-        <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400">Done ✓</span>
+      actionButtonHtml =
+          '''
+        <div class="flex items-center gap-1.5">
+          <button class="tip-btn px-2.5 py-1 text-[11px] font-bold rounded-lg text-amber-600 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 transition-colors" data-helper-id="${req.helperUserId}">
+            🎁 Tip Helper
+          </button>
+          <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400">Done ✓</span>
+        </div>
       ''';
     }
 
@@ -286,6 +334,7 @@ class HelpHubController {
           <div class="flex items-center justify-between gap-2 mb-2">
             <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">${req.category}</span>
             <div class="flex items-center gap-1.5">
+              $emergencyBadge
               <span class="text-xs font-semibold px-2 py-0.5 rounded-full $urgencyBg">${req.urgency}</span>
               <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-surface-100 dark:bg-surface-800">$statusBadge</span>
             </div>
@@ -360,6 +409,28 @@ class HelpHubController {
       );
     }
 
+    final tipBtns = web.document.querySelectorAll('.tip-btn');
+    for (var i = 0; i < tipBtns.length; i++) {
+      final btn = tipBtns.item(i) as web.HTMLElement?;
+      btn?.addEventListener(
+        'click',
+        ((web.Event e) async {
+          final helperIdStr = btn.getAttribute('data-helper-id');
+          if (helperIdStr != null) {
+            final helperId = int.tryParse(helperIdStr);
+            if (helperId != null) {
+              await client.helpRequest.tipHelper(
+                helperUserId: helperId,
+                tipAmount: 15,
+              );
+              web.window.alert('Tipped 15 bonus points to the helper! 🎁');
+              await loadLeaderboard();
+            }
+          }
+        }).toJS,
+      );
+    }
+
     final commentsBtns = web.document.querySelectorAll('.comments-btn');
     for (var i = 0; i < commentsBtns.length; i++) {
       final btn = commentsBtns.item(i) as web.HTMLElement?;
@@ -397,7 +468,7 @@ class HelpHubController {
       if (comments.isEmpty) {
         listEl.insertHtml(
           'beforeend',
-          '''<p class="text-xs text-surface-400 text-center py-4">No comments yet. Be the first to start the discussion!</p>''',
+          '<p class="text-xs text-surface-400 text-center py-4">No comments yet. Be the first to start the discussion!</p>',
         );
         return;
       }
@@ -483,6 +554,7 @@ class HelpHubController {
         location: location,
         urgency: urgency,
         rewardPoints: points,
+        isEmergency: urgency == 'Urgent',
         creatorEmail: creatorEmail,
       );
 

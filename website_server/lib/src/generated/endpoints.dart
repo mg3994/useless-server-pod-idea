@@ -297,6 +297,11 @@ class Endpoints extends _is.EndpointDispatch {
               type: _is.getType<String?>(),
               nullable: true,
             ),
+            'isEmergency': _is.ParameterDescription(
+              name: 'isEmergency',
+              type: _is.getType<bool?>(),
+              nullable: true,
+            ),
             'searchQuery': _is.ParameterDescription(
               name: 'searchQuery',
               type: _is.getType<String?>(),
@@ -313,6 +318,7 @@ class Endpoints extends _is.EndpointDispatch {
                         session,
                         category: params['category'],
                         status: params['status'],
+                        isEmergency: params['isEmergency'],
                         searchQuery: params['searchQuery'],
                       ),
         ),
@@ -349,6 +355,11 @@ class Endpoints extends _is.EndpointDispatch {
               type: _is.getType<int>(),
               nullable: false,
             ),
+            'isEmergency': _is.ParameterDescription(
+              name: 'isEmergency',
+              type: _is.getType<bool?>(),
+              nullable: true,
+            ),
             'creatorEmail': _is.ParameterDescription(
               name: 'creatorEmail',
               type: _is.getType<String>(),
@@ -369,6 +380,7 @@ class Endpoints extends _is.EndpointDispatch {
                         location: params['location'],
                         urgency: params['urgency'],
                         rewardPoints: params['rewardPoints'],
+                        isEmergency: params['isEmergency'],
                         creatorEmail: params['creatorEmail'],
                       ),
         ),
@@ -416,6 +428,32 @@ class Endpoints extends _is.EndpointDispatch {
                       .completeHelpRequest(
                         session,
                         requestId: params['requestId'],
+                      ),
+        ),
+        'tipHelper': _is.MethodConnector(
+          name: 'tipHelper',
+          params: {
+            'helperUserId': _is.ParameterDescription(
+              name: 'helperUserId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'tipAmount': _is.ParameterDescription(
+              name: 'tipAmount',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .tipHelper(
+                        session,
+                        helperUserId: params['helperUserId'],
+                        tipAmount: params['tipAmount'],
                       ),
         ),
         'getUserProfile': _is.MethodConnector(

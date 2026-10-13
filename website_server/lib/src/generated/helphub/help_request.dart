@@ -23,6 +23,7 @@ abstract class HelpRequest
     required this.urgency,
     required this.status,
     required this.rewardPoints,
+    required this.isEmergency,
     required this.creatorUserId,
     required this.creatorEmail,
     this.helperUserId,
@@ -40,6 +41,7 @@ abstract class HelpRequest
     required String urgency,
     required String status,
     required int rewardPoints,
+    required bool isEmergency,
     required int creatorUserId,
     required String creatorEmail,
     int? helperUserId,
@@ -58,6 +60,9 @@ abstract class HelpRequest
       urgency: jsonSerialization['urgency'] as String,
       status: jsonSerialization['status'] as String,
       rewardPoints: jsonSerialization['rewardPoints'] as int,
+      isEmergency: _is.BoolJsonExtension.fromJson(
+        jsonSerialization['isEmergency'],
+      ),
       creatorUserId: jsonSerialization['creatorUserId'] as int,
       creatorEmail: jsonSerialization['creatorEmail'] as String,
       helperUserId: jsonSerialization['helperUserId'] as int?,
@@ -92,6 +97,8 @@ abstract class HelpRequest
 
   int rewardPoints;
 
+  bool isEmergency;
+
   int creatorUserId;
 
   String creatorEmail;
@@ -119,6 +126,7 @@ abstract class HelpRequest
     String? urgency,
     String? status,
     int? rewardPoints,
+    bool? isEmergency,
     int? creatorUserId,
     String? creatorEmail,
     int? helperUserId,
@@ -138,6 +146,7 @@ abstract class HelpRequest
       'urgency': urgency,
       'status': status,
       'rewardPoints': rewardPoints,
+      'isEmergency': isEmergency,
       'creatorUserId': creatorUserId,
       'creatorEmail': creatorEmail,
       if (helperUserId != null) 'helperUserId': helperUserId,
@@ -159,6 +168,7 @@ abstract class HelpRequest
       'urgency': urgency,
       'status': status,
       'rewardPoints': rewardPoints,
+      'isEmergency': isEmergency,
       'creatorUserId': creatorUserId,
       'creatorEmail': creatorEmail,
       if (helperUserId != null) 'helperUserId': helperUserId,
@@ -208,6 +218,7 @@ class _HelpRequestImpl extends HelpRequest {
     required String urgency,
     required String status,
     required int rewardPoints,
+    required bool isEmergency,
     required int creatorUserId,
     required String creatorEmail,
     int? helperUserId,
@@ -223,6 +234,7 @@ class _HelpRequestImpl extends HelpRequest {
          urgency: urgency,
          status: status,
          rewardPoints: rewardPoints,
+         isEmergency: isEmergency,
          creatorUserId: creatorUserId,
          creatorEmail: creatorEmail,
          helperUserId: helperUserId,
@@ -244,6 +256,7 @@ class _HelpRequestImpl extends HelpRequest {
     String? urgency,
     String? status,
     int? rewardPoints,
+    bool? isEmergency,
     int? creatorUserId,
     String? creatorEmail,
     Object? helperUserId = _Undefined,
@@ -260,6 +273,7 @@ class _HelpRequestImpl extends HelpRequest {
       urgency: urgency ?? this.urgency,
       status: status ?? this.status,
       rewardPoints: rewardPoints ?? this.rewardPoints,
+      isEmergency: isEmergency ?? this.isEmergency,
       creatorUserId: creatorUserId ?? this.creatorUserId,
       creatorEmail: creatorEmail ?? this.creatorEmail,
       helperUserId: helperUserId is int? ? helperUserId : this.helperUserId,
@@ -305,6 +319,11 @@ class HelpRequestUpdateTable extends _is.UpdateTable<HelpRequestTable> {
 
   _is.ColumnValue<int, int> rewardPoints(int value) => _is.ColumnValue(
     table.rewardPoints,
+    value,
+  );
+
+  _is.ColumnValue<bool, bool> isEmergency(bool value) => _is.ColumnValue(
+    table.isEmergency,
     value,
   );
 
@@ -372,6 +391,10 @@ class HelpRequestTable extends _is.Table<int?> {
       'rewardPoints',
       this,
     );
+    isEmergency = _is.ColumnBool(
+      'isEmergency',
+      this,
+    );
     creatorUserId = _is.ColumnInt(
       'creatorUserId',
       this,
@@ -414,6 +437,8 @@ class HelpRequestTable extends _is.Table<int?> {
 
   late final _is.ColumnInt rewardPoints;
 
+  late final _is.ColumnBool isEmergency;
+
   late final _is.ColumnInt creatorUserId;
 
   late final _is.ColumnString creatorEmail;
@@ -436,6 +461,7 @@ class HelpRequestTable extends _is.Table<int?> {
     urgency,
     status,
     rewardPoints,
+    isEmergency,
     creatorUserId,
     creatorEmail,
     helperUserId,

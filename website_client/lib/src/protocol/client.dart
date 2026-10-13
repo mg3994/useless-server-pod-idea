@@ -279,10 +279,11 @@ class EndpointHelpRequest extends _isc.EndpointRef {
   @override
   String get name => 'helpRequest';
 
-  /// Fetches all help requests, optionally filtered by category or status.
+  /// Fetches all help requests, optionally filtered by category, status, or emergency mode.
   _ida.Future<List<_ilm5roly.HelpRequest>> getHelpRequests({
     String? category,
     String? status,
+    bool? isEmergency,
     String? searchQuery,
   }) => caller.callServerEndpoint<List<_ilm5roly.HelpRequest>>(
     'helpRequest',
@@ -290,6 +291,7 @@ class EndpointHelpRequest extends _isc.EndpointRef {
     {
       'category': category,
       'status': status,
+      'isEmergency': isEmergency,
       'searchQuery': searchQuery,
     },
   );
@@ -302,6 +304,7 @@ class EndpointHelpRequest extends _isc.EndpointRef {
     required String location,
     required String urgency,
     required int rewardPoints,
+    bool? isEmergency,
     required String creatorEmail,
   }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
     'helpRequest',
@@ -313,6 +316,7 @@ class EndpointHelpRequest extends _isc.EndpointRef {
       'location': location,
       'urgency': urgency,
       'rewardPoints': rewardPoints,
+      'isEmergency': isEmergency,
       'creatorEmail': creatorEmail,
     },
   );
@@ -337,6 +341,19 @@ class EndpointHelpRequest extends _isc.EndpointRef {
     'helpRequest',
     'completeHelpRequest',
     {'requestId': requestId},
+  );
+
+  /// Tips additional bonus points to a helper for exceptional help.
+  _ida.Future<bool> tipHelper({
+    required int helperUserId,
+    required int tipAmount,
+  }) => caller.callServerEndpoint<bool>(
+    'helpRequest',
+    'tipHelper',
+    {
+      'helperUserId': helperUserId,
+      'tipAmount': tipAmount,
+    },
   );
 
   /// Get user profile stats for Helphub

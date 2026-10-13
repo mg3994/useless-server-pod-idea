@@ -569,6 +569,7 @@ class _HelpRequestEndpoint {
     _ist.TestSessionBuilder sessionBuilder, {
     String? category,
     String? status,
+    bool? isEmergency,
     String? searchQuery,
   }) async {
     return _ist.callAwaitableFunctionAndHandleExceptions(() async {
@@ -585,6 +586,7 @@ class _HelpRequestEndpoint {
           parameters: _ist.testObjectToJson({
             'category': category,
             'status': status,
+            'isEmergency': isEmergency,
             'searchQuery': searchQuery,
           }),
           serializationManager: _serializationManager,
@@ -610,6 +612,7 @@ class _HelpRequestEndpoint {
     required String location,
     required String urgency,
     required int rewardPoints,
+    bool? isEmergency,
     required String creatorEmail,
   }) async {
     return _ist.callAwaitableFunctionAndHandleExceptions(() async {
@@ -630,6 +633,7 @@ class _HelpRequestEndpoint {
             'location': location,
             'urgency': urgency,
             'rewardPoints': rewardPoints,
+            'isEmergency': isEmergency,
             'creatorEmail': creatorEmail,
           }),
           serializationManager: _serializationManager,
@@ -706,6 +710,41 @@ class _HelpRequestEndpoint {
                   _localCallContext.arguments,
                 )
                 as _ida.Future<_i62gi6d1.HelpRequest>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<bool> tipHelper(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int helperUserId,
+    required int tipAmount,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'tipHelper',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'tipHelper',
+          parameters: _ist.testObjectToJson({
+            'helperUserId': helperUserId,
+            'tipAmount': tipAmount,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<bool>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

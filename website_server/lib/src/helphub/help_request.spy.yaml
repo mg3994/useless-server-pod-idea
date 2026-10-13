@@ -8,6 +8,7 @@ fields:
   urgency: String
   status: String
   rewardPoints: int
+  isEmergency: bool
   creatorUserId: int
   creatorEmail: String
   helperUserId: int?

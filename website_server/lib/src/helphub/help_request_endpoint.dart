@@ -2,11 +2,12 @@ import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 
 class HelpRequestEndpoint extends Endpoint {
-  /// Fetches all help requests, optionally filtered by category or status.
+  /// Fetches all help requests, optionally filtered by category, status, or emergency mode.
   Future<List<HelpRequest>> getHelpRequests(
     Session session, {
     String? category,
     String? status,
+    bool? isEmergency,
     String? searchQuery,
   }) async {
     Expression where = Constant.bool(true);
@@ -17,6 +18,10 @@ class HelpRequestEndpoint extends Endpoint {
 
     if (status != null && status.isNotEmpty && status != 'All') {
       where = where & HelpRequest.t.status.equals(status);
+    }
+
+    if (isEmergency == true) {
+      where = where & HelpRequest.t.isEmergency.equals(true);
     }
 
     var requests = await HelpRequest.db.find(
@@ -48,6 +53,7 @@ class HelpRequestEndpoint extends Endpoint {
     required String location,
     required String urgency,
     required int rewardPoints,
+    bool? isEmergency,
     required String creatorEmail,
   }) async {
     final authInfo = session.authenticated;
@@ -64,6 +70,7 @@ class HelpRequestEndpoint extends Endpoint {
       urgency: urgency,
       status: 'Open',
       rewardPoints: rewardPoints,
+      isEmergency: isEmergency ?? (urgency == 'Urgent'),
       creatorUserId: userId,
       creatorEmail: creatorEmail.isNotEmpty
           ? creatorEmail
@@ -140,6 +147,29 @@ class HelpRequestEndpoint extends Endpoint {
     }
 
     return saved;
+  }
+
+  /// Tips additional bonus points to a helper for exceptional help.
+  Future<bool> tipHelper(
+    Session session, {
+    required int helperUserId,
+    required int tipAmount,
+  }) async {
+    if (tipAmount <= 0) return false;
+
+    var profile = await UserProfile.db.findFirstRow(
+      session,
+      where: (t) => t.userId.equals(helperUserId),
+    );
+
+    if (profile != null) {
+      final updated = profile.copyWith(
+        points: profile.points + tipAmount,
+      );
+      await UserProfile.db.updateRow(session, updated);
+      return true;
+    }
+    return false;
   }
 
   /// Get user profile stats for Helphub
