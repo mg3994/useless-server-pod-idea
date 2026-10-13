@@ -18,7 +18,8 @@ Component navbar() {
                 [
                   div(
                     {
-                      'class': 'logo-box bg-gradient-to-br from-primary-500 to-accent-500',
+                      'class':
+                          'logo-box bg-gradient-to-br from-primary-500 to-accent-500',
                     },
                     [
                       span(
@@ -89,7 +90,8 @@ Component navbar() {
                 [
                   span({
                     'id': 'user-email',
-                    'class': 'text-sm text-surface-600 dark:text-surface-300 font-medium',
+                    'class':
+                        'text-sm text-surface-600 dark:text-surface-300 font-medium',
                   }, []),
                   button(
                     {'id': 'nav-signout', 'class': 'btn-ghost text-sm'},
@@ -112,7 +114,8 @@ Component landingHero() {
     [
       div(
         {
-          'class': 'hero flex flex-col items-center justify-center min-h-screen pt-[72px]',
+          'class':
+              'hero flex flex-col items-center justify-center min-h-screen pt-[72px]',
         },
         [
           div(
@@ -170,7 +173,8 @@ Component landingHero() {
               // Features section
               div(
                 {
-                  'class': 'grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 w-full max-w-4xl',
+                  'class':
+                      'grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 w-full max-w-4xl',
                 },
                 [
                   // Feature 1
@@ -182,7 +186,8 @@ Component landingHero() {
                         [
                           div(
                             {
-                              'class': 'w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-4',
+                              'class':
+                                  'w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-4',
                             },
                             [
                               span({'class': 'text-2xl'}, [Text('⚡')]),
@@ -190,13 +195,15 @@ Component landingHero() {
                           ),
                           h3(
                             {
-                              'class': 'text-lg font-bold text-surface-900 dark:text-white mb-2',
+                              'class':
+                                  'text-lg font-bold text-surface-900 dark:text-white mb-2',
                             },
                             [Text('Lightning Fast')],
                           ),
                           p(
                             {
-                              'class': 'text-sm text-surface-500 dark:text-surface-400',
+                              'class':
+                                  'text-sm text-surface-500 dark:text-surface-400',
                             },
                             [
                               Text(
@@ -217,7 +224,8 @@ Component landingHero() {
                         [
                           div(
                             {
-                              'class': 'w-12 h-12 rounded-xl bg-accent-100 dark:bg-accent-900/30 flex items-center justify-center mb-4',
+                              'class':
+                                  'w-12 h-12 rounded-xl bg-accent-100 dark:bg-accent-900/30 flex items-center justify-center mb-4',
                             },
                             [
                               span({'class': 'text-2xl'}, [Text('🔒')]),
@@ -225,13 +233,15 @@ Component landingHero() {
                           ),
                           h3(
                             {
-                              'class': 'text-lg font-bold text-surface-900 dark:text-white mb-2',
+                              'class':
+                                  'text-lg font-bold text-surface-900 dark:text-white mb-2',
                             },
                             [Text('Secure Auth')],
                           ),
                           p(
                             {
-                              'class': 'text-sm text-surface-500 dark:text-surface-400',
+                              'class':
+                                  'text-sm text-surface-500 dark:text-surface-400',
                             },
                             [
                               Text(
@@ -252,7 +262,8 @@ Component landingHero() {
                         [
                           div(
                             {
-                              'class': 'w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-4',
+                              'class':
+                                  'w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-4',
                             },
                             [
                               span({'class': 'text-2xl'}, [Text('🎨')]),
@@ -260,13 +271,15 @@ Component landingHero() {
                           ),
                           h3(
                             {
-                              'class': 'text-lg font-bold text-surface-900 dark:text-white mb-2',
+                              'class':
+                                  'text-lg font-bold text-surface-900 dark:text-white mb-2',
                             },
                             [Text('Modern Design')],
                           ),
                           p(
                             {
-                              'class': 'text-sm text-surface-500 dark:text-surface-400',
+                              'class':
+                                  'text-sm text-surface-500 dark:text-surface-400',
                             },
                             [
                               Text(

@@ -166,26 +166,14 @@ class _InternalTestEndpoints extends TestEndpoints
     _is.SerializationManager serializationManager,
     _is.EndpointDispatch endpoints,
   ) {
-    emailIdp = _EmailIdpEndpoint(
-      endpoints,
-      serializationManager,
-    );
-    jwtRefresh = _JwtRefreshEndpoint(
-      endpoints,
-      serializationManager,
-    );
-    greeting = _GreetingEndpoint(
-      endpoints,
-      serializationManager,
-    );
+    emailIdp = _EmailIdpEndpoint(endpoints, serializationManager);
+    jwtRefresh = _JwtRefreshEndpoint(endpoints, serializationManager);
+    greeting = _GreetingEndpoint(endpoints, serializationManager);
   }
 }
 
 class _EmailIdpEndpoint {
-  _EmailIdpEndpoint(
-    this._endpointDispatch,
-    this._serializationManager,
-  );
+  _EmailIdpEndpoint(this._endpointDispatch, this._serializationManager);
 
   final _is.EndpointDispatch _endpointDispatch;
 
@@ -458,10 +446,7 @@ class _EmailIdpEndpoint {
 }
 
 class _JwtRefreshEndpoint {
-  _JwtRefreshEndpoint(
-    this._endpointDispatch,
-    this._serializationManager,
-  );
+  _JwtRefreshEndpoint(this._endpointDispatch, this._serializationManager);
 
   final _is.EndpointDispatch _endpointDispatch;
 
@@ -500,10 +485,7 @@ class _JwtRefreshEndpoint {
 }
 
 class _GreetingEndpoint {
-  _GreetingEndpoint(
-    this._endpointDispatch,
-    this._serializationManager,
-  );
+  _GreetingEndpoint(this._endpointDispatch, this._serializationManager);
 
   final _is.EndpointDispatch _endpointDispatch;
 

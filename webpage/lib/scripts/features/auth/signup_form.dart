@@ -16,9 +16,9 @@ void setupSignupForm(wc.Client client, PageRouter router) {
       web.document.querySelector('#signup-email') as web.HTMLInputElement?;
   final passwordEl =
       web.document.querySelector('#signup-password') as web.HTMLInputElement?;
-  final confirmEl = web.document.querySelector(
-    '#signup-confirm-password',
-  ) as web.HTMLInputElement?;
+  final confirmEl =
+      web.document.querySelector('#signup-confirm-password')
+          as web.HTMLInputElement?;
   final btnEl =
       web.document.querySelector('#signup-btn') as web.HTMLButtonElement?;
   final errorEl = web.document.querySelector('#signup-error');
