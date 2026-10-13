@@ -67,8 +67,7 @@ Component mainPage(String css) {
         link({
           'rel': 'icon',
           'type': 'image/svg+xml',
-          'href':
-              'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🚀</text></svg>',
+          'href': 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🚀</text></svg>',
         }),
         // UnoCSS generated styles
         style({'type': 'text/css'}, [Text(css, escape: false)]),
@@ -89,15 +88,13 @@ Component mainPage(String css) {
         div(
           {
             'id': 'connectivity-snackbar',
-            'class':
-                'fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300',
+            'class': 'fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300',
           },
           [
             div(
               {
                 'id': 'snackbar-content',
-                'class':
-                    'flex items-center justify-center gap-2.5 px-4 py-2.5 text-white text-sm font-medium',
+                'class': 'flex items-center justify-center gap-2.5 px-4 py-2.5 text-white text-sm font-medium',
               },
               [
                 span({'id': 'snackbar-icon', 'class': 'text-base'}, []),
@@ -105,8 +102,7 @@ Component mainPage(String css) {
                 button(
                   {
                     'id': 'snackbar-dismiss',
-                    'class':
-                        'ml-4 text-xs font-bold uppercase tracking-wide opacity-80 hover:opacity-100',
+                    'class': 'ml-4 text-xs font-bold uppercase tracking-wide opacity-80 hover:opacity-100',
                   },
                   [Text('DISMISS')],
                 ),

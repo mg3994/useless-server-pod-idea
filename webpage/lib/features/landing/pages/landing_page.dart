@@ -3,17 +3,25 @@ import 'package:blogger_theme/blogger_theme.dart';
 /// Renders the top navigation bar with HelpHub branding and navigation links.
 Component navbar() {
   return header(
-    {'class': 'navbar sticky top-0 z-40 bg-surface-50/90 dark:bg-surface-900/90 backdrop-blur border-b border-surface-200 dark:border-surface-800 px-4 py-3'},
+    {
+      'class': 'navbar sticky top-0 z-40 bg-surface-50/90 dark:bg-surface-900/90 backdrop-blur border-b border-surface-200 dark:border-surface-800 px-4 py-3',
+    },
     [
       div(
         {'class': 'max-w-7xl mx-auto flex items-center justify-between'},
         [
           // Brand Logo
           a(
-            {'href': '#', 'id': 'nav-logo', 'class': 'flex items-center gap-2.5 no-underline'},
+            {
+              'href': '#',
+              'id': 'nav-logo',
+              'class': 'flex items-center gap-2.5 no-underline',
+            },
             [
               div(
-                {'class': 'w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20'},
+                {
+                  'class': 'w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20',
+                },
                 [
                   span({'class': 'text-xl font-black'}, [Text('H')]),
                 ],
@@ -21,8 +29,18 @@ Component navbar() {
               div(
                 {'class': 'flex flex-col'},
                 [
-                  span({'class': 'text-lg font-bold text-surface-900 dark:text-white leading-none tracking-tight'}, [Text('HelpHub')]),
-                  span({'class': 'text-xs text-indigo-600 dark:text-indigo-400 font-medium tracking-wide'}, [Text('Campus & Local Network')]),
+                  span(
+                    {
+                      'class': 'text-lg font-bold text-surface-900 dark:text-white leading-none tracking-tight',
+                    },
+                    [Text('HelpHub')],
+                  ),
+                  span(
+                    {
+                      'class': 'text-xs text-indigo-600 dark:text-indigo-400 font-medium tracking-wide',
+                    },
+                    [Text('Campus & Local Network')],
+                  ),
                 ],
               ),
             ],
@@ -33,15 +51,27 @@ Component navbar() {
             {'class': 'hidden md:flex items-center gap-6'},
             [
               a(
-                {'href': '#feed', 'id': 'nav-feed', 'class': 'text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700'},
+                {
+                  'href': '#feed',
+                  'id': 'nav-feed',
+                  'class': 'text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700',
+                },
                 [Text('Live Request Feed')],
               ),
               a(
-                {'href': '#leaderboard', 'id': 'nav-leaderboard-link', 'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400'},
+                {
+                  'href': '#leaderboard',
+                  'id': 'nav-leaderboard-link',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                },
                 [Text('🏆 Leaderboard')],
               ),
               a(
-                {'href': '#create', 'id': 'nav-create-shortcut', 'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400'},
+                {
+                  'href': '#create',
+                  'id': 'nav-create-shortcut',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                },
                 [Text('Post Favor Request')],
               ),
             ],
@@ -63,7 +93,10 @@ Component navbar() {
                 ],
               ),
               div(
-                {'id': 'auth-actions-logged-out', 'class': 'flex items-center gap-2'},
+                {
+                  'id': 'auth-actions-logged-out',
+                  'class': 'flex items-center gap-2',
+                },
                 [
                   a(
                     {
@@ -90,9 +123,14 @@ Component navbar() {
                 },
                 [
                   div(
-                    {'class': 'flex items-center gap-2 bg-indigo-50 dark:bg-indigo-950/50 px-3 py-1 rounded-full border border-indigo-200 dark:border-indigo-800'},
+                    {
+                      'class': 'flex items-center gap-2 bg-indigo-50 dark:bg-indigo-950/50 px-3 py-1 rounded-full border border-indigo-200 dark:border-indigo-800',
+                    },
                     [
-                      span({'class': 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse'}, []),
+                      span({
+                        'class':
+                            'w-2 h-2 rounded-full bg-emerald-500 animate-pulse',
+                      }, []),
                       span({
                         'id': 'user-email',
                         'class': 'text-xs text-indigo-900 dark:text-indigo-200 font-semibold',
@@ -100,7 +138,10 @@ Component navbar() {
                     ],
                   ),
                   button(
-                    {'id': 'nav-signout', 'class': 'px-3 py-1.5 text-xs font-medium text-surface-500 hover:text-red-600 dark:text-surface-400'},
+                    {
+                      'id': 'nav-signout',
+                      'class': 'px-3 py-1.5 text-xs font-medium text-surface-500 hover:text-red-600 dark:text-surface-400',
+                    },
                     [Text('Sign out')],
                   ),
                 ],
@@ -116,32 +157,51 @@ Component navbar() {
 /// Renders the main Hero and Feed UI for HelpHub.
 Component landingHero() {
   return div(
-    {'id': 'home-page', 'class': 'min-h-screen bg-surface-50 dark:bg-surface-950 text-surface-900 dark:text-surface-100 pb-16'},
+    {
+      'id': 'home-page',
+      'class': 'min-h-screen bg-surface-50 dark:bg-surface-950 text-surface-900 dark:text-surface-100 pb-16',
+    },
     [
       // Hero Header Banner
       div(
-        {'class': 'bg-gradient-to-b from-indigo-900/10 to-transparent py-12 px-4 border-b border-surface-200/50 dark:border-surface-800/50'},
+        {
+          'class': 'bg-gradient-to-b from-indigo-900/10 to-transparent py-12 px-4 border-b border-surface-200/50 dark:border-surface-800/50',
+        },
         [
           div(
-            {'class': 'max-w-5xl mx-auto text-center flex flex-col items-center'},
+            {
+              'class':
+                  'max-w-5xl mx-auto text-center flex flex-col items-center',
+            },
             [
               div(
-                {'class': 'inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-semibold mb-4'},
+                {
+                  'class': 'inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-semibold mb-4',
+                },
                 [
                   span({'class': 'i-carbon-flash text-sm'}, []),
                   Text('Real-Time Campus & Neighborhood Favor Exchange'),
                 ],
               ),
               h1(
-                {'class': 'text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight mb-4'},
+                {
+                  'class': 'text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight mb-4',
+                },
                 [
                   Text('Need a quick favor? '),
-                  span({'class': 'text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-500'}, [Text('HelpHub')]),
+                  span(
+                    {
+                      'class': 'text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-500',
+                    },
+                    [Text('HelpHub')],
+                  ),
                   Text(' has your back.'),
                 ],
               ),
               p(
-                {'class': 'text-base md:text-lg text-surface-600 dark:text-surface-300 max-w-2xl mb-8 leading-relaxed'},
+                {
+                  'class': 'text-base md:text-lg text-surface-600 dark:text-surface-300 max-w-2xl mb-8 leading-relaxed',
+                },
                 [
                   Text(
                     'Borrow tools, request quick errands, pet sitting, or tech support from trusted neighbors and students near you in seconds.',
@@ -180,54 +240,93 @@ Component landingHero() {
         {'class': 'max-w-6xl mx-auto px-4 mt-8'},
         [
           div(
-            {'class': 'p-5 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-sm flex flex-wrap items-center justify-between gap-4'},
+            {
+              'class': 'p-5 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-sm flex flex-wrap items-center justify-between gap-4',
+            },
             [
               div(
                 {'class': 'flex items-center gap-3'},
                 [
                   div(
-                    {'class': 'w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl font-bold'},
+                    {
+                      'class': 'w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl font-bold',
+                    },
                     [
                       span({'id': 'profile-avatar-char'}, [Text('👤')]),
                     ],
                   ),
-                  div(
-                    [
-                      h3({'id': 'profile-name', 'class': 'text-base font-bold text-surface-900 dark:text-white'}, [Text('Guest User')]),
-                      p({'id': 'profile-badge', 'class': 'text-xs text-indigo-600 dark:text-indigo-400 font-medium'}, [Text('🌱 Community Rookie')]),
-                    ],
-                  ),
+                  div([
+                    h3(
+                      {
+                        'id': 'profile-name',
+                        'class': 'text-base font-bold text-surface-900 dark:text-white',
+                      },
+                      [Text('Guest User')],
+                    ),
+                    p(
+                      {
+                        'id': 'profile-badge',
+                        'class': 'text-xs text-indigo-600 dark:text-indigo-400 font-medium',
+                      },
+                      [Text('🌱 Community Rookie')],
+                    ),
+                  ]),
                 ],
               ),
               div(
                 {'class': 'flex items-center gap-6 text-center'},
                 [
-                  div(
-                    [
-                      span({'id': 'profile-points', 'class': 'block text-xl font-black text-amber-500'}, [Text('50')]),
-                      span({'class': 'text-xs text-surface-500 dark:text-surface-400 uppercase font-semibold'}, [Text('Reward Points')]),
-                    ],
-                  ),
-                  div(
-                    {'class': 'w-px h-8 bg-surface-200 dark:bg-surface-800'},
-                    [],
-                  ),
-                  div(
-                    [
-                      span({'id': 'profile-completed', 'class': 'block text-xl font-black text-emerald-500'}, [Text('0')]),
-                      span({'class': 'text-xs text-surface-500 dark:text-surface-400 uppercase font-semibold'}, [Text('Favors Done')]),
-                    ],
-                  ),
-                  div(
-                    {'class': 'w-px h-8 bg-surface-200 dark:bg-surface-800'},
-                    [],
-                  ),
-                  div(
-                    [
-                      span({'id': 'profile-requested', 'class': 'block text-xl font-black text-indigo-500'}, [Text('0')]),
-                      span({'class': 'text-xs text-surface-500 dark:text-surface-400 uppercase font-semibold'}, [Text('Requested')]),
-                    ],
-                  ),
+                  div([
+                    span(
+                      {
+                        'id': 'profile-points',
+                        'class': 'block text-xl font-black text-amber-500',
+                      },
+                      [Text('50')],
+                    ),
+                    span(
+                      {
+                        'class': 'text-xs text-surface-500 dark:text-surface-400 uppercase font-semibold',
+                      },
+                      [Text('Reward Points')],
+                    ),
+                  ]),
+                  div({
+                    'class': 'w-px h-8 bg-surface-200 dark:bg-surface-800',
+                  }, []),
+                  div([
+                    span(
+                      {
+                        'id': 'profile-completed',
+                        'class': 'block text-xl font-black text-emerald-500',
+                      },
+                      [Text('0')],
+                    ),
+                    span(
+                      {
+                        'class': 'text-xs text-surface-500 dark:text-surface-400 uppercase font-semibold',
+                      },
+                      [Text('Favors Done')],
+                    ),
+                  ]),
+                  div({
+                    'class': 'w-px h-8 bg-surface-200 dark:bg-surface-800',
+                  }, []),
+                  div([
+                    span(
+                      {
+                        'id': 'profile-requested',
+                        'class': 'block text-xl font-black text-indigo-500',
+                      },
+                      [Text('0')],
+                    ),
+                    span(
+                      {
+                        'class': 'text-xs text-surface-500 dark:text-surface-400 uppercase font-semibold',
+                      },
+                      [Text('Requested')],
+                    ),
+                  ]),
                 ],
               ),
             ],
@@ -240,39 +339,63 @@ Component landingHero() {
         {'id': 'leaderboard', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
         [
           div(
-            {'class': 'bg-gradient-to-r from-indigo-900/10 via-purple-900/10 to-transparent p-6 rounded-2xl border border-indigo-200/50 dark:border-indigo-800/50'},
+            {
+              'class': 'bg-gradient-to-r from-indigo-900/10 via-purple-900/10 to-transparent p-6 rounded-2xl border border-indigo-200/50 dark:border-indigo-800/50',
+            },
             [
               div(
                 {'class': 'flex items-center justify-between mb-4'},
                 [
                   h2(
-                    {'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2'},
+                    {
+                      'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                    },
                     [
                       span({'class': 'text-2xl'}, [Text('🏆')]),
                       Text('Top Community Helpers'),
                     ],
                   ),
-                  span({'class': 'text-xs text-indigo-600 dark:text-indigo-400 font-semibold'}, [Text('Rankings update live')]),
+                  span(
+                    {
+                      'class': 'text-xs text-indigo-600 dark:text-indigo-400 font-semibold',
+                    },
+                    [Text('Rankings update live')],
+                  ),
                 ],
               ),
               div(
                 {
                   'id': 'leaderboard-container',
-                  'class': 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3',
+                  'class':
+                      'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3',
                 },
                 [
                   div(
-                    {'class': 'p-3 rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 flex items-center gap-3'},
+                    {
+                      'class': 'p-3 rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 flex items-center gap-3',
+                    },
                     [
-                      span({'class': 'text-lg font-black text-amber-500'}, [Text('#1')]),
+                      span(
+                        {'class': 'text-lg font-black text-amber-500'},
+                        [Text('#1')],
+                      ),
                       div(
                         {'class': 'flex-1'},
                         [
-                          h4({'class': 'text-sm font-bold'}, [Text('Alex Rivers')]),
-                          p({'class': 'text-xs text-surface-500'}, [Text('⚡ Community Hero')]),
+                          h4(
+                            {'class': 'text-sm font-bold'},
+                            [Text('Alex Rivers')],
+                          ),
+                          p(
+                            {'class': 'text-xs text-surface-500'},
+                            [Text('⚡ Community Hero')],
+                          ),
                         ],
                       ),
-                      span({'class': 'text-xs font-bold text-amber-500'}, [Text('340 pts')]),
+                      span(
+                        {'class': 'text-xs font-bold text-amber-500'},
+                        [Text('340 pts')],
+                      ),
                     ],
                   ),
                 ],
@@ -288,12 +411,18 @@ Component landingHero() {
         [
           // Filter Controls
           div(
-            {'class': 'flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6'},
+            {
+              'class': 'flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6',
+            },
             [
               h2(
-                {'class': 'text-2xl font-bold text-surface-900 dark:text-white flex items-center gap-2'},
+                {
+                  'class': 'text-2xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                },
                 [
-                  span({'class': 'w-3 h-3 rounded-full bg-emerald-500 animate-ping'}, []),
+                  span({
+                    'class': 'w-3 h-3 rounded-full bg-emerald-500 animate-ping',
+                  }, []),
                   Text('Live Requests Feed'),
                 ],
               ),
@@ -317,11 +446,26 @@ Component landingHero() {
                     },
                     [
                       option({'value': 'All'}, [Text('All Categories')]),
-                      option({'value': 'Borrow Item'}, [Text('🛠️ Borrow Item')]),
-                      option({'value': 'Errand & Delivery'}, [Text('🛵 Errand & Delivery')]),
-                      option({'value': 'Tutoring & Study'}, [Text('📚 Tutoring & Study')]),
-                      option({'value': 'Pet & Plant Care'}, [Text('🐱 Pet & Plant Care')]),
-                      option({'value': 'Tech & Rides'}, [Text('💻 Tech & Rides')]),
+                      option(
+                        {'value': 'Borrow Item'},
+                        [Text('🛠️ Borrow Item')],
+                      ),
+                      option(
+                        {'value': 'Errand & Delivery'},
+                        [Text('🛵 Errand & Delivery')],
+                      ),
+                      option(
+                        {'value': 'Tutoring & Study'},
+                        [Text('📚 Tutoring & Study')],
+                      ),
+                      option(
+                        {'value': 'Pet & Plant Care'},
+                        [Text('🐱 Pet & Plant Care')],
+                      ),
+                      option(
+                        {'value': 'Tech & Rides'},
+                        [Text('💻 Tech & Rides')],
+                      ),
                     ],
                   ),
 
@@ -334,7 +478,10 @@ Component landingHero() {
                     [
                       option({'value': 'All'}, [Text('All Statuses')]),
                       option({'value': 'Open'}, [Text('🟢 Open')]),
-                      option({'value': 'In Progress'}, [Text('🟡 In Progress')]),
+                      option(
+                        {'value': 'In Progress'},
+                        [Text('🟡 In Progress')],
+                      ),
                       option({'value': 'Completed'}, [Text('🔵 Completed')]),
                     ],
                   ),
@@ -409,11 +556,14 @@ Component _sampleCard({
   required String description,
   required int id,
 }) {
-  String urgencyBg = 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300';
+  String urgencyBg =
+      'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300';
   if (urgency == 'Urgent') {
-    urgencyBg = 'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300';
+    urgencyBg =
+        'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300';
   } else if (urgency == 'Low') {
-    urgencyBg = 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300';
+    urgencyBg =
+        'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300';
   }
 
   return div(
@@ -421,28 +571,57 @@ Component _sampleCard({
       'class': 'bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between gap-4',
     },
     [
-      div(
-        [
-          div(
-            {'class': 'flex items-center justify-between gap-2 mb-2'},
-            [
-              span({'class': 'text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400'}, [Text(category)]),
-              span({'class': 'text-xs font-semibold px-2 py-0.5 rounded-full $urgencyBg'}, [Text(urgency)]),
-            ],
-          ),
-          h3({'class': 'text-lg font-bold text-surface-900 dark:text-white mb-1 leading-snug'}, [Text(title)]),
-          p({'class': 'text-xs text-surface-500 dark:text-surface-400 mb-3 flex items-center gap-1'}, [
+      div([
+        div(
+          {'class': 'flex items-center justify-between gap-2 mb-2'},
+          [
+            span(
+              {
+                'class': 'text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400',
+              },
+              [Text(category)],
+            ),
+            span(
+              {
+                'class':
+                    'text-xs font-semibold px-2 py-0.5 rounded-full $urgencyBg',
+              },
+              [Text(urgency)],
+            ),
+          ],
+        ),
+        h3(
+          {
+            'class': 'text-lg font-bold text-surface-900 dark:text-white mb-1 leading-snug',
+          },
+          [Text(title)],
+        ),
+        p(
+          {
+            'class': 'text-xs text-surface-500 dark:text-surface-400 mb-3 flex items-center gap-1',
+          },
+          [
             span({'class': 'text-sm'}, [Text('📍')]),
             Text(location),
-          ]),
-          p({'class': 'text-sm text-surface-600 dark:text-surface-300 line-clamp-3 mb-4'}, [Text(description)]),
-        ],
-      ),
+          ],
+        ),
+        p(
+          {
+            'class': 'text-sm text-surface-600 dark:text-surface-300 line-clamp-3 mb-4',
+          },
+          [Text(description)],
+        ),
+      ]),
       div(
-        {'class': 'pt-3 border-t border-surface-100 dark:border-surface-800 flex items-center justify-between'},
+        {
+          'class': 'pt-3 border-t border-surface-100 dark:border-surface-800 flex items-center justify-between',
+        },
         [
           div(
-            {'class': 'flex items-center gap-1 text-amber-500 font-bold text-sm'},
+            {
+              'class':
+                  'flex items-center gap-1 text-amber-500 font-bold text-sm',
+            },
             [
               span({'class': 'text-base'}, [Text('🪙')]),
               Text('+$points pts'),
@@ -481,113 +660,151 @@ Component _createRequestModal() {
             [Text('✕')],
           ),
           h2(
-            {'class': 'text-xl font-bold text-surface-900 dark:text-white mb-1'},
+            {
+              'class':
+                  'text-xl font-bold text-surface-900 dark:text-white mb-1',
+            },
             [Text('Post a Help Request')],
           ),
           p(
             {'class': 'text-xs text-surface-500 dark:text-surface-400 mb-5'},
-            [Text('Describe what you need and offer points for neighbors who assist!')],
+            [
+              Text(
+                'Describe what you need and offer points for neighbors who assist!',
+              ),
+            ],
           ),
 
           div(
             {'class': 'flex flex-col gap-4'},
             [
+              div([
+                label(
+                  {
+                    'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1',
+                  },
+                  [Text('Title')],
+                ),
+                input({
+                  'id': 'req-title',
+                  'type': 'text',
+                  'placeholder': 'e.g., Need jumper cables for car',
+                  'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                }),
+              ]),
+
               div(
+                {'class': 'grid grid-cols-2 gap-3'},
                 [
-                  label({'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1'}, [Text('Title')]),
-                  input({
-                    'id': 'req-title',
-                    'type': 'text',
-                    'placeholder': 'e.g., Need jumper cables for car',
-                    'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
-                  }),
+                  div([
+                    label(
+                      {
+                        'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1',
+                      },
+                      [Text('Category')],
+                    ),
+                    select(
+                      {
+                        'id': 'req-category',
+                        'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                      },
+                      [
+                        option(
+                          {'value': 'Borrow Item'},
+                          [Text('🛠️ Borrow Item')],
+                        ),
+                        option(
+                          {'value': 'Errand & Delivery'},
+                          [Text('🛵 Errand & Delivery')],
+                        ),
+                        option(
+                          {'value': 'Tutoring & Study'},
+                          [Text('📚 Tutoring & Study')],
+                        ),
+                        option(
+                          {'value': 'Pet & Plant Care'},
+                          [Text('🐱 Pet & Plant Care')],
+                        ),
+                        option(
+                          {'value': 'Tech & Rides'},
+                          [Text('💻 Tech & Rides')],
+                        ),
+                      ],
+                    ),
+                  ]),
+
+                  div([
+                    label(
+                      {
+                        'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1',
+                      },
+                      [Text('Urgency')],
+                    ),
+                    select(
+                      {
+                        'id': 'req-urgency',
+                        'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                      },
+                      [
+                        option({'value': 'Normal'}, [Text('Normal')]),
+                        option({'value': 'Urgent'}, [Text('⚡ Urgent')]),
+                        option({'value': 'Low'}, [Text('Low')]),
+                      ],
+                    ),
+                  ]),
                 ],
               ),
 
               div(
                 {'class': 'grid grid-cols-2 gap-3'},
                 [
-                  div(
-                    [
-                      label({'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1'}, [Text('Category')]),
-                      select(
-                        {
-                          'id': 'req-category',
-                          'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
-                        },
-                        [
-                          option({'value': 'Borrow Item'}, [Text('🛠️ Borrow Item')]),
-                          option({'value': 'Errand & Delivery'}, [Text('🛵 Errand & Delivery')]),
-                          option({'value': 'Tutoring & Study'}, [Text('📚 Tutoring & Study')]),
-                          option({'value': 'Pet & Plant Care'}, [Text('🐱 Pet & Plant Care')]),
-                          option({'value': 'Tech & Rides'}, [Text('💻 Tech & Rides')]),
-                        ],
-                      ),
-                    ],
-                  ),
-
-                  div(
-                    [
-                      label({'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1'}, [Text('Urgency')]),
-                      select(
-                        {
-                          'id': 'req-urgency',
-                          'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
-                        },
-                        [
-                          option({'value': 'Normal'}, [Text('Normal')]),
-                          option({'value': 'Urgent'}, [Text('⚡ Urgent')]),
-                          option({'value': 'Low'}, [Text('Low')]),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-
-              div(
-                {'class': 'grid grid-cols-2 gap-3'},
-                [
-                  div(
-                    [
-                      label({'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1'}, [Text('Location')]),
-                      input({
-                        'id': 'req-location',
-                        'type': 'text',
-                        'placeholder': 'e.g., Campus East Quad',
-                        'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
-                      }),
-                    ],
-                  ),
-
-                  div(
-                    [
-                      label({'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1'}, [Text('Reward Points')]),
-                      input({
-                        'id': 'req-points',
-                        'type': 'number',
-                        'value': '25',
-                        'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
-                      }),
-                    ],
-                  ),
-                ],
-              ),
-
-              div(
-                [
-                  label({'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1'}, [Text('Description')]),
-                  textarea(
-                    {
-                      'id': 'req-description',
-                      'rows': '3',
-                      'placeholder': 'Provide details about what you need and time frame...',
+                  div([
+                    label(
+                      {
+                        'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1',
+                      },
+                      [Text('Location')],
+                    ),
+                    input({
+                      'id': 'req-location',
+                      'type': 'text',
+                      'placeholder': 'e.g., Campus East Quad',
                       'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
-                    },
-                    [],
-                  ),
+                    }),
+                  ]),
+
+                  div([
+                    label(
+                      {
+                        'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1',
+                      },
+                      [Text('Reward Points')],
+                    ),
+                    input({
+                      'id': 'req-points',
+                      'type': 'number',
+                      'value': '25',
+                      'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                    }),
+                  ]),
                 ],
               ),
+
+              div([
+                label(
+                  {
+                    'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1',
+                  },
+                  [Text('Description')],
+                ),
+                textarea({
+                  'id': 'req-description',
+                  'rows': '3',
+                  'placeholder':
+                      'Provide details about what you need and time frame...',
+                  'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                }, []),
+              ]),
 
               div(
                 {'class': 'mt-2 flex items-center justify-end gap-3'},
@@ -638,7 +855,11 @@ Component _commentsModal() {
             [Text('✕')],
           ),
           h2(
-            {'id': 'comments-title', 'class': 'text-xl font-bold text-surface-900 dark:text-white mb-1'},
+            {
+              'id': 'comments-title',
+              'class':
+                  'text-xl font-bold text-surface-900 dark:text-white mb-1',
+            },
             [Text('Request Discussion')],
           ),
           p(
@@ -652,7 +873,10 @@ Component _commentsModal() {
               'class': 'flex-1 overflow-y-auto my-3 space-y-3 min-h-[160px] max-h-[300px] border-y border-surface-100 dark:border-surface-800 py-3',
             },
             [
-              p({'class': 'text-xs text-surface-400 text-center py-4'}, [Text('No comments yet. Start the conversation!')]),
+              p(
+                {'class': 'text-xs text-surface-400 text-center py-4'},
+                [Text('No comments yet. Start the conversation!')],
+              ),
             ],
           ),
 
@@ -684,7 +908,9 @@ Component _commentsModal() {
 /// Renders the footer section.
 Component pageFooter() {
   return div(
-    {'class': 'footer border-t border-surface-200 dark:border-surface-800 py-8 bg-surface-100/50 dark:bg-surface-900/50'},
+    {
+      'class': 'footer border-t border-surface-200 dark:border-surface-800 py-8 bg-surface-100/50 dark:bg-surface-900/50',
+    },
     [
       div(
         {'class': 'max-w-6xl mx-auto px-4 text-center'},

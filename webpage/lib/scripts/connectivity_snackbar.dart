@@ -14,19 +14,19 @@ class ConnectivitySnackbar {
   Timer? _autoDismissTimer;
 
   ConnectivitySnackbar()
-    : _snackbar =
-          web.document.querySelector('#connectivity-snackbar')
-              as web.HTMLDivElement?,
-      _content =
-          web.document.querySelector('#snackbar-content')
-              as web.HTMLDivElement?,
+    : _snackbar = web.document.querySelector(
+        '#connectivity-snackbar',
+      ) as web.HTMLDivElement?,
+      _content = web.document.querySelector(
+        '#snackbar-content',
+      ) as web.HTMLDivElement?,
       _icon =
           web.document.querySelector('#snackbar-icon') as web.HTMLSpanElement?,
       _text =
           web.document.querySelector('#snackbar-text') as web.HTMLSpanElement?,
-      _dismissBtn =
-          web.document.querySelector('#snackbar-dismiss')
-              as web.HTMLButtonElement?;
+      _dismissBtn = web.document.querySelector(
+        '#snackbar-dismiss',
+      ) as web.HTMLButtonElement?;
 
   void setup() {
     _dismissBtn?.addEventListener(

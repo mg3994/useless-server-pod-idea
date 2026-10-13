@@ -7,8 +7,7 @@ Component loginPage() {
     [
       div(
         {
-          'class':
-              'relative flex flex-col items-center justify-center min-h-screen pt-[72px]',
+          'class': 'relative flex flex-col items-center justify-center min-h-screen pt-[72px]',
         },
         [
           // Background decoration
@@ -16,12 +15,10 @@ Component loginPage() {
             {'class': 'absolute inset-0 overflow-hidden pointer-events-none'},
             [
               div({
-                'class':
-                    'absolute -top-40 -right-40 w-80 h-80 bg-primary-500/10 rounded-full blur-3xl',
+                'class': 'absolute -top-40 -right-40 w-80 h-80 bg-primary-500/10 rounded-full blur-3xl',
               }, []),
               div({
-                'class':
-                    'absolute -bottom-40 -left-40 w-80 h-80 bg-accent-500/10 rounded-full blur-3xl',
+                'class': 'absolute -bottom-40 -left-40 w-80 h-80 bg-accent-500/10 rounded-full blur-3xl',
               }, []),
             ],
           ),
@@ -41,15 +38,13 @@ Component loginPage() {
                         [
                           h2(
                             {
-                              'class':
-                                  'text-2xl font-extrabold text-surface-900 dark:text-white mb-2',
+                              'class': 'text-2xl font-extrabold text-surface-900 dark:text-white mb-2',
                             },
                             [Text('Welcome back')],
                           ),
                           p(
                             {
-                              'class':
-                                  'text-sm text-surface-500 dark:text-surface-400',
+                              'class': 'text-sm text-surface-500 dark:text-surface-400',
                             },
                             [Text('Sign in to your account to continue.')],
                           ),
@@ -62,8 +57,7 @@ Component loginPage() {
                           label(
                             {
                               'for': 'login-email',
-                              'class':
-                                  'text-sm font-semibold text-surface-700 dark:text-surface-300',
+                              'class': 'text-sm font-semibold text-surface-700 dark:text-surface-300',
                             },
                             [Text('Email')],
                           ),
@@ -72,8 +66,7 @@ Component loginPage() {
                             'id': 'login-email',
                             'name': 'email',
                             'placeholder': 'you@example.com',
-                            'class':
-                                'w-full px-4 py-3 rounded-xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-white placeholder-surface-400 dark:placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200',
+                            'class': 'w-full px-4 py-3 rounded-xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-white placeholder-surface-400 dark:placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200',
                             'autocomplete': 'email',
                           }),
                         ],
@@ -85,8 +78,7 @@ Component loginPage() {
                           label(
                             {
                               'for': 'login-password',
-                              'class':
-                                  'text-sm font-semibold text-surface-700 dark:text-surface-300',
+                              'class': 'text-sm font-semibold text-surface-700 dark:text-surface-300',
                             },
                             [Text('Password')],
                           ),
@@ -95,8 +87,7 @@ Component loginPage() {
                             'id': 'login-password',
                             'name': 'password',
                             'placeholder': 'Enter your password',
-                            'class':
-                                'w-full px-4 py-3 rounded-xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-white placeholder-surface-400 dark:placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200',
+                            'class': 'w-full px-4 py-3 rounded-xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-white placeholder-surface-400 dark:placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200',
                             'autocomplete': 'current-password',
                           }),
                         ],
@@ -113,27 +104,23 @@ Component loginPage() {
                         {'class': 'flex items-center gap-3 my-2'},
                         [
                           div({
-                            'class':
-                                'flex-1 h-px bg-surface-200 dark:bg-surface-700',
+                            'class': 'flex-1 h-px bg-surface-200 dark:bg-surface-700',
                           }, []),
                           span(
                             {
-                              'class':
-                                  'text-xs text-surface-400 dark:text-surface-500 uppercase tracking-wide',
+                              'class': 'text-xs text-surface-400 dark:text-surface-500 uppercase tracking-wide',
                             },
                             [Text('or')],
                           ),
                           div({
-                            'class':
-                                'flex-1 h-px bg-surface-200 dark:bg-surface-700',
+                            'class': 'flex-1 h-px bg-surface-200 dark:bg-surface-700',
                           }, []),
                         ],
                       ),
                       // Sign up link
                       p(
                         {
-                          'class':
-                              'text-center text-sm text-surface-500 dark:text-surface-400',
+                          'class': 'text-center text-sm text-surface-500 dark:text-surface-400',
                         },
                         [
                           Text('Don\'t have an account? '),
@@ -141,8 +128,7 @@ Component loginPage() {
                             {
                               'href': '#',
                               'id': 'go-to-signup',
-                              'class':
-                                  'text-primary-600 dark:text-primary-400 font-semibold no-underline hover:underline transition-all duration-200',
+                              'class': 'text-primary-600 dark:text-primary-400 font-semibold no-underline hover:underline transition-all duration-200',
                             },
                             [Text('Sign up')],
                           ),

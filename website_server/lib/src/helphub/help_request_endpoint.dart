@@ -52,7 +52,8 @@ class HelpRequestEndpoint extends Endpoint {
   }) async {
     final authInfo = session.authenticated;
     final userId = authInfo != null
-        ? (int.tryParse(authInfo.userIdentifier) ?? authInfo.userIdentifier.hashCode)
+        ? (int.tryParse(authInfo.userIdentifier) ??
+              authInfo.userIdentifier.hashCode)
         : (creatorEmail.isNotEmpty ? creatorEmail.hashCode : 1);
 
     final request = HelpRequest(
@@ -64,7 +65,9 @@ class HelpRequestEndpoint extends Endpoint {
       status: 'Open',
       rewardPoints: rewardPoints,
       creatorUserId: userId,
-      creatorEmail: creatorEmail.isNotEmpty ? creatorEmail : 'anonymous@helphub.com',
+      creatorEmail: creatorEmail.isNotEmpty
+          ? creatorEmail
+          : 'anonymous@helphub.com',
       createdAt: DateTime.now().toUtc(),
     );
 
@@ -82,7 +85,8 @@ class HelpRequestEndpoint extends Endpoint {
   }) async {
     final authInfo = session.authenticated;
     final userId = authInfo != null
-        ? (int.tryParse(authInfo.userIdentifier) ?? authInfo.userIdentifier.hashCode)
+        ? (int.tryParse(authInfo.userIdentifier) ??
+              authInfo.userIdentifier.hashCode)
         : (helperEmail.isNotEmpty ? helperEmail.hashCode : 2);
 
     final request = await HelpRequest.db.findById(session, requestId);
@@ -145,11 +149,14 @@ class HelpRequestEndpoint extends Endpoint {
   }) async {
     final authInfo = session.authenticated;
     final userId = authInfo != null
-        ? (int.tryParse(authInfo.userIdentifier) ?? authInfo.userIdentifier.hashCode)
+        ? (int.tryParse(authInfo.userIdentifier) ??
+              authInfo.userIdentifier.hashCode)
         : (email.isNotEmpty ? email.hashCode : 1);
 
     final userEmail = email.isNotEmpty ? email : 'guest@helphub.com';
-    final name = userEmail.contains('@') ? userEmail.split('@').first : userEmail;
+    final name = userEmail.contains('@')
+        ? userEmail.split('@').first
+        : userEmail;
 
     var profile = await UserProfile.db.findFirstRow(
       session,
@@ -181,13 +188,16 @@ class HelpRequestEndpoint extends Endpoint {
   }) async {
     final authInfo = session.authenticated;
     final userId = authInfo != null
-        ? (int.tryParse(authInfo.userIdentifier) ?? authInfo.userIdentifier.hashCode)
+        ? (int.tryParse(authInfo.userIdentifier) ??
+              authInfo.userIdentifier.hashCode)
         : (authorEmail.isNotEmpty ? authorEmail.hashCode : 1);
 
     final comment = RequestComment(
       requestId: requestId,
       authorUserId: userId,
-      authorEmail: authorEmail.isNotEmpty ? authorEmail : 'neighbor@helphub.com',
+      authorEmail: authorEmail.isNotEmpty
+          ? authorEmail
+          : 'neighbor@helphub.com',
       content: content,
       createdAt: DateTime.now().toUtc(),
     );
@@ -218,7 +228,8 @@ class HelpRequestEndpoint extends Endpoint {
   }) async {
     final authInfo = session.authenticated;
     final fromUserId = authInfo != null
-        ? (int.tryParse(authInfo.userIdentifier) ?? authInfo.userIdentifier.hashCode)
+        ? (int.tryParse(authInfo.userIdentifier) ??
+              authInfo.userIdentifier.hashCode)
         : 1;
 
     final requestRating = RequestRating(

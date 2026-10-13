@@ -1,9 +1,14 @@
 import 'dart:js_interop';
+
 import 'package:web/web.dart' as web;
 import 'package:website_client/website_client.dart' as wc;
 
 @JS('Element.prototype.insertAdjacentHTML')
-external void _insertAdjacentHTML(web.Element element, JSString position, JSString text);
+external void _insertAdjacentHTML(
+  web.Element element,
+  JSString position,
+  JSString text,
+);
 
 extension ElementInsertExtension on web.Element {
   void insertHtml(String position, String text) {
@@ -70,7 +75,9 @@ class HelpHubController {
     );
 
     // Close comments modal
-    final closeCommentsBtn = web.document.querySelector('#close-comments-modal-btn');
+    final closeCommentsBtn = web.document.querySelector(
+      '#close-comments-modal-btn',
+    );
     closeCommentsBtn?.addEventListener(
       'click',
       ((web.Event e) {
@@ -100,7 +107,9 @@ class HelpHubController {
     );
 
     // Filters
-    final catSelect = web.document.querySelector('#category-filter') as web.HTMLSelectElement?;
+    final catSelect = web.document.querySelector(
+      '#category-filter',
+    ) as web.HTMLSelectElement?;
     catSelect?.addEventListener(
       'change',
       ((web.Event e) {
@@ -109,7 +118,8 @@ class HelpHubController {
       }).toJS,
     );
 
-    final statusSelect = web.document.querySelector('#status-filter') as web.HTMLSelectElement?;
+    final statusSelect =
+        web.document.querySelector('#status-filter') as web.HTMLSelectElement?;
     statusSelect?.addEventListener(
       'change',
       ((web.Event e) {
@@ -118,7 +128,8 @@ class HelpHubController {
       }).toJS,
     );
 
-    final searchInput = web.document.querySelector('#search-input') as web.HTMLInputElement?;
+    final searchInput =
+        web.document.querySelector('#search-input') as web.HTMLInputElement?;
     searchInput?.addEventListener(
       'input',
       ((web.Event e) {
@@ -135,14 +146,23 @@ class HelpHubController {
 
       final profile = await client.helpRequest.getUserProfile(email: email);
 
-      web.document.querySelector('#profile-name')?.textContent = profile.displayName;
-      web.document.querySelector('#profile-badge')?.textContent = profile.avatarBadge;
-      web.document.querySelector('#profile-points')?.textContent = profile.points.toString();
-      web.document.querySelector('#profile-completed')?.textContent = profile.completedCount.toString();
-      web.document.querySelector('#profile-requested')?.textContent = profile.requestedCount.toString();
+      web.document.querySelector('#profile-name')?.textContent =
+          profile.displayName;
+      web.document.querySelector('#profile-badge')?.textContent =
+          profile.avatarBadge;
+      web.document.querySelector('#profile-points')?.textContent = profile
+          .points
+          .toString();
+      web.document.querySelector('#profile-completed')?.textContent = profile
+          .completedCount
+          .toString();
+      web.document.querySelector('#profile-requested')?.textContent = profile
+          .requestedCount
+          .toString();
 
       if (profile.displayName.isNotEmpty) {
-        web.document.querySelector('#profile-avatar-char')?.textContent = profile.displayName[0].toUpperCase();
+        web.document.querySelector('#profile-avatar-char')?.textContent =
+            profile.displayName[0].toUpperCase();
       }
     } catch (e) {
       // Fallback display
@@ -168,7 +188,8 @@ class HelpHubController {
       for (var i = 0; i < topUsers.length; i++) {
         final u = topUsers[i];
         final rank = '#${i + 1}';
-        final cardHtml = '''
+        final cardHtml =
+            '''
           <div class="p-3 rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 flex items-center gap-3 shadow-sm">
             <span class="text-base font-black text-amber-500">$rank</span>
             <div class="flex-1">
@@ -199,16 +220,13 @@ class HelpHubController {
       container.textContent = '';
 
       if (requests.isEmpty) {
-        container.insertHtml(
-          'beforeend',
-          '''
+        container.insertHtml('beforeend', '''
             <div class="col-span-full py-12 text-center text-surface-500 dark:text-surface-400">
               <span class="text-4xl block mb-2">🔍</span>
               <p class="text-base font-semibold">No help requests found.</p>
               <p class="text-xs">Be the first to create one!</p>
             </div>
-          ''',
-        );
+          ''');
         return;
       }
 
@@ -224,11 +242,14 @@ class HelpHubController {
   }
 
   String _buildCardHtml(wc.HelpRequest req) {
-    String urgencyBg = 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300';
+    String urgencyBg =
+        'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300';
     if (req.urgency == 'Urgent') {
-      urgencyBg = 'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300';
+      urgencyBg =
+          'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300';
     } else if (req.urgency == 'Low') {
-      urgencyBg = 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300';
+      urgencyBg =
+          'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300';
     }
 
     String statusBadge = '🟢 Open';
@@ -240,13 +261,15 @@ class HelpHubController {
 
     String actionButtonHtml = '';
     if (req.status == 'Open') {
-      actionButtonHtml = '''
+      actionButtonHtml =
+          '''
         <button class="claim-btn px-4 py-1.5 text-xs font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors" data-id="${req.id}">
           Claim Request
         </button>
       ''';
     } else if (req.status == 'In Progress') {
-      actionButtonHtml = '''
+      actionButtonHtml =
+          '''
         <button class="complete-btn px-4 py-1.5 text-xs font-semibold rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 transition-colors" data-id="${req.id}">
           Mark Complete
         </button>
@@ -304,7 +327,10 @@ class HelpHubController {
               final emailEl = web.document.querySelector('#user-email');
               final email = emailEl?.textContent ?? 'helper@helphub.com';
 
-              await client.helpRequest.claimHelpRequest(requestId: id, helperEmail: email);
+              await client.helpRequest.claimHelpRequest(
+                requestId: id,
+                helperEmail: email,
+              );
               await loadHelpRequests();
               await loadUserProfile();
               await loadLeaderboard();
@@ -363,7 +389,9 @@ class HelpHubController {
     if (listEl == null) return;
 
     try {
-      final comments = await client.helpRequest.getComments(requestId: requestId);
+      final comments = await client.helpRequest.getComments(
+        requestId: requestId,
+      );
       listEl.textContent = '';
 
       if (comments.isEmpty) {
@@ -375,7 +403,8 @@ class HelpHubController {
       }
 
       for (final c in comments) {
-        final commentHtml = '''
+        final commentHtml =
+            '''
           <div class="p-2.5 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200/60 dark:border-surface-700/60">
             <div class="flex items-center justify-between mb-1">
               <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400">${_escapeHtml(c.authorEmail)}</span>
@@ -394,7 +423,8 @@ class HelpHubController {
   Future<void> _submitComment() async {
     if (activeCommentsRequestId == null) return;
 
-    final inputEl = web.document.querySelector('#comment-input') as web.HTMLInputElement?;
+    final inputEl =
+        web.document.querySelector('#comment-input') as web.HTMLInputElement?;
     final content = inputEl?.value.trim() ?? '';
     if (content.isEmpty) return;
 
@@ -416,12 +446,19 @@ class HelpHubController {
   }
 
   Future<void> _submitNewRequest() async {
-    final titleEl = web.document.querySelector('#req-title') as web.HTMLInputElement?;
-    final catEl = web.document.querySelector('#req-category') as web.HTMLSelectElement?;
-    final urgEl = web.document.querySelector('#req-urgency') as web.HTMLSelectElement?;
-    final locEl = web.document.querySelector('#req-location') as web.HTMLInputElement?;
-    final ptsEl = web.document.querySelector('#req-points') as web.HTMLInputElement?;
-    final descEl = web.document.querySelector('#req-description') as web.HTMLTextAreaElement?;
+    final titleEl =
+        web.document.querySelector('#req-title') as web.HTMLInputElement?;
+    final catEl =
+        web.document.querySelector('#req-category') as web.HTMLSelectElement?;
+    final urgEl =
+        web.document.querySelector('#req-urgency') as web.HTMLSelectElement?;
+    final locEl =
+        web.document.querySelector('#req-location') as web.HTMLInputElement?;
+    final ptsEl =
+        web.document.querySelector('#req-points') as web.HTMLInputElement?;
+    final descEl = web.document.querySelector(
+      '#req-description',
+    ) as web.HTMLTextAreaElement?;
 
     final title = titleEl?.value.trim() ?? '';
     final category = catEl?.value ?? 'Borrow Item';
