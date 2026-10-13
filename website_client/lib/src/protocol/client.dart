@@ -19,6 +19,14 @@ import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
 import 'package:website_client/src/protocol/greetings/greeting.dart'
     as _ik0mmf5h;
+import 'package:website_client/src/protocol/helphub/help_request.dart'
+    as _ilm5roly;
+import 'package:website_client/src/protocol/helphub/request_comment.dart'
+    as _iq4ufam1;
+import 'package:website_client/src/protocol/helphub/request_rating.dart'
+    as _ib2k1m8u;
+import 'package:website_client/src/protocol/helphub/user_profile.dart'
+    as _if5f0yyd;
 import 'protocol.dart' as _il2as5qe;
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
@@ -264,6 +272,131 @@ class EndpointGreeting extends _isc.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointHelpRequest extends _isc.EndpointRef {
+  EndpointHelpRequest(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'helpRequest';
+
+  /// Fetches all help requests, optionally filtered by category or status.
+  _ida.Future<List<_ilm5roly.HelpRequest>> getHelpRequests({
+    String? category,
+    String? status,
+    String? searchQuery,
+  }) => caller.callServerEndpoint<List<_ilm5roly.HelpRequest>>(
+    'helpRequest',
+    'getHelpRequests',
+    {
+      'category': category,
+      'status': status,
+      'searchQuery': searchQuery,
+    },
+  );
+
+  /// Creates a new help request.
+  _ida.Future<_ilm5roly.HelpRequest> createHelpRequest({
+    required String title,
+    required String description,
+    required String category,
+    required String location,
+    required String urgency,
+    required int rewardPoints,
+    required String creatorEmail,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'createHelpRequest',
+    {
+      'title': title,
+      'description': description,
+      'category': category,
+      'location': location,
+      'urgency': urgency,
+      'rewardPoints': rewardPoints,
+      'creatorEmail': creatorEmail,
+    },
+  );
+
+  /// Claim a help request as a helper.
+  _ida.Future<_ilm5roly.HelpRequest> claimHelpRequest({
+    required int requestId,
+    required String helperEmail,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'claimHelpRequest',
+    {
+      'requestId': requestId,
+      'helperEmail': helperEmail,
+    },
+  );
+
+  /// Mark a help request as completed.
+  _ida.Future<_ilm5roly.HelpRequest> completeHelpRequest({
+    required int requestId,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'completeHelpRequest',
+    {'requestId': requestId},
+  );
+
+  /// Get user profile stats for Helphub
+  _ida.Future<_if5f0yyd.UserProfile> getUserProfile({required String email}) =>
+      caller.callServerEndpoint<_if5f0yyd.UserProfile>(
+        'helpRequest',
+        'getUserProfile',
+        {'email': email},
+      );
+
+  /// Adds a comment to a request.
+  _ida.Future<_iq4ufam1.RequestComment> addComment({
+    required int requestId,
+    required String content,
+    required String authorEmail,
+  }) => caller.callServerEndpoint<_iq4ufam1.RequestComment>(
+    'helpRequest',
+    'addComment',
+    {
+      'requestId': requestId,
+      'content': content,
+      'authorEmail': authorEmail,
+    },
+  );
+
+  /// Gets comments for a specific request.
+  _ida.Future<List<_iq4ufam1.RequestComment>> getComments({
+    required int requestId,
+  }) => caller.callServerEndpoint<List<_iq4ufam1.RequestComment>>(
+    'helpRequest',
+    'getComments',
+    {'requestId': requestId},
+  );
+
+  /// Submits rating and feedback for a completed request.
+  _ida.Future<_ib2k1m8u.RequestRating> submitRating({
+    required int requestId,
+    required int toUserId,
+    required int rating,
+    String? feedback,
+  }) => caller.callServerEndpoint<_ib2k1m8u.RequestRating>(
+    'helpRequest',
+    'submitRating',
+    {
+      'requestId': requestId,
+      'toUserId': toUserId,
+      'rating': rating,
+      'feedback': feedback,
+    },
+  );
+
+  /// Fetches top community helpers leaderboard.
+  _ida.Future<List<_if5f0yyd.UserProfile>> getLeaderboard() =>
+      caller.callServerEndpoint<List<_if5f0yyd.UserProfile>>(
+        'helpRequest',
+        'getLeaderboard',
+        {},
+      );
+}
+
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _iaic.Caller(client);
@@ -305,6 +438,7 @@ class Client extends _isc.ServerpodClientShared {
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
     greeting = EndpointGreeting(this);
+    helpRequest = EndpointHelpRequest(this);
     modules = Modules(this);
   }
 
@@ -314,6 +448,8 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointGreeting greeting;
 
+  late final EndpointHelpRequest helpRequest;
+
   late final Modules modules;
 
   @override
@@ -321,6 +457,7 @@ class Client extends _isc.ServerpodClientShared {
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
     'greeting': greeting,
+    'helpRequest': helpRequest,
   };
 
   @override

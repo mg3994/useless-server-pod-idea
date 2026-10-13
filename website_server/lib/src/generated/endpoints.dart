@@ -18,17 +18,36 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
 import '../auth/email_idp_endpoint.dart' as _iuc1hd5t;
 import '../auth/jwt_refresh_endpoint.dart' as _inwq3ztq;
 import '../greetings/greeting_endpoint.dart' as _il624ik7;
+import '../helphub/help_request_endpoint.dart' as _i8zczuz7;
 
 class Endpoints extends _is.EndpointDispatch {
   @override
   void initializeEndpoints(_is.Server server) {
     var endpoints = <String, _is.Endpoint>{
       'emailIdp': _iuc1hd5t.EmailIdpEndpoint()
-        ..initialize(server, 'emailIdp', null),
+        ..initialize(
+          server,
+          'emailIdp',
+          null,
+        ),
       'jwtRefresh': _inwq3ztq.JwtRefreshEndpoint()
-        ..initialize(server, 'jwtRefresh', null),
+        ..initialize(
+          server,
+          'jwtRefresh',
+          null,
+        ),
       'greeting': _il624ik7.GreetingEndpoint()
-        ..initialize(server, 'greeting', null),
+        ..initialize(
+          server,
+          'greeting',
+          null,
+        ),
+      'helpRequest': _i8zczuz7.HelpRequestEndpoint()
+        ..initialize(
+          server,
+          'helpRequest',
+          null,
+        ),
     };
     connectors['emailIdp'] = _is.EndpointConnector(
       name: 'emailIdp',
@@ -48,12 +67,16 @@ class Endpoints extends _is.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (_is.Session session, Map<String, dynamic> params) async =>
-              (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint).login(
-                session,
-                email: params['email'],
-                password: params['password'],
-              ),
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint).login(
+                    session,
+                    email: params['email'],
+                    password: params['password'],
+                  ),
         ),
         'startRegistration': _is.MethodConnector(
           name: 'startRegistration',
@@ -64,9 +87,15 @@ class Endpoints extends _is.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (_is.Session session, Map<String, dynamic> params) async =>
-              (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint)
-                  .startRegistration(session, email: params['email']),
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint)
+                  .startRegistration(
+                    session,
+                    email: params['email'],
+                  ),
         ),
         'verifyRegistrationCode': _is.MethodConnector(
           name: 'verifyRegistrationCode',
@@ -82,8 +111,11 @@ class Endpoints extends _is.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (_is.Session session, Map<String, dynamic> params) async =>
-              (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint)
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint)
                   .verifyRegistrationCode(
                     session,
                     accountRequestId: params['accountRequestId'],
@@ -104,8 +136,11 @@ class Endpoints extends _is.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (_is.Session session, Map<String, dynamic> params) async =>
-              (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint)
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint)
                   .finishRegistration(
                     session,
                     registrationToken: params['registrationToken'],
@@ -121,9 +156,15 @@ class Endpoints extends _is.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (_is.Session session, Map<String, dynamic> params) async =>
-              (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint)
-                  .startPasswordReset(session, email: params['email']),
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint)
+                  .startPasswordReset(
+                    session,
+                    email: params['email'],
+                  ),
         ),
         'verifyPasswordResetCode': _is.MethodConnector(
           name: 'verifyPasswordResetCode',
@@ -139,8 +180,11 @@ class Endpoints extends _is.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (_is.Session session, Map<String, dynamic> params) async =>
-              (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint)
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint)
                   .verifyPasswordResetCode(
                     session,
                     passwordResetRequestId: params['passwordResetRequestId'],
@@ -161,8 +205,11 @@ class Endpoints extends _is.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (_is.Session session, Map<String, dynamic> params) async =>
-              (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint)
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint)
                   .finishPasswordReset(
                     session,
                     finishPasswordResetToken:
@@ -173,10 +220,12 @@ class Endpoints extends _is.EndpointDispatch {
         'hasAccount': _is.MethodConnector(
           name: 'hasAccount',
           params: {},
-          call: (_is.Session session, Map<String, dynamic> params) async =>
-              (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint).hasAccount(
-                session,
-              ),
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _iuc1hd5t.EmailIdpEndpoint)
+                  .hasAccount(session),
         ),
       },
     );
@@ -193,12 +242,16 @@ class Endpoints extends _is.EndpointDispatch {
               nullable: true,
             ),
           },
-          call: (_is.Session session, Map<String, dynamic> params) async =>
-              (endpoints['jwtRefresh'] as _inwq3ztq.JwtRefreshEndpoint)
-                  .refreshAccessToken(
-                    session,
-                    refreshToken: params['refreshToken'],
-                  ),
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['jwtRefresh'] as _inwq3ztq.JwtRefreshEndpoint)
+                      .refreshAccessToken(
+                        session,
+                        refreshToken: params['refreshToken'],
+                      ),
         ),
       },
     );
@@ -215,11 +268,276 @@ class Endpoints extends _is.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (_is.Session session, Map<String, dynamic> params) async =>
-              (endpoints['greeting'] as _il624ik7.GreetingEndpoint).hello(
-                session,
-                params['name'],
-              ),
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['greeting'] as _il624ik7.GreetingEndpoint).hello(
+                    session,
+                    params['name'],
+                  ),
+        ),
+      },
+    );
+    connectors['helpRequest'] = _is.EndpointConnector(
+      name: 'helpRequest',
+      endpoint: endpoints['helpRequest']!,
+      methodConnectors: {
+        'getHelpRequests': _is.MethodConnector(
+          name: 'getHelpRequests',
+          params: {
+            'category': _is.ParameterDescription(
+              name: 'category',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+            'status': _is.ParameterDescription(
+              name: 'status',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+            'searchQuery': _is.ParameterDescription(
+              name: 'searchQuery',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getHelpRequests(
+                        session,
+                        category: params['category'],
+                        status: params['status'],
+                        searchQuery: params['searchQuery'],
+                      ),
+        ),
+        'createHelpRequest': _is.MethodConnector(
+          name: 'createHelpRequest',
+          params: {
+            'title': _is.ParameterDescription(
+              name: 'title',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'description': _is.ParameterDescription(
+              name: 'description',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'category': _is.ParameterDescription(
+              name: 'category',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'location': _is.ParameterDescription(
+              name: 'location',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'urgency': _is.ParameterDescription(
+              name: 'urgency',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'rewardPoints': _is.ParameterDescription(
+              name: 'rewardPoints',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'creatorEmail': _is.ParameterDescription(
+              name: 'creatorEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .createHelpRequest(
+                        session,
+                        title: params['title'],
+                        description: params['description'],
+                        category: params['category'],
+                        location: params['location'],
+                        urgency: params['urgency'],
+                        rewardPoints: params['rewardPoints'],
+                        creatorEmail: params['creatorEmail'],
+                      ),
+        ),
+        'claimHelpRequest': _is.MethodConnector(
+          name: 'claimHelpRequest',
+          params: {
+            'requestId': _is.ParameterDescription(
+              name: 'requestId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'helperEmail': _is.ParameterDescription(
+              name: 'helperEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .claimHelpRequest(
+                        session,
+                        requestId: params['requestId'],
+                        helperEmail: params['helperEmail'],
+                      ),
+        ),
+        'completeHelpRequest': _is.MethodConnector(
+          name: 'completeHelpRequest',
+          params: {
+            'requestId': _is.ParameterDescription(
+              name: 'requestId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .completeHelpRequest(
+                        session,
+                        requestId: params['requestId'],
+                      ),
+        ),
+        'getUserProfile': _is.MethodConnector(
+          name: 'getUserProfile',
+          params: {
+            'email': _is.ParameterDescription(
+              name: 'email',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getUserProfile(
+                        session,
+                        email: params['email'],
+                      ),
+        ),
+        'addComment': _is.MethodConnector(
+          name: 'addComment',
+          params: {
+            'requestId': _is.ParameterDescription(
+              name: 'requestId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'content': _is.ParameterDescription(
+              name: 'content',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'authorEmail': _is.ParameterDescription(
+              name: 'authorEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .addComment(
+                        session,
+                        requestId: params['requestId'],
+                        content: params['content'],
+                        authorEmail: params['authorEmail'],
+                      ),
+        ),
+        'getComments': _is.MethodConnector(
+          name: 'getComments',
+          params: {
+            'requestId': _is.ParameterDescription(
+              name: 'requestId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getComments(
+                        session,
+                        requestId: params['requestId'],
+                      ),
+        ),
+        'submitRating': _is.MethodConnector(
+          name: 'submitRating',
+          params: {
+            'requestId': _is.ParameterDescription(
+              name: 'requestId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'toUserId': _is.ParameterDescription(
+              name: 'toUserId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'rating': _is.ParameterDescription(
+              name: 'rating',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'feedback': _is.ParameterDescription(
+              name: 'feedback',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .submitRating(
+                        session,
+                        requestId: params['requestId'],
+                        toUserId: params['toUserId'],
+                        rating: params['rating'],
+                        feedback: params['feedback'],
+                      ),
+        ),
+        'getLeaderboard': _is.MethodConnector(
+          name: 'getLeaderboard',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getLeaderboard(session),
         ),
       },
     );

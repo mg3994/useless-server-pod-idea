@@ -16,31 +16,30 @@ import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _iaic;
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
+import 'package:website_client/src/protocol/helphub/help_request.dart'
+    as _ilm5roly;
+import 'package:website_client/src/protocol/helphub/request_comment.dart'
+    as _iq4ufam1;
+import 'package:website_client/src/protocol/helphub/user_profile.dart'
+    as _if5f0yyd;
 import 'greetings/greeting.dart' as _izw8z7ou;
+import 'helphub/help_request.dart' as _i2hcnfb8;
+import 'helphub/request_comment.dart' as _il3090nm;
+import 'helphub/request_rating.dart' as _ivm2zgp6;
+import 'helphub/user_profile.dart' as _i2208dl4;
 export 'greetings/greeting.dart';
+export 'helphub/help_request.dart';
+export 'helphub/request_comment.dart';
+export 'helphub/request_rating.dart';
+export 'helphub/user_profile.dart';
 export 'client.dart';
 
-class Protocol extends _isc.SerializationManager
-    implements _isc.ProtocolDeserializationProvider {
+class Protocol extends _isc.SerializationManager {
   Protocol._();
 
   factory Protocol() => _instance;
 
   static final Protocol _instance = Protocol._().._registerHostProtocols();
-
-  @override
-  _isc.ProtocolDeserialization get deserializationMetadata =>
-      _isc.ProtocolDeserialization.cached(
-        this,
-        types: const [
-          _isc.getType<_izw8z7ou.Greeting>,
-          _isc.getType<_izw8z7ou.Greeting?>,
-        ],
-        modules: const [
-          _iaic.Protocol.new,
-          _iacc.Protocol.new,
-        ],
-      );
 
   static String? getClassNameFromObjectJson(dynamic data) {
     if (data is! Map) return null;
@@ -72,24 +71,69 @@ class Protocol extends _isc.SerializationManager
     if (t == _izw8z7ou.Greeting) {
       return _izw8z7ou.Greeting.fromJson(data) as T;
     }
+    if (t == _i2hcnfb8.HelpRequest) {
+      return _i2hcnfb8.HelpRequest.fromJson(data) as T;
+    }
+    if (t == _il3090nm.RequestComment) {
+      return _il3090nm.RequestComment.fromJson(data) as T;
+    }
+    if (t == _ivm2zgp6.RequestRating) {
+      return _ivm2zgp6.RequestRating.fromJson(data) as T;
+    }
+    if (t == _i2208dl4.UserProfile) {
+      return _i2208dl4.UserProfile.fromJson(data) as T;
+    }
     if (t == _isc.getType<_izw8z7ou.Greeting?>()) {
       return (data != null ? _izw8z7ou.Greeting.fromJson(data) : null) as T;
     }
-    final modules = dataClassName == null
-        ? deserializationMetadata.modulesForType(t)
-        : deserializationMetadata.modules;
-    for (final module in modules) {
-      try {
-        return module.deserialize<T>(data, t);
-      } on _isc.DeserializationTypeNotFoundException catch (_) {}
+    if (t == _isc.getType<_i2hcnfb8.HelpRequest?>()) {
+      return (data != null ? _i2hcnfb8.HelpRequest.fromJson(data) : null) as T;
     }
-
+    if (t == _isc.getType<_il3090nm.RequestComment?>()) {
+      return (data != null ? _il3090nm.RequestComment.fromJson(data) : null)
+          as T;
+    }
+    if (t == _isc.getType<_ivm2zgp6.RequestRating?>()) {
+      return (data != null ? _ivm2zgp6.RequestRating.fromJson(data) : null)
+          as T;
+    }
+    if (t == _isc.getType<_i2208dl4.UserProfile?>()) {
+      return (data != null ? _i2208dl4.UserProfile.fromJson(data) : null) as T;
+    }
+    if (t == List<_ilm5roly.HelpRequest>) {
+      return (data as List)
+              .map((e) => deserialize<_ilm5roly.HelpRequest>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_iq4ufam1.RequestComment>) {
+      return (data as List)
+              .map((e) => deserialize<_iq4ufam1.RequestComment>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_if5f0yyd.UserProfile>) {
+      return (data as List)
+              .map((e) => deserialize<_if5f0yyd.UserProfile>(e))
+              .toList()
+          as T;
+    }
+    try {
+      return _iaic.Protocol().deserialize<T>(data, t);
+    } on _isc.DeserializationTypeNotFoundException catch (_) {}
+    try {
+      return _iacc.Protocol().deserialize<T>(data, t);
+    } on _isc.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
 
   static String? getClassNameForType(Type type) {
     return switch (type) {
       _izw8z7ou.Greeting => 'Greeting',
+      _i2hcnfb8.HelpRequest => 'HelpRequest',
+      _il3090nm.RequestComment => 'RequestComment',
+      _ivm2zgp6.RequestRating => 'RequestRating',
+      _i2208dl4.UserProfile => 'UserProfile',
       _ => null,
     };
   }
@@ -106,6 +150,14 @@ class Protocol extends _isc.SerializationManager
     switch (data) {
       case _izw8z7ou.Greeting():
         return 'Greeting';
+      case _i2hcnfb8.HelpRequest():
+        return 'HelpRequest';
+      case _il3090nm.RequestComment():
+        return 'RequestComment';
+      case _ivm2zgp6.RequestRating():
+        return 'RequestRating';
+      case _i2208dl4.UserProfile():
+        return 'UserProfile';
     }
     className = _iaic.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -130,6 +182,18 @@ class Protocol extends _isc.SerializationManager
     }
     if (dataClassName == 'Greeting') {
       return deserialize<_izw8z7ou.Greeting>(data['data']);
+    }
+    if (dataClassName == 'HelpRequest') {
+      return deserialize<_i2hcnfb8.HelpRequest>(data['data']);
+    }
+    if (dataClassName == 'RequestComment') {
+      return deserialize<_il3090nm.RequestComment>(data['data']);
+    }
+    if (dataClassName == 'RequestRating') {
+      return deserialize<_ivm2zgp6.RequestRating>(data['data']);
+    }
+    if (dataClassName == 'UserProfile') {
+      return deserialize<_i2208dl4.UserProfile>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);

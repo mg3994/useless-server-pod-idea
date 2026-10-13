@@ -19,6 +19,14 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
 import 'package:serverpod_test/serverpod_test.dart' as _ist;
 import 'package:website_server/src/generated/greetings/greeting.dart'
     as _iv7sgnpu;
+import 'package:website_server/src/generated/helphub/help_request.dart'
+    as _i62gi6d1;
+import 'package:website_server/src/generated/helphub/request_comment.dart'
+    as _itygqzxa;
+import 'package:website_server/src/generated/helphub/request_rating.dart'
+    as _iopw990x;
+import 'package:website_server/src/generated/helphub/user_profile.dart'
+    as _ivj3h5rp;
 import 'package:website_server/src/generated/protocol.dart';
 import 'package:website_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -157,6 +165,8 @@ class TestEndpoints {
   late final _JwtRefreshEndpoint jwtRefresh;
 
   late final _GreetingEndpoint greeting;
+
+  late final _HelpRequestEndpoint helpRequest;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -166,14 +176,30 @@ class _InternalTestEndpoints extends TestEndpoints
     _is.SerializationManager serializationManager,
     _is.EndpointDispatch endpoints,
   ) {
-    emailIdp = _EmailIdpEndpoint(endpoints, serializationManager);
-    jwtRefresh = _JwtRefreshEndpoint(endpoints, serializationManager);
-    greeting = _GreetingEndpoint(endpoints, serializationManager);
+    emailIdp = _EmailIdpEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    jwtRefresh = _JwtRefreshEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    greeting = _GreetingEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    helpRequest = _HelpRequestEndpoint(
+      endpoints,
+      serializationManager,
+    );
   }
 }
 
 class _EmailIdpEndpoint {
-  _EmailIdpEndpoint(this._endpointDispatch, this._serializationManager);
+  _EmailIdpEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
 
   final _is.EndpointDispatch _endpointDispatch;
 
@@ -446,7 +472,10 @@ class _EmailIdpEndpoint {
 }
 
 class _JwtRefreshEndpoint {
-  _JwtRefreshEndpoint(this._endpointDispatch, this._serializationManager);
+  _JwtRefreshEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
 
   final _is.EndpointDispatch _endpointDispatch;
 
@@ -485,7 +514,10 @@ class _JwtRefreshEndpoint {
 }
 
 class _GreetingEndpoint {
-  _GreetingEndpoint(this._endpointDispatch, this._serializationManager);
+  _GreetingEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
 
   final _is.EndpointDispatch _endpointDispatch;
 
@@ -515,6 +547,333 @@ class _GreetingEndpoint {
                   _localCallContext.arguments,
                 )
                 as _ida.Future<_iv7sgnpu.Greeting>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _HelpRequestEndpoint {
+  _HelpRequestEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _is.EndpointDispatch _endpointDispatch;
+
+  final _is.SerializationManager _serializationManager;
+
+  _ida.Future<List<_i62gi6d1.HelpRequest>> getHelpRequests(
+    _ist.TestSessionBuilder sessionBuilder, {
+    String? category,
+    String? status,
+    String? searchQuery,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'getHelpRequests',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'getHelpRequests',
+          parameters: _ist.testObjectToJson({
+            'category': category,
+            'status': status,
+            'searchQuery': searchQuery,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_i62gi6d1.HelpRequest>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_i62gi6d1.HelpRequest> createHelpRequest(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String title,
+    required String description,
+    required String category,
+    required String location,
+    required String urgency,
+    required int rewardPoints,
+    required String creatorEmail,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'createHelpRequest',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'createHelpRequest',
+          parameters: _ist.testObjectToJson({
+            'title': title,
+            'description': description,
+            'category': category,
+            'location': location,
+            'urgency': urgency,
+            'rewardPoints': rewardPoints,
+            'creatorEmail': creatorEmail,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i62gi6d1.HelpRequest>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_i62gi6d1.HelpRequest> claimHelpRequest(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int requestId,
+    required String helperEmail,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'claimHelpRequest',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'claimHelpRequest',
+          parameters: _ist.testObjectToJson({
+            'requestId': requestId,
+            'helperEmail': helperEmail,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i62gi6d1.HelpRequest>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_i62gi6d1.HelpRequest> completeHelpRequest(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int requestId,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'completeHelpRequest',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'completeHelpRequest',
+          parameters: _ist.testObjectToJson({'requestId': requestId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i62gi6d1.HelpRequest>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_ivj3h5rp.UserProfile> getUserProfile(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String email,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'getUserProfile',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'getUserProfile',
+          parameters: _ist.testObjectToJson({'email': email}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ivj3h5rp.UserProfile>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_itygqzxa.RequestComment> addComment(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int requestId,
+    required String content,
+    required String authorEmail,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'addComment',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'addComment',
+          parameters: _ist.testObjectToJson({
+            'requestId': requestId,
+            'content': content,
+            'authorEmail': authorEmail,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_itygqzxa.RequestComment>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<List<_itygqzxa.RequestComment>> getComments(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int requestId,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'getComments',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'getComments',
+          parameters: _ist.testObjectToJson({'requestId': requestId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_itygqzxa.RequestComment>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_iopw990x.RequestRating> submitRating(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int requestId,
+    required int toUserId,
+    required int rating,
+    String? feedback,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'submitRating',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'submitRating',
+          parameters: _ist.testObjectToJson({
+            'requestId': requestId,
+            'toUserId': toUserId,
+            'rating': rating,
+            'feedback': feedback,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_iopw990x.RequestRating>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<List<_ivj3h5rp.UserProfile>> getLeaderboard(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'getLeaderboard',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'getLeaderboard',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_ivj3h5rp.UserProfile>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

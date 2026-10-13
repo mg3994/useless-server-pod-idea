@@ -11,3 +11,13 @@ jwtRefresh:
   - refreshAccessToken:
 greeting:
   - hello:
+helpRequest:
+  - getHelpRequests:
+  - createHelpRequest:
+  - claimHelpRequest:
+  - completeHelpRequest:
+  - getUserProfile:
+  - addComment:
+  - getComments:
+  - submitRating:
+  - getLeaderboard:

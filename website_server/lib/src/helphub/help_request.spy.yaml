@@ -1,0 +1,16 @@
+class: HelpRequest
+table: help_request
+fields:
+  title: String
+  description: String
+  category: String
+  location: String
+  urgency: String
+  status: String
+  rewardPoints: int
+  creatorUserId: int
+  creatorEmail: String
+  helperUserId: int?
+  helperEmail: String?
+  createdAt: DateTime
+  updatedAt: DateTime?

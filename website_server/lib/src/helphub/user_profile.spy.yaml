@@ -1,0 +1,10 @@
+class: UserProfile
+table: user_profile
+fields:
+  userId: int
+  email: String
+  displayName: String
+  points: int
+  completedCount: int
+  requestedCount: int
+  avatarBadge: String

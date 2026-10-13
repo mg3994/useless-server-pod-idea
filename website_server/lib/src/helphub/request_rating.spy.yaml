@@ -1,0 +1,9 @@
+class: RequestRating
+table: request_rating
+fields:
+  requestId: int
+  fromUserId: int
+  toUserId: int
+  rating: int
+  feedback: String?
+  createdAt: DateTime

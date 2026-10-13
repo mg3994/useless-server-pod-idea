@@ -17,33 +17,289 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
+import 'package:website_server/src/generated/helphub/help_request.dart'
+    as _i62gi6d1;
+import 'package:website_server/src/generated/helphub/request_comment.dart'
+    as _itygqzxa;
+import 'package:website_server/src/generated/helphub/user_profile.dart'
+    as _ivj3h5rp;
 import 'greetings/greeting.dart' as _izw8z7ou;
+import 'helphub/help_request.dart' as _i2hcnfb8;
+import 'helphub/request_comment.dart' as _il3090nm;
+import 'helphub/request_rating.dart' as _ivm2zgp6;
+import 'helphub/user_profile.dart' as _i2208dl4;
 export 'greetings/greeting.dart';
+export 'helphub/help_request.dart';
+export 'helphub/request_comment.dart';
+export 'helphub/request_rating.dart';
+export 'helphub/user_profile.dart';
 
-class Protocol extends _is.DatabaseSerializationManager
-    implements _is.DatabaseProtocolDeserializationProvider {
+class Protocol extends _is.DatabaseSerializationManager {
   Protocol._();
 
   factory Protocol() => _instance;
 
   static final Protocol _instance = Protocol._().._registerHostProtocols();
 
-  @override
-  _is.ProtocolDeserialization get deserializationMetadata =>
-      _is.ProtocolDeserialization.cached(
-        this,
-        types: const [
-          _is.getType<_izw8z7ou.Greeting>,
-          _is.getType<_izw8z7ou.Greeting?>,
-        ],
-        modules: const [
-          _iais.Protocol.new,
-          _iacs.Protocol.new,
-          _isp.Protocol.new,
-        ],
-      );
-
   static List<_isp.TableDefinition> get targetTableDefinitions => [
+    _isp.TableDefinition(
+      name: 'help_request',
+      dartName: 'HelpRequest',
+      schema: 'public',
+      module: 'website',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'title',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'description',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'category',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'location',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'urgency',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'status',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'rewardPoints',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'creatorUserId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'creatorEmail',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'helperUserId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'helperEmail',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _isp.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
+    _isp.TableDefinition(
+      name: 'request_comment',
+      dartName: 'RequestComment',
+      schema: 'public',
+      module: 'website',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'requestId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'authorUserId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'authorEmail',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'content',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
+    _isp.TableDefinition(
+      name: 'request_rating',
+      dartName: 'RequestRating',
+      schema: 'public',
+      module: 'website',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'requestId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'fromUserId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'toUserId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'rating',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'feedback',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
+    _isp.TableDefinition(
+      name: 'user_profile',
+      dartName: 'UserProfile',
+      schema: 'public',
+      module: 'website',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'userId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'email',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'displayName',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'points',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'completedCount',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'requestedCount',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'avatarBadge',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
     ..._iais.Protocol.targetTableDefinitions,
     ..._iacs.Protocol.targetTableDefinitions,
     ..._isp.Protocol.targetTableDefinitions,
@@ -56,7 +312,10 @@ class Protocol extends _is.DatabaseSerializationManager
   }
 
   @override
-  T deserialize<T>(dynamic data, [Type? t]) {
+  T deserialize<T>(
+    dynamic data, [
+    Type? t,
+  ]) {
     t ??= T;
 
     final dataClassName = getClassNameFromObjectJson(data);
@@ -76,24 +335,72 @@ class Protocol extends _is.DatabaseSerializationManager
     if (t == _izw8z7ou.Greeting) {
       return _izw8z7ou.Greeting.fromJson(data) as T;
     }
+    if (t == _i2hcnfb8.HelpRequest) {
+      return _i2hcnfb8.HelpRequest.fromJson(data) as T;
+    }
+    if (t == _il3090nm.RequestComment) {
+      return _il3090nm.RequestComment.fromJson(data) as T;
+    }
+    if (t == _ivm2zgp6.RequestRating) {
+      return _ivm2zgp6.RequestRating.fromJson(data) as T;
+    }
+    if (t == _i2208dl4.UserProfile) {
+      return _i2208dl4.UserProfile.fromJson(data) as T;
+    }
     if (t == _is.getType<_izw8z7ou.Greeting?>()) {
       return (data != null ? _izw8z7ou.Greeting.fromJson(data) : null) as T;
     }
-    final modules = dataClassName == null
-        ? deserializationMetadata.modulesForType(t)
-        : deserializationMetadata.modules;
-    for (final module in modules) {
-      try {
-        return module.deserialize<T>(data, t);
-      } on _is.DeserializationTypeNotFoundException catch (_) {}
+    if (t == _is.getType<_i2hcnfb8.HelpRequest?>()) {
+      return (data != null ? _i2hcnfb8.HelpRequest.fromJson(data) : null) as T;
     }
-
+    if (t == _is.getType<_il3090nm.RequestComment?>()) {
+      return (data != null ? _il3090nm.RequestComment.fromJson(data) : null)
+          as T;
+    }
+    if (t == _is.getType<_ivm2zgp6.RequestRating?>()) {
+      return (data != null ? _ivm2zgp6.RequestRating.fromJson(data) : null)
+          as T;
+    }
+    if (t == _is.getType<_i2208dl4.UserProfile?>()) {
+      return (data != null ? _i2208dl4.UserProfile.fromJson(data) : null) as T;
+    }
+    if (t == List<_i62gi6d1.HelpRequest>) {
+      return (data as List)
+              .map((e) => deserialize<_i62gi6d1.HelpRequest>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_itygqzxa.RequestComment>) {
+      return (data as List)
+              .map((e) => deserialize<_itygqzxa.RequestComment>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_ivj3h5rp.UserProfile>) {
+      return (data as List)
+              .map((e) => deserialize<_ivj3h5rp.UserProfile>(e))
+              .toList()
+          as T;
+    }
+    try {
+      return _iais.Protocol().deserialize<T>(data, t);
+    } on _is.DeserializationTypeNotFoundException catch (_) {}
+    try {
+      return _iacs.Protocol().deserialize<T>(data, t);
+    } on _is.DeserializationTypeNotFoundException catch (_) {}
+    try {
+      return _isp.Protocol().deserialize<T>(data, t);
+    } on _is.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
 
   static String? getClassNameForType(Type type) {
     return switch (type) {
       _izw8z7ou.Greeting => 'Greeting',
+      _i2hcnfb8.HelpRequest => 'HelpRequest',
+      _il3090nm.RequestComment => 'RequestComment',
+      _ivm2zgp6.RequestRating => 'RequestRating',
+      _i2208dl4.UserProfile => 'UserProfile',
       _ => null,
     };
   }
@@ -110,6 +417,14 @@ class Protocol extends _is.DatabaseSerializationManager
     switch (data) {
       case _izw8z7ou.Greeting():
         return 'Greeting';
+      case _i2hcnfb8.HelpRequest():
+        return 'HelpRequest';
+      case _il3090nm.RequestComment():
+        return 'RequestComment';
+      case _ivm2zgp6.RequestRating():
+        return 'RequestRating';
+      case _i2208dl4.UserProfile():
+        return 'UserProfile';
     }
     className = _iais.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -138,6 +453,18 @@ class Protocol extends _is.DatabaseSerializationManager
     }
     if (dataClassName == 'Greeting') {
       return deserialize<_izw8z7ou.Greeting>(data['data']);
+    }
+    if (dataClassName == 'HelpRequest') {
+      return deserialize<_i2hcnfb8.HelpRequest>(data['data']);
+    }
+    if (dataClassName == 'RequestComment') {
+      return deserialize<_il3090nm.RequestComment>(data['data']);
+    }
+    if (dataClassName == 'RequestRating') {
+      return deserialize<_ivm2zgp6.RequestRating>(data['data']);
+    }
+    if (dataClassName == 'UserProfile') {
+      return deserialize<_i2208dl4.UserProfile>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
@@ -178,6 +505,16 @@ class Protocol extends _is.DatabaseSerializationManager
       if (table != null) {
         return table;
       }
+    }
+    switch (t) {
+      case _i2hcnfb8.HelpRequest:
+        return _i2hcnfb8.HelpRequest.t;
+      case _il3090nm.RequestComment:
+        return _il3090nm.RequestComment.t;
+      case _ivm2zgp6.RequestRating:
+        return _ivm2zgp6.RequestRating.t;
+      case _i2208dl4.UserProfile:
+        return _i2208dl4.UserProfile.t;
     }
     return null;
   }
