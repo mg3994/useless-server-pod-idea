@@ -22,6 +22,10 @@ import 'package:website_client/src/protocol/helphub/help_request.dart'
     as _ilm5roly;
 import 'package:website_client/src/protocol/helphub/request_comment.dart'
     as _iq4ufam1;
+import 'package:website_client/src/protocol/helphub/request_rating.dart'
+    as _ib2k1m8u;
+import 'package:website_client/src/protocol/helphub/user_notification.dart'
+    as _ihs35lap;
 import 'package:website_client/src/protocol/helphub/user_profile.dart'
     as _if5f0yyd;
 import 'greetings/greeting.dart' as _izw8z7ou;
@@ -29,12 +33,14 @@ import 'helphub/community_announcement.dart' as _iw40l365;
 import 'helphub/help_request.dart' as _i2hcnfb8;
 import 'helphub/request_comment.dart' as _il3090nm;
 import 'helphub/request_rating.dart' as _ivm2zgp6;
+import 'helphub/user_notification.dart' as _inwdejad;
 import 'helphub/user_profile.dart' as _i2208dl4;
 export 'greetings/greeting.dart';
 export 'helphub/community_announcement.dart';
 export 'helphub/help_request.dart';
 export 'helphub/request_comment.dart';
 export 'helphub/request_rating.dart';
+export 'helphub/user_notification.dart';
 export 'helphub/user_profile.dart';
 export 'client.dart';
 
@@ -87,6 +93,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _ivm2zgp6.RequestRating) {
       return _ivm2zgp6.RequestRating.fromJson(data) as T;
     }
+    if (t == _inwdejad.UserNotification) {
+      return _inwdejad.UserNotification.fromJson(data) as T;
+    }
     if (t == _i2208dl4.UserProfile) {
       return _i2208dl4.UserProfile.fromJson(data) as T;
     }
@@ -110,6 +119,10 @@ class Protocol extends _isc.SerializationManager {
       return (data != null ? _ivm2zgp6.RequestRating.fromJson(data) : null)
           as T;
     }
+    if (t == _isc.getType<_inwdejad.UserNotification?>()) {
+      return (data != null ? _inwdejad.UserNotification.fromJson(data) : null)
+          as T;
+    }
     if (t == _isc.getType<_i2208dl4.UserProfile?>()) {
       return (data != null ? _i2208dl4.UserProfile.fromJson(data) : null) as T;
     }
@@ -122,6 +135,18 @@ class Protocol extends _isc.SerializationManager {
     if (t == List<_iq4ufam1.RequestComment>) {
       return (data as List)
               .map((e) => deserialize<_iq4ufam1.RequestComment>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_ib2k1m8u.RequestRating>) {
+      return (data as List)
+              .map((e) => deserialize<_ib2k1m8u.RequestRating>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_ihs35lap.UserNotification>) {
+      return (data as List)
+              .map((e) => deserialize<_ihs35lap.UserNotification>(e))
               .toList()
           as T;
     }
@@ -153,6 +178,7 @@ class Protocol extends _isc.SerializationManager {
       _i2hcnfb8.HelpRequest => 'HelpRequest',
       _il3090nm.RequestComment => 'RequestComment',
       _ivm2zgp6.RequestRating => 'RequestRating',
+      _inwdejad.UserNotification => 'UserNotification',
       _i2208dl4.UserProfile => 'UserProfile',
       _ => null,
     };
@@ -178,6 +204,8 @@ class Protocol extends _isc.SerializationManager {
         return 'RequestComment';
       case _ivm2zgp6.RequestRating():
         return 'RequestRating';
+      case _inwdejad.UserNotification():
+        return 'UserNotification';
       case _i2208dl4.UserProfile():
         return 'UserProfile';
     }
@@ -216,6 +244,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'RequestRating') {
       return deserialize<_ivm2zgp6.RequestRating>(data['data']);
+    }
+    if (dataClassName == 'UserNotification') {
+      return deserialize<_inwdejad.UserNotification>(data['data']);
     }
     if (dataClassName == 'UserProfile') {
       return deserialize<_i2208dl4.UserProfile>(data['data']);

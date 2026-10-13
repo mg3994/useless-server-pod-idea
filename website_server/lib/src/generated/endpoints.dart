@@ -384,6 +384,32 @@ class Endpoints extends _is.EndpointDispatch {
                         creatorEmail: params['creatorEmail'],
                       ),
         ),
+        'boostRewardPoints': _is.MethodConnector(
+          name: 'boostRewardPoints',
+          params: {
+            'requestId': _is.ParameterDescription(
+              name: 'requestId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'boostAmount': _is.ParameterDescription(
+              name: 'boostAmount',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .boostRewardPoints(
+                        session,
+                        requestId: params['requestId'],
+                        boostAmount: params['boostAmount'],
+                      ),
+        ),
         'claimHelpRequest': _is.MethodConnector(
           name: 'claimHelpRequest',
           params: {
@@ -564,6 +590,66 @@ class Endpoints extends _is.EndpointDispatch {
                         toUserId: params['toUserId'],
                         rating: params['rating'],
                         feedback: params['feedback'],
+                      ),
+        ),
+        'getHelperRatings': _is.MethodConnector(
+          name: 'getHelperRatings',
+          params: {
+            'toUserId': _is.ParameterDescription(
+              name: 'toUserId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getHelperRatings(
+                        session,
+                        toUserId: params['toUserId'],
+                      ),
+        ),
+        'getUserNotifications': _is.MethodConnector(
+          name: 'getUserNotifications',
+          params: {
+            'userEmail': _is.ParameterDescription(
+              name: 'userEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getUserNotifications(
+                        session,
+                        userEmail: params['userEmail'],
+                      ),
+        ),
+        'markNotificationRead': _is.MethodConnector(
+          name: 'markNotificationRead',
+          params: {
+            'notificationId': _is.ParameterDescription(
+              name: 'notificationId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .markNotificationRead(
+                        session,
+                        notificationId: params['notificationId'],
                       ),
         ),
         'getLeaderboard': _is.MethodConnector(

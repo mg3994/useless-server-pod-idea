@@ -8,3 +8,6 @@ fields:
   completedCount: int
   requestedCount: int
   avatarBadge: String
+  ratingAverage: double?
+  ratingCount: int?
+  skills: String?

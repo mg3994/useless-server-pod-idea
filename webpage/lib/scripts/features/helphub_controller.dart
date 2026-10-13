@@ -13,6 +13,8 @@ class HelpHubController {
   bool emergencyOnly = false;
 
   int? activeCommentsRequestId;
+  int? activeRatingRequestId;
+  int? activeRatingToUserId;
 
   HelpHubController(this.client);
 
@@ -22,6 +24,7 @@ class HelpHubController {
     loadAnnouncements();
     loadLeaderboard();
     loadHelpRequests();
+    loadNotifications();
   }
 
   void _bindEvents() {
@@ -46,6 +49,47 @@ class HelpHubController {
           emergencyBtn.classList.remove('text-white');
         }
         loadHelpRequests();
+      }).toJS,
+    );
+
+    // Open notification modal
+    final notifBtn = web.document.querySelector('#notifications-bell-btn');
+    notifBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        _openNotificationsModal();
+      }).toJS,
+    );
+
+    final closeNotifBtn = web.document.querySelector('#close-notif-modal-btn');
+    closeNotifBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        _toggleModal('notifications-modal', show: false);
+      }).toJS,
+    );
+
+    // Close rating modal
+    final closeRatingBtn = web.document.querySelector(
+      '#close-rating-modal-btn',
+    );
+    closeRatingBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        _toggleModal('rating-modal', show: false);
+      }).toJS,
+    );
+
+    // Submit rating
+    final submitRatingBtn = web.document.querySelector('#submit-rating-btn');
+    submitRatingBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        _submitRating();
       }).toJS,
     );
 
@@ -173,6 +217,24 @@ class HelpHubController {
           .requestedCount
           .toString();
 
+      final ratingAvg = profile.ratingAverage ?? 5.0;
+      web.document.querySelector('#profile-rating-badge')?.textContent =
+          '⭐ ${ratingAvg.toStringAsFixed(1)}';
+
+      // Update skills tags
+      final skillsContainer = web.document.querySelector(
+        '#profile-skills-tags',
+      );
+      if (skillsContainer != null && profile.skills != null) {
+        skillsContainer.textContent = '';
+        final skillsList = profile.skills!.split(',');
+        for (final skill in skillsList) {
+          final tagHtml =
+              '<span class="text-[10px] px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 rounded-md font-semibold border border-indigo-200 dark:border-indigo-800">${_escapeHtml(skill.trim())}</span>';
+          (skillsContainer as dynamic).insertAdjacentHTML('beforeend', tagHtml);
+        }
+      }
+
       // Update milestone progress bar
       final done = profile.completedCount;
       int target = 5;
@@ -194,6 +256,81 @@ class HelpHubController {
       }
     } catch (e) {
       // Fallback display
+    }
+  }
+
+  Future<void> loadNotifications() async {
+    try {
+      final userEmailEl = web.document.querySelector('#user-email');
+      final email = userEmailEl?.textContent ?? 'guest@helphub.com';
+
+      final notifications = await client.helpRequest.getUserNotifications(
+        userEmail: email,
+      );
+
+      final unreadCount = notifications.where((n) => !n.isRead).length;
+      final badgeEl = web.document.querySelector('#notif-badge-count');
+      if (badgeEl != null) {
+        if (unreadCount > 0) {
+          badgeEl.textContent = unreadCount.toString();
+          badgeEl.classList.remove('hidden');
+        } else {
+          badgeEl.classList.add('hidden');
+        }
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+
+  Future<void> _openNotificationsModal() async {
+    _toggleModal('notifications-modal', show: true);
+    final container = web.document.querySelector(
+      '#notifications-list-container',
+    );
+    if (container == null) return;
+
+    try {
+      final userEmailEl = web.document.querySelector('#user-email');
+      final email = userEmailEl?.textContent ?? 'guest@helphub.com';
+
+      final notifications = await client.helpRequest.getUserNotifications(
+        userEmail: email,
+      );
+
+      container.textContent = '';
+
+      if (notifications.isEmpty) {
+        (container as dynamic).insertAdjacentHTML(
+          'beforeend',
+          '<p class="text-xs text-surface-400 text-center py-4">No notifications yet.</p>',
+        );
+        return;
+      }
+
+      for (final notif in notifications) {
+        final notifHtml =
+            '''
+          <div class="p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200/60 dark:border-surface-700/60 flex flex-col gap-1">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-indigo-900 dark:text-indigo-200">${_escapeHtml(notif.title)}</span>
+              <span class="text-[10px] text-surface-400">Just now</span>
+            </div>
+            <p class="text-xs text-surface-600 dark:text-surface-300">${_escapeHtml(notif.message)}</p>
+          </div>
+        ''';
+        (container as dynamic).insertAdjacentHTML('beforeend', notifHtml);
+
+        if (!notif.isRead && notif.id != null) {
+          await client.helpRequest.markNotificationRead(
+            notificationId: notif.id!,
+          );
+        }
+      }
+
+      loadNotifications();
+    } catch (e) {
+      // Ignore
     }
   }
 
@@ -240,12 +377,17 @@ class HelpHubController {
       for (var i = 0; i < topUsers.length; i++) {
         final u = topUsers[i];
         final rank = '#${i + 1}';
+        final ratingAvg = u.ratingAverage ?? 5.0;
+
         final cardHtml =
             '''
           <div class="p-3 rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 flex items-center gap-3 shadow-sm">
             <span class="text-base font-black text-amber-500">$rank</span>
             <div class="flex-1">
-              <h4 class="text-sm font-bold text-surface-900 dark:text-white">${_escapeHtml(u.displayName)}</h4>
+              <div class="flex items-center gap-1.5">
+                <h4 class="text-sm font-bold text-surface-900 dark:text-white">${_escapeHtml(u.displayName)}</h4>
+                <span class="text-[10px] text-amber-500 font-bold">⭐ ${ratingAvg.toStringAsFixed(1)}</span>
+              </div>
               <p class="text-xs text-indigo-600 dark:text-indigo-400 font-medium">${_escapeHtml(u.avatarBadge)}</p>
             </div>
             <span class="text-xs font-extrabold text-amber-500">${u.points} pts</span>
@@ -290,7 +432,7 @@ class HelpHubController {
 
       _bindCardActionButtons();
     } catch (e) {
-      // Keep static cards on fail
+      // Ignore
     }
   }
 
@@ -323,9 +465,14 @@ class HelpHubController {
     if (req.status == 'Open') {
       actionButtonHtml =
           '''
-        <button class="claim-btn px-4 py-1.5 text-xs font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors" data-id="${req.id}">
-          Claim Request
-        </button>
+        <div class="flex items-center gap-1">
+          <button class="boost-btn px-2.5 py-1 text-[11px] font-bold rounded-lg text-indigo-600 bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition-colors" data-id="${req.id}">
+            🪙 Boost +10
+          </button>
+          <button class="claim-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors" data-id="${req.id}">
+            Claim
+          </button>
+        </div>
       ''';
     } else if (req.status == 'In Progress') {
       actionButtonHtml =
@@ -338,10 +485,12 @@ class HelpHubController {
       actionButtonHtml =
           '''
         <div class="flex items-center gap-1.5">
-          <button class="tip-btn px-2.5 py-1 text-[11px] font-bold rounded-lg text-amber-600 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 transition-colors" data-helper-id="${req.helperUserId}">
-            🎁 Tip Helper
+          <button class="rate-btn px-2.5 py-1 text-[11px] font-bold rounded-lg text-indigo-600 bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition-colors" data-id="${req.id}" data-helper-id="${req.helperUserId}">
+            ⭐ Rate
           </button>
-          <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400">Done ✓</span>
+          <button class="tip-btn px-2.5 py-1 text-[11px] font-bold rounded-lg text-amber-600 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 transition-colors" data-helper-id="${req.helperUserId}">
+            🎁 Tip
+          </button>
         </div>
       ''';
     }
@@ -381,6 +530,28 @@ class HelpHubController {
   }
 
   void _bindCardActionButtons() {
+    final boostBtns = web.document.querySelectorAll('.boost-btn');
+    for (var i = 0; i < boostBtns.length; i++) {
+      final btn = boostBtns.item(i) as web.HTMLElement?;
+      btn?.addEventListener(
+        'click',
+        ((web.Event e) {
+          final idStr = btn.getAttribute('data-id');
+          if (idStr != null) {
+            final id = int.tryParse(idStr);
+            if (id != null) {
+              client.helpRequest
+                  .boostRewardPoints(requestId: id, boostAmount: 10)
+                  .then((_) {
+                    loadHelpRequests();
+                    loadNotifications();
+                  });
+            }
+          }
+        }).toJS,
+      );
+    }
+
     final claimBtns = web.document.querySelectorAll('.claim-btn');
     for (var i = 0; i < claimBtns.length; i++) {
       final btn = claimBtns.item(i) as web.HTMLElement?;
@@ -400,6 +571,7 @@ class HelpHubController {
                     loadHelpRequests();
                     loadUserProfile();
                     loadLeaderboard();
+                    loadNotifications();
                   });
             }
           }
@@ -421,8 +593,26 @@ class HelpHubController {
                 loadHelpRequests();
                 loadUserProfile();
                 loadLeaderboard();
+                loadNotifications();
               });
             }
+          }
+        }).toJS,
+      );
+    }
+
+    final rateBtns = web.document.querySelectorAll('.rate-btn');
+    for (var i = 0; i < rateBtns.length; i++) {
+      final btn = rateBtns.item(i) as web.HTMLElement?;
+      btn?.addEventListener(
+        'click',
+        ((web.Event e) {
+          final idStr = btn.getAttribute('data-id');
+          final helperIdStr = btn.getAttribute('data-helper-id');
+          if (idStr != null && helperIdStr != null) {
+            activeRatingRequestId = int.tryParse(idStr);
+            activeRatingToUserId = int.tryParse(helperIdStr);
+            _toggleModal('rating-modal', show: true);
           }
         }).toJS,
       );
@@ -445,6 +635,7 @@ class HelpHubController {
                       'Tipped 15 bonus points to the helper! 🎁',
                     );
                     loadLeaderboard();
+                    loadNotifications();
                   });
             }
           }
@@ -468,6 +659,36 @@ class HelpHubController {
           }
         }).toJS,
       );
+    }
+  }
+
+  Future<void> _submitRating() async {
+    if (activeRatingRequestId == null || activeRatingToUserId == null) return;
+
+    final selectEl = web.document.querySelector(
+      '#rating-score-select',
+    ) as web.HTMLSelectElement?;
+    final feedbackEl = web.document.querySelector(
+      '#rating-feedback-input',
+    ) as web.HTMLTextAreaElement?;
+
+    final rating = int.tryParse(selectEl?.value ?? '5') ?? 5;
+    final feedback = feedbackEl?.value.trim();
+
+    try {
+      await client.helpRequest.submitRating(
+        requestId: activeRatingRequestId!,
+        toUserId: activeRatingToUserId!,
+        rating: rating,
+        feedback: feedback,
+      );
+
+      web.window.alert('Thank you! Rating submitted successfully. ⭐');
+      _toggleModal('rating-modal', show: false);
+      await loadUserProfile();
+      await loadLeaderboard();
+    } catch (e) {
+      web.window.alert('Failed to submit rating.');
     }
   }
 
@@ -532,6 +753,7 @@ class HelpHubController {
 
       if (inputEl != null) inputEl.value = '';
       await _loadCommentsList(activeCommentsRequestId!);
+      await loadNotifications();
     } catch (e) {
       web.window.alert('Failed to post comment.');
     }
@@ -588,6 +810,7 @@ class HelpHubController {
       await loadHelpRequests();
       await loadUserProfile();
       await loadLeaderboard();
+      await loadNotifications();
     } catch (e) {
       web.window.alert('Failed to publish request. Please try again.');
     }

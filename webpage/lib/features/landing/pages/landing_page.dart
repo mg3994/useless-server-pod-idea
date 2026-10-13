@@ -77,10 +77,30 @@ Component navbar() {
             ],
           ),
 
-          // Right side — auth actions & dark mode
+          // Right side — auth actions, notifications & dark mode
           div(
             {'class': 'flex items-center gap-3'},
             [
+              // Notifications Bell Button
+              button(
+                {
+                  'id': 'notifications-bell-btn',
+                  'class': 'p-2 rounded-lg text-surface-500 hover:text-surface-900 dark:hover:text-white hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors relative cursor-pointer',
+                  'type': 'button',
+                  'title': 'Notifications',
+                },
+                [
+                  span({'class': 'text-lg'}, [Text('🔔')]),
+                  span(
+                    {
+                      'id': 'notif-badge-count',
+                      'class': 'absolute -top-1 -right-1 bg-rose-600 text-white text-[10px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center hidden',
+                    },
+                    [Text('0')],
+                  ),
+                ],
+              ),
+
               button(
                 {
                   'id': 'dark-mode-toggle',
@@ -296,12 +316,24 @@ Component landingHero() {
                     ],
                   ),
                   div([
-                    h3(
-                      {
-                        'id': 'profile-name',
-                        'class': 'text-base font-bold text-surface-900 dark:text-white',
-                      },
-                      [Text('Guest User')],
+                    div(
+                      {'class': 'flex items-center gap-2'},
+                      [
+                        h3(
+                          {
+                            'id': 'profile-name',
+                            'class': 'text-base font-bold text-surface-900 dark:text-white',
+                          },
+                          [Text('Guest User')],
+                        ),
+                        span(
+                          {
+                            'id': 'profile-rating-badge',
+                            'class': 'text-xs font-bold text-amber-500 bg-amber-50 dark:bg-amber-950/50 px-2 py-0.5 rounded-md border border-amber-200 dark:border-amber-800',
+                          },
+                          [Text('⭐ 5.0')],
+                        ),
+                      ],
                     ),
                     p(
                       {
@@ -309,6 +341,20 @@ Component landingHero() {
                         'class': 'text-xs text-indigo-600 dark:text-indigo-400 font-medium',
                       },
                       [Text('🌱 Community Rookie')],
+                    ),
+                    div(
+                      {
+                        'id': 'profile-skills-tags',
+                        'class': 'flex flex-wrap gap-1 mt-1',
+                      },
+                      [
+                        span(
+                          {
+                            'class': 'text-[10px] px-1.5 py-0.5 bg-surface-100 dark:bg-surface-800 rounded font-medium text-surface-600 dark:text-surface-300',
+                          },
+                          [Text('🛠️ General')],
+                        ),
+                      ],
                     ),
                   ]),
                 ],
@@ -432,43 +478,10 @@ Component landingHero() {
                   ),
                 ],
               ),
-              div(
-                {
-                  'id': 'leaderboard-container',
-                  'class':
-                      'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3',
-                },
-                [
-                  div(
-                    {
-                      'class': 'p-3 rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 flex items-center gap-3',
-                    },
-                    [
-                      span(
-                        {'class': 'text-lg font-black text-amber-500'},
-                        [Text('#1')],
-                      ),
-                      div(
-                        {'class': 'flex-1'},
-                        [
-                          h4(
-                            {'class': 'text-sm font-bold'},
-                            [Text('Alex Rivers')],
-                          ),
-                          p(
-                            {'class': 'text-xs text-surface-500'},
-                            [Text('⚡ Community Hero')],
-                          ),
-                        ],
-                      ),
-                      span(
-                        {'class': 'text-xs font-bold text-amber-500'},
-                        [Text('340 pts')],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+              div({
+                'id': 'leaderboard-container',
+                'class': 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3',
+              }, []),
             ],
           ),
         ],
@@ -576,48 +589,10 @@ Component landingHero() {
           ),
 
           // Requests Grid Container
-          div(
-            {
-              'id': 'requests-container',
-              'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5',
-            },
-            [
-              // Default Initial Card Skeleton / Samples
-              _sampleCard(
-                title: 'Borrow a High-Temp Glue Gun',
-                category: '🛠️ Borrow Item',
-                location: 'Dorm Block B, Room 304',
-                urgency: 'Medium',
-                points: 20,
-                status: 'Open',
-                creator: 'alex@campus.edu',
-                description: 'Need a glue gun for 2 hours to fix a design project prototype tonight.',
-                id: 1,
-              ),
-              _sampleCard(
-                title: 'Quick Grocery Pickup from Target',
-                category: '🛵 Errand & Delivery',
-                location: 'North Campus Quad',
-                urgency: 'Urgent',
-                points: 40,
-                status: 'Open',
-                creator: 'maria@campus.edu',
-                description: 'Super sick and need someone to pick up milk and cough medicine.',
-                id: 2,
-              ),
-              _sampleCard(
-                title: 'Cal 2 Integration Homework Help',
-                category: '📚 Tutoring & Study',
-                location: 'Library 2nd Floor',
-                urgency: 'Low',
-                points: 35,
-                status: 'In Progress',
-                creator: 'david@campus.edu',
-                description: 'Stuck on partial fractions problem set. 30 mins explanation needed!',
-                id: 3,
-              ),
-            ],
-          ),
+          div({
+            'id': 'requests-container',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5',
+          }, []),
         ],
       ),
 
@@ -626,101 +601,12 @@ Component landingHero() {
 
       // Modal Dialog for Comments
       _commentsModal(),
-    ],
-  );
-}
 
-Component _sampleCard({
-  required String title,
-  required String category,
-  required String location,
-  required String urgency,
-  required int points,
-  required String status,
-  required String creator,
-  required String description,
-  required int id,
-}) {
-  String urgencyBg =
-      'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300';
-  if (urgency == 'Urgent') {
-    urgencyBg =
-        'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300';
-  } else if (urgency == 'Low') {
-    urgencyBg =
-        'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300';
-  }
+      // Modal Dialog for Notifications
+      _notificationsModal(),
 
-  return div(
-    {
-      'class': 'bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between gap-4',
-    },
-    [
-      div([
-        div(
-          {'class': 'flex items-center justify-between gap-2 mb-2'},
-          [
-            span(
-              {
-                'class': 'text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400',
-              },
-              [Text(category)],
-            ),
-            span(
-              {
-                'class':
-                    'text-xs font-semibold px-2 py-0.5 rounded-full $urgencyBg',
-              },
-              [Text(urgency)],
-            ),
-          ],
-        ),
-        h3(
-          {
-            'class': 'text-lg font-bold text-surface-900 dark:text-white mb-1 leading-snug',
-          },
-          [Text(title)],
-        ),
-        p(
-          {
-            'class': 'text-xs text-surface-500 dark:text-surface-400 mb-3 flex items-center gap-1',
-          },
-          [
-            span({'class': 'text-sm'}, [Text('📍')]),
-            Text(location),
-          ],
-        ),
-        p(
-          {
-            'class': 'text-sm text-surface-600 dark:text-surface-300 line-clamp-3 mb-4',
-          },
-          [Text(description)],
-        ),
-      ]),
-      div(
-        {
-          'class': 'pt-3 border-t border-surface-100 dark:border-surface-800 flex items-center justify-between',
-        },
-        [
-          div(
-            {
-              'class':
-                  'flex items-center gap-1 text-amber-500 font-bold text-sm',
-            },
-            [
-              span({'class': 'text-base'}, [Text('🪙')]),
-              Text('+$points pts'),
-            ],
-          ),
-          button(
-            {
-              'class': 'claim-btn px-4 py-1.5 text-xs font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors',
-              'data-id': '$id',
-            },
-            [Text('Claim Request')],
-          ),
-        ],
-      ),
+      // Modal Dialog for Rating
+      _ratingModal(),
     ],
   );
 }
@@ -952,18 +838,10 @@ Component _commentsModal() {
             [Text('Ask questions or offer specific help details below.')],
           ),
 
-          div(
-            {
-              'id': 'comments-list-container',
-              'class': 'flex-1 overflow-y-auto my-3 space-y-3 min-h-[160px] max-h-[300px] border-y border-surface-100 dark:border-surface-800 py-3',
-            },
-            [
-              p(
-                {'class': 'text-xs text-surface-400 text-center py-4'},
-                [Text('No comments yet. Start the conversation!')],
-              ),
-            ],
-          ),
+          div({
+            'id': 'comments-list-container',
+            'class': 'flex-1 overflow-y-auto my-3 space-y-3 min-h-[160px] max-h-[300px] border-y border-surface-100 dark:border-surface-800 py-3',
+          }, []),
 
           div(
             {'class': 'mt-3 flex gap-2'},
@@ -983,6 +861,120 @@ Component _commentsModal() {
                 [Text('Send')],
               ),
             ],
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+Component _notificationsModal() {
+  return div(
+    {
+      'id': 'notifications-modal',
+      'class': 'fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden',
+    },
+    [
+      div(
+        {
+          'class': 'bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative flex flex-col max-h-[80vh]',
+        },
+        [
+          button(
+            {
+              'id': 'close-notif-modal-btn',
+              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold',
+            },
+            [Text('✕')],
+          ),
+          h2(
+            {
+              'class': 'text-xl font-bold text-surface-900 dark:text-white mb-1 flex items-center gap-2',
+            },
+            [
+              span({'class': 'text-xl'}, [Text('🔔')]),
+              Text('Notifications Feed'),
+            ],
+          ),
+          p(
+            {'class': 'text-xs text-surface-500 dark:text-surface-400 mb-4'},
+            [Text('Updates regarding your posted and claimed favor requests.')],
+          ),
+
+          div({
+            'id': 'notifications-list-container',
+            'class': 'flex-1 overflow-y-auto my-2 space-y-2.5 min-h-[180px] max-h-[350px] border-y border-surface-100 dark:border-surface-800 py-3',
+          }, []),
+        ],
+      ),
+    ],
+  );
+}
+
+Component _ratingModal() {
+  return div(
+    {
+      'id': 'rating-modal',
+      'class': 'fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden',
+    },
+    [
+      div(
+        {
+          'class': 'bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center',
+        },
+        [
+          button(
+            {
+              'id': 'close-rating-modal-btn',
+              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold',
+            },
+            [Text('✕')],
+          ),
+          div({'class': 'text-4xl mb-2'}, [Text('⭐')]),
+          h2(
+            {
+              'class':
+                  'text-lg font-bold text-surface-900 dark:text-white mb-1',
+            },
+            [Text('Rate Helper Performance')],
+          ),
+          p(
+            {'class': 'text-xs text-surface-500 dark:text-surface-400 mb-4'},
+            [
+              Text(
+                'Your feedback helps maintain trust in the HelpHub network.',
+              ),
+            ],
+          ),
+
+          select(
+            {
+              'id': 'rating-score-select',
+              'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500 mb-3',
+            },
+            [
+              option({'value': '5'}, [Text('⭐⭐⭐⭐⭐ (5/5) Excellent')]),
+              option({'value': '4'}, [Text('⭐⭐⭐⭐ (4/5) Very Good')]),
+              option({'value': '3'}, [Text('⭐⭐⭐ (3/5) Average')]),
+              option({'value': '2'}, [Text('⭐⭐ (2/5) Below Average')]),
+              option({'value': '1'}, [Text('⭐ (1/5) Poor')]),
+            ],
+          ),
+
+          textarea({
+            'id': 'rating-feedback-input',
+            'rows': '2',
+            'placeholder': 'Optional review feedback...',
+            'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500 mb-4',
+          }, []),
+
+          button(
+            {
+              'id': 'submit-rating-btn',
+              'type': 'button',
+              'class': 'w-full py-2.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md',
+            },
+            [Text('Submit Rating')],
           ),
         ],
       ),

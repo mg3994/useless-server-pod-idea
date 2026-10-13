@@ -23,6 +23,10 @@ import 'package:website_server/src/generated/helphub/help_request.dart'
     as _i62gi6d1;
 import 'package:website_server/src/generated/helphub/request_comment.dart'
     as _itygqzxa;
+import 'package:website_server/src/generated/helphub/request_rating.dart'
+    as _iopw990x;
+import 'package:website_server/src/generated/helphub/user_notification.dart'
+    as _irisjcz6;
 import 'package:website_server/src/generated/helphub/user_profile.dart'
     as _ivj3h5rp;
 import 'greetings/greeting.dart' as _izw8z7ou;
@@ -30,12 +34,14 @@ import 'helphub/community_announcement.dart' as _iw40l365;
 import 'helphub/help_request.dart' as _i2hcnfb8;
 import 'helphub/request_comment.dart' as _il3090nm;
 import 'helphub/request_rating.dart' as _ivm2zgp6;
+import 'helphub/user_notification.dart' as _inwdejad;
 import 'helphub/user_profile.dart' as _i2208dl4;
 export 'greetings/greeting.dart';
 export 'helphub/community_announcement.dart';
 export 'helphub/help_request.dart';
 export 'helphub/request_comment.dart';
 export 'helphub/request_rating.dart';
+export 'helphub/user_notification.dart';
 export 'helphub/user_profile.dart';
 
 class Protocol extends _is.DatabaseSerializationManager {
@@ -305,6 +311,60 @@ class Protocol extends _is.DatabaseSerializationManager {
       managed: true,
     ),
     _isp.TableDefinition(
+      name: 'user_notification',
+      dartName: 'UserNotification',
+      schema: 'public',
+      module: 'website',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'recipientEmail',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'title',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'message',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'requestId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'isRead',
+          columnType: _isp.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
+    _isp.TableDefinition(
       name: 'user_profile',
       dartName: 'UserProfile',
       schema: 'public',
@@ -359,6 +419,24 @@ class Protocol extends _is.DatabaseSerializationManager {
           isNullable: false,
           dartType: 'String',
         ),
+        _isp.ColumnDefinition(
+          name: 'ratingAverage',
+          columnType: _isp.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'ratingCount',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'skills',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
       ],
       foreignKeys: [],
       indexes: [],
@@ -411,6 +489,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _ivm2zgp6.RequestRating) {
       return _ivm2zgp6.RequestRating.fromJson(data) as T;
     }
+    if (t == _inwdejad.UserNotification) {
+      return _inwdejad.UserNotification.fromJson(data) as T;
+    }
     if (t == _i2208dl4.UserProfile) {
       return _i2208dl4.UserProfile.fromJson(data) as T;
     }
@@ -434,6 +515,10 @@ class Protocol extends _is.DatabaseSerializationManager {
       return (data != null ? _ivm2zgp6.RequestRating.fromJson(data) : null)
           as T;
     }
+    if (t == _is.getType<_inwdejad.UserNotification?>()) {
+      return (data != null ? _inwdejad.UserNotification.fromJson(data) : null)
+          as T;
+    }
     if (t == _is.getType<_i2208dl4.UserProfile?>()) {
       return (data != null ? _i2208dl4.UserProfile.fromJson(data) : null) as T;
     }
@@ -446,6 +531,18 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == List<_itygqzxa.RequestComment>) {
       return (data as List)
               .map((e) => deserialize<_itygqzxa.RequestComment>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_iopw990x.RequestRating>) {
+      return (data as List)
+              .map((e) => deserialize<_iopw990x.RequestRating>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_irisjcz6.UserNotification>) {
+      return (data as List)
+              .map((e) => deserialize<_irisjcz6.UserNotification>(e))
               .toList()
           as T;
     }
@@ -480,6 +577,7 @@ class Protocol extends _is.DatabaseSerializationManager {
       _i2hcnfb8.HelpRequest => 'HelpRequest',
       _il3090nm.RequestComment => 'RequestComment',
       _ivm2zgp6.RequestRating => 'RequestRating',
+      _inwdejad.UserNotification => 'UserNotification',
       _i2208dl4.UserProfile => 'UserProfile',
       _ => null,
     };
@@ -505,6 +603,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'RequestComment';
       case _ivm2zgp6.RequestRating():
         return 'RequestRating';
+      case _inwdejad.UserNotification():
+        return 'UserNotification';
       case _i2208dl4.UserProfile():
         return 'UserProfile';
     }
@@ -547,6 +647,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'RequestRating') {
       return deserialize<_ivm2zgp6.RequestRating>(data['data']);
+    }
+    if (dataClassName == 'UserNotification') {
+      return deserialize<_inwdejad.UserNotification>(data['data']);
     }
     if (dataClassName == 'UserProfile') {
       return deserialize<_i2208dl4.UserProfile>(data['data']);
@@ -600,6 +703,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return _il3090nm.RequestComment.t;
       case _ivm2zgp6.RequestRating:
         return _ivm2zgp6.RequestRating.t;
+      case _inwdejad.UserNotification:
+        return _inwdejad.UserNotification.t;
       case _i2208dl4.UserProfile:
         return _i2208dl4.UserProfile.t;
     }

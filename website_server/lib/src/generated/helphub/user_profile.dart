@@ -23,6 +23,9 @@ abstract class UserProfile
     required this.completedCount,
     required this.requestedCount,
     required this.avatarBadge,
+    this.ratingAverage,
+    this.ratingCount,
+    this.skills,
   });
 
   factory UserProfile({
@@ -34,6 +37,9 @@ abstract class UserProfile
     required int completedCount,
     required int requestedCount,
     required String avatarBadge,
+    double? ratingAverage,
+    int? ratingCount,
+    String? skills,
   }) = _UserProfileImpl;
 
   factory UserProfile.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -46,6 +52,9 @@ abstract class UserProfile
       completedCount: jsonSerialization['completedCount'] as int,
       requestedCount: jsonSerialization['requestedCount'] as int,
       avatarBadge: jsonSerialization['avatarBadge'] as String,
+      ratingAverage: (jsonSerialization['ratingAverage'] as num?)?.toDouble(),
+      ratingCount: jsonSerialization['ratingCount'] as int?,
+      skills: jsonSerialization['skills'] as String?,
     );
   }
 
@@ -70,6 +79,12 @@ abstract class UserProfile
 
   String avatarBadge;
 
+  double? ratingAverage;
+
+  int? ratingCount;
+
+  String? skills;
+
   @override
   _is.Table<int?> get table => t;
 
@@ -85,6 +100,9 @@ abstract class UserProfile
     int? completedCount,
     int? requestedCount,
     String? avatarBadge,
+    double? ratingAverage,
+    int? ratingCount,
+    String? skills,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -98,6 +116,9 @@ abstract class UserProfile
       'completedCount': completedCount,
       'requestedCount': requestedCount,
       'avatarBadge': avatarBadge,
+      if (ratingAverage != null) 'ratingAverage': ratingAverage,
+      if (ratingCount != null) 'ratingCount': ratingCount,
+      if (skills != null) 'skills': skills,
     };
   }
 
@@ -113,6 +134,9 @@ abstract class UserProfile
       'completedCount': completedCount,
       'requestedCount': requestedCount,
       'avatarBadge': avatarBadge,
+      if (ratingAverage != null) 'ratingAverage': ratingAverage,
+      if (ratingCount != null) 'ratingCount': ratingCount,
+      if (skills != null) 'skills': skills,
     };
   }
 
@@ -156,6 +180,9 @@ class _UserProfileImpl extends UserProfile {
     required int completedCount,
     required int requestedCount,
     required String avatarBadge,
+    double? ratingAverage,
+    int? ratingCount,
+    String? skills,
   }) : super._(
          id: id,
          userId: userId,
@@ -165,6 +192,9 @@ class _UserProfileImpl extends UserProfile {
          completedCount: completedCount,
          requestedCount: requestedCount,
          avatarBadge: avatarBadge,
+         ratingAverage: ratingAverage,
+         ratingCount: ratingCount,
+         skills: skills,
        );
 
   /// Returns a shallow copy of this [UserProfile]
@@ -180,6 +210,9 @@ class _UserProfileImpl extends UserProfile {
     int? completedCount,
     int? requestedCount,
     String? avatarBadge,
+    Object? ratingAverage = _Undefined,
+    Object? ratingCount = _Undefined,
+    Object? skills = _Undefined,
   }) {
     return UserProfile(
       id: id is int? ? id : this.id,
@@ -190,6 +223,11 @@ class _UserProfileImpl extends UserProfile {
       completedCount: completedCount ?? this.completedCount,
       requestedCount: requestedCount ?? this.requestedCount,
       avatarBadge: avatarBadge ?? this.avatarBadge,
+      ratingAverage: ratingAverage is double?
+          ? ratingAverage
+          : this.ratingAverage,
+      ratingCount: ratingCount is int? ? ratingCount : this.ratingCount,
+      skills: skills is String? ? skills : this.skills,
     );
   }
 }
@@ -231,6 +269,22 @@ class UserProfileUpdateTable extends _is.UpdateTable<UserProfileTable> {
     table.avatarBadge,
     value,
   );
+
+  _is.ColumnValue<double, double> ratingAverage(double? value) =>
+      _is.ColumnValue(
+        table.ratingAverage,
+        value,
+      );
+
+  _is.ColumnValue<int, int> ratingCount(int? value) => _is.ColumnValue(
+    table.ratingCount,
+    value,
+  );
+
+  _is.ColumnValue<String, String> skills(String? value) => _is.ColumnValue(
+    table.skills,
+    value,
+  );
 }
 
 class UserProfileTable extends _is.Table<int?> {
@@ -264,6 +318,18 @@ class UserProfileTable extends _is.Table<int?> {
       'avatarBadge',
       this,
     );
+    ratingAverage = _is.ColumnDouble(
+      'ratingAverage',
+      this,
+    );
+    ratingCount = _is.ColumnInt(
+      'ratingCount',
+      this,
+    );
+    skills = _is.ColumnString(
+      'skills',
+      this,
+    );
   }
 
   late final UserProfileUpdateTable updateTable;
@@ -282,6 +348,12 @@ class UserProfileTable extends _is.Table<int?> {
 
   late final _is.ColumnString avatarBadge;
 
+  late final _is.ColumnDouble ratingAverage;
+
+  late final _is.ColumnInt ratingCount;
+
+  late final _is.ColumnString skills;
+
   @override
   List<_is.Column> get columns => [
     id,
@@ -292,6 +364,9 @@ class UserProfileTable extends _is.Table<int?> {
     completedCount,
     requestedCount,
     avatarBadge,
+    ratingAverage,
+    ratingCount,
+    skills,
   ];
 }
 

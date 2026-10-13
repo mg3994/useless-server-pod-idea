@@ -84,6 +84,37 @@ class HelpRequestEndpoint extends Endpoint {
     return inserted;
   }
 
+  /// Boosts reward points for an open request.
+  Future<HelpRequest> boostRewardPoints(
+    Session session, {
+    required int requestId,
+    required int boostAmount,
+  }) async {
+    final request = await HelpRequest.db.findById(session, requestId);
+    if (request == null) {
+      throw Exception('Help request not found');
+    }
+
+    final updated = request.copyWith(
+      rewardPoints: request.rewardPoints + boostAmount,
+      updatedAt: DateTime.now().toUtc(),
+    );
+
+    final saved = await HelpRequest.db.updateRow(session, updated);
+
+    // Notify request creator
+    await _createNotification(
+      session,
+      recipientEmail: saved.creatorEmail,
+      title: '🪙 Favor Reward Boosted!',
+      message:
+          'Your request "${saved.title}" reward was boosted by +$boostAmount pts!',
+      requestId: saved.id,
+    );
+
+    return saved;
+  }
+
   /// Claim a help request as a helper.
   Future<HelpRequest> claimHelpRequest(
     Session session, {
@@ -112,7 +143,19 @@ class HelpRequestEndpoint extends Endpoint {
       updatedAt: DateTime.now().toUtc(),
     );
 
-    return await HelpRequest.db.updateRow(session, updated);
+    final saved = await HelpRequest.db.updateRow(session, updated);
+
+    // Notify request creator
+    await _createNotification(
+      session,
+      recipientEmail: saved.creatorEmail,
+      title: '🤝 Favor Claimed!',
+      message:
+          '${saved.helperEmail} has claimed your request "${saved.title}".',
+      requestId: saved.id,
+    );
+
+    return saved;
   }
 
   /// Mark a help request as completed.
@@ -144,6 +187,16 @@ class HelpRequestEndpoint extends Endpoint {
         helperEmail,
         saved.rewardPoints,
       );
+
+      // Notify helper
+      await _createNotification(
+        session,
+        recipientEmail: helperEmail,
+        title: '🎉 Favor Completed & Rewarded!',
+        message:
+            'You earned +${saved.rewardPoints} pts for completing "${saved.title}"!',
+        requestId: saved.id,
+      );
     }
 
     return saved;
@@ -167,6 +220,14 @@ class HelpRequestEndpoint extends Endpoint {
         points: profile.points + tipAmount,
       );
       await UserProfile.db.updateRow(session, updated);
+
+      await _createNotification(
+        session,
+        recipientEmail: profile.email,
+        title: '🎁 Bonus Tip Received!',
+        message: 'You received a $tipAmount pts tip for your awesome help!',
+      );
+
       return true;
     }
     return false;
@@ -202,6 +263,9 @@ class HelpRequestEndpoint extends Endpoint {
         completedCount: 0,
         requestedCount: 0,
         avatarBadge: '🌱 Community Rookie',
+        ratingAverage: 5.0,
+        ratingCount: 1,
+        skills: 'General, Errands, Tutoring',
       );
       profile = await UserProfile.db.insertRow(session, profile);
     }
@@ -232,7 +296,20 @@ class HelpRequestEndpoint extends Endpoint {
       createdAt: DateTime.now().toUtc(),
     );
 
-    return await RequestComment.db.insertRow(session, comment);
+    final inserted = await RequestComment.db.insertRow(session, comment);
+
+    final request = await HelpRequest.db.findById(session, requestId);
+    if (request != null && request.creatorEmail != authorEmail) {
+      await _createNotification(
+        session,
+        recipientEmail: request.creatorEmail,
+        title: '💬 New Comment on Request',
+        message: '$authorEmail commented: "$content"',
+        requestId: requestId,
+      );
+    }
+
+    return inserted;
   }
 
   /// Gets comments for a specific request.
@@ -271,7 +348,95 @@ class HelpRequestEndpoint extends Endpoint {
       createdAt: DateTime.now().toUtc(),
     );
 
-    return await RequestRating.db.insertRow(session, requestRating);
+    final saved = await RequestRating.db.insertRow(session, requestRating);
+
+    // Recalculate target user's rating average
+    var targetProfile = await UserProfile.db.findFirstRow(
+      session,
+      where: (t) => t.userId.equals(toUserId),
+    );
+
+    if (targetProfile != null) {
+      final currentCount = targetProfile.ratingCount ?? 0;
+      final currentAvg = targetProfile.ratingAverage ?? 5.0;
+      final newCount = currentCount + 1;
+      final newAvg = ((currentAvg * currentCount) + rating) / newCount;
+
+      final updatedProfile = targetProfile.copyWith(
+        ratingAverage: double.parse(newAvg.toStringAsFixed(1)),
+        ratingCount: newCount,
+      );
+      await UserProfile.db.updateRow(session, updatedProfile);
+
+      await _createNotification(
+        session,
+        recipientEmail: targetProfile.email,
+        title: '⭐ New Rating Received!',
+        message: 'You received a $rating-star rating for favor #$requestId!',
+        requestId: requestId,
+      );
+    }
+
+    return saved;
+  }
+
+  /// Gets rating list for a user.
+  Future<List<RequestRating>> getHelperRatings(
+    Session session, {
+    required int toUserId,
+  }) async {
+    final ratings = await RequestRating.db.find(
+      session,
+      where: (t) => t.toUserId.equals(toUserId),
+      orderBy: (t) => t.createdAt,
+    );
+    return ratings;
+  }
+
+  /// Get notifications for a user
+  Future<List<UserNotification>> getUserNotifications(
+    Session session, {
+    required String userEmail,
+  }) async {
+    final notifications = await UserNotification.db.find(
+      session,
+      where: (t) => t.recipientEmail.equals(userEmail),
+      orderBy: (t) => t.createdAt,
+    );
+
+    if (notifications.isEmpty) {
+      // Seed welcome notification
+      final welcomeNotif = UserNotification(
+        recipientEmail: userEmail,
+        title: '👋 Welcome to HelpHub!',
+        message:
+            'Start by browsing neighbor requests or posting your first favor.',
+        isRead: false,
+        createdAt: DateTime.now().toUtc(),
+      );
+      final inserted = await UserNotification.db.insertRow(
+        session,
+        welcomeNotif,
+      );
+      return [inserted];
+    }
+
+    notifications.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return notifications;
+  }
+
+  /// Marks notification as read
+  Future<bool> markNotificationRead(
+    Session session, {
+    required int notificationId,
+  }) async {
+    final notif = await UserNotification.db.findById(session, notificationId);
+    if (notif != null) {
+      final updated = notif.copyWith(isRead: true);
+      await UserNotification.db.updateRow(session, updated);
+      return true;
+    }
+    return false;
   }
 
   /// Fetches top community helpers leaderboard.
@@ -289,7 +454,6 @@ class HelpRequestEndpoint extends Endpoint {
     );
 
     if (announcements.isEmpty) {
-      // Seed default announcement
       final defaultAnn = CommunityAnnouncement(
         title: 'Welcome to HelpHub Community Network!',
         content:
@@ -336,6 +500,25 @@ class HelpRequestEndpoint extends Endpoint {
     return await CommunityAnnouncement.db.insertRow(session, announcement);
   }
 
+  Future<void> _createNotification(
+    Session session, {
+    required String recipientEmail,
+    required String title,
+    required String message,
+    int? requestId,
+  }) async {
+    final notif = UserNotification(
+      recipientEmail: recipientEmail,
+      title: title,
+      message: message,
+      requestId: requestId,
+      isRead: false,
+      createdAt: DateTime.now().toUtc(),
+    );
+
+    await UserNotification.db.insertRow(session, notif);
+  }
+
   Future<void> _incrementRequestedCount(
     Session session,
     int userId,
@@ -355,6 +538,9 @@ class HelpRequestEndpoint extends Endpoint {
         completedCount: 0,
         requestedCount: 1,
         avatarBadge: '🌱 Community Rookie',
+        ratingAverage: 5.0,
+        ratingCount: 1,
+        skills: 'General, Errands',
       );
       await UserProfile.db.insertRow(session, profile);
     } else {
@@ -396,6 +582,9 @@ class HelpRequestEndpoint extends Endpoint {
         completedCount: newCompleted,
         requestedCount: 0,
         avatarBadge: badge,
+        ratingAverage: 5.0,
+        ratingCount: 1,
+        skills: 'General, Tutoring',
       );
       await UserProfile.db.insertRow(session, profile);
     } else {

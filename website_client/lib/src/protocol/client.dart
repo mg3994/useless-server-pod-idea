@@ -27,6 +27,8 @@ import 'package:website_client/src/protocol/helphub/request_comment.dart'
     as _iq4ufam1;
 import 'package:website_client/src/protocol/helphub/request_rating.dart'
     as _ib2k1m8u;
+import 'package:website_client/src/protocol/helphub/user_notification.dart'
+    as _ihs35lap;
 import 'package:website_client/src/protocol/helphub/user_profile.dart'
     as _if5f0yyd;
 import 'protocol.dart' as _il2as5qe;
@@ -323,6 +325,19 @@ class EndpointHelpRequest extends _isc.EndpointRef {
     },
   );
 
+  /// Boosts reward points for an open request.
+  _ida.Future<_ilm5roly.HelpRequest> boostRewardPoints({
+    required int requestId,
+    required int boostAmount,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'boostRewardPoints',
+    {
+      'requestId': requestId,
+      'boostAmount': boostAmount,
+    },
+  );
+
   /// Claim a help request as a helper.
   _ida.Future<_ilm5roly.HelpRequest> claimHelpRequest({
     required int requestId,
@@ -406,6 +421,32 @@ class EndpointHelpRequest extends _isc.EndpointRef {
       'feedback': feedback,
     },
   );
+
+  /// Gets rating list for a user.
+  _ida.Future<List<_ib2k1m8u.RequestRating>> getHelperRatings({
+    required int toUserId,
+  }) => caller.callServerEndpoint<List<_ib2k1m8u.RequestRating>>(
+    'helpRequest',
+    'getHelperRatings',
+    {'toUserId': toUserId},
+  );
+
+  /// Get notifications for a user
+  _ida.Future<List<_ihs35lap.UserNotification>> getUserNotifications({
+    required String userEmail,
+  }) => caller.callServerEndpoint<List<_ihs35lap.UserNotification>>(
+    'helpRequest',
+    'getUserNotifications',
+    {'userEmail': userEmail},
+  );
+
+  /// Marks notification as read
+  _ida.Future<bool> markNotificationRead({required int notificationId}) =>
+      caller.callServerEndpoint<bool>(
+        'helpRequest',
+        'markNotificationRead',
+        {'notificationId': notificationId},
+      );
 
   /// Fetches top community helpers leaderboard.
   _ida.Future<List<_if5f0yyd.UserProfile>> getLeaderboard() =>

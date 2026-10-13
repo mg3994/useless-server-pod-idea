@@ -13,6 +13,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
   List<HelpRequest> _requests = [];
   List<UserProfile> _leaderboard = [];
   List<CommunityAnnouncement> _announcements = [];
+  List<UserNotification> _notifications = [];
   UserProfile? _profile;
   bool _isLoading = true;
 
@@ -65,12 +66,16 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
       final profile = await client.helpRequest.getUserProfile(email: userEmail);
       final leaderboard = await client.helpRequest.getLeaderboard();
       final announcements = await client.helpRequest.getAnnouncements();
+      final notifications = await client.helpRequest.getUserNotifications(
+        userEmail: userEmail,
+      );
 
       setState(() {
         _requests = requests;
         _profile = profile;
         _leaderboard = leaderboard;
         _announcements = announcements;
+        _notifications = notifications;
         _isLoading = false;
       });
     } catch (e) {
@@ -78,6 +83,197 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         setState(() => _isLoading = false);
       }
     }
+  }
+
+  Future<void> _showNotificationsBottomSheet() async {
+    final unreadList = _notifications.where((n) => !n.isRead).toList();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(ctx).viewInsets.bottom,
+            left: 16,
+            right: 16,
+            top: 16,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(Icons.notifications_active, color: Colors.indigo),
+                      SizedBox(width: 8),
+                      Text(
+                        'Notifications Feed',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(ctx),
+                  ),
+                ],
+              ),
+              const Divider(),
+              SizedBox(
+                height: 280,
+                child: _notifications.isEmpty
+                    ? const Center(child: Text('No notifications yet.'))
+                    : ListView.builder(
+                        itemCount: _notifications.length,
+                        itemBuilder: (context, index) {
+                          final n = _notifications[index];
+                          return Card(
+                            elevation: n.isRead ? 0 : 1,
+                            color: n.isRead
+                                ? Colors.grey.shade50
+                                : Colors.indigo.shade50,
+                            margin: const EdgeInsets.only(bottom: 8),
+                            child: ListTile(
+                              dense: true,
+                              title: Text(
+                                n.title,
+                                style: TextStyle(
+                                  fontWeight: n.isRead
+                                      ? FontWeight.normal
+                                      : FontWeight.bold,
+                                  color: Colors.indigo.shade900,
+                                ),
+                              ),
+                              subtitle: Text(
+                                n.message,
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+              ),
+              const SizedBox(height: 12),
+            ],
+          ),
+        );
+      },
+    );
+
+    // Mark unread notifications as read
+    for (final notif in unreadList) {
+      if (notif.id != null) {
+        await client.helpRequest.markNotificationRead(
+          notificationId: notif.id!,
+        );
+      }
+    }
+    _loadData();
+  }
+
+  Future<void> _showRatingDialog(int requestId, int helperUserId) async {
+    int rating = 5;
+    final feedbackController = TextEditingController();
+
+    return showDialog(
+      context: context,
+      builder: (dialogCtx) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              title: const Row(
+                children: [
+                  Icon(Icons.star, color: Colors.amber),
+                  SizedBox(width: 8),
+                  Text(
+                    'Rate Helper',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'How was your helper\'s performance?',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(5, (index) {
+                      final starNum = index + 1;
+                      return IconButton(
+                        icon: Icon(
+                          starNum <= rating ? Icons.star : Icons.star_border,
+                          color: Colors.amber,
+                          size: 32,
+                        ),
+                        onPressed: () => setDialogState(() => rating = starNum),
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: feedbackController,
+                    decoration: const InputDecoration(
+                      labelText: 'Feedback / Comment',
+                      hintText: 'e.g. Prompt, friendly and very helpful!',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogCtx),
+                  child: const Text('Skip'),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.indigo,
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () async {
+                    await client.helpRequest.submitRating(
+                      requestId: requestId,
+                      toUserId: helperUserId,
+                      rating: rating,
+                      feedback: feedbackController.text.trim(),
+                    );
+                    if (dialogCtx.mounted) {
+                      Navigator.pop(dialogCtx);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Rating submitted! Thank you ⭐'),
+                        ),
+                      );
+                    }
+                    _loadData();
+                  },
+                  child: const Text('Submit'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   Future<void> _showCommentsBottomSheet(HelpRequest req) async {
@@ -256,7 +452,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String>(
-                      value: category,
+                      initialValue: category,
                       decoration: const InputDecoration(labelText: 'Category'),
                       items: _categories
                           .where((c) => c != 'All')
@@ -270,7 +466,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String>(
-                      value: urgency,
+                      initialValue: urgency,
                       decoration: const InputDecoration(labelText: 'Urgency'),
                       items: const [
                         DropdownMenuItem(
@@ -386,6 +582,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final unreadNotifsCount = _notifications.where((n) => !n.isRead).length;
 
     int targetMilestone = 5;
     if ((_profile?.completedCount ?? 0) >= 10) {
@@ -406,6 +603,34 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
           ],
         ),
         actions: [
+          Stack(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.notifications_outlined),
+                onPressed: _showNotificationsBottomSheet,
+              ),
+              if (unreadNotifsCount > 0)
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.redAccent,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      '$unreadNotifsCount',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _loadData,
@@ -494,12 +719,40 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    _profile!.displayName,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        _profile!.displayName,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 6,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.amber.shade50,
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
+                                          border: Border.all(
+                                            color: Colors.amber.shade300,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          '⭐ ${(_profile!.ratingAverage ?? 5.0).toStringAsFixed(1)}',
+                                          style: const TextStyle(
+                                            color: Colors.amber,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   Text(
                                     _profile!.avatarBadge,
@@ -509,6 +762,32 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
+                                  if (_profile!.skills != null) ...[
+                                    const SizedBox(height: 4),
+                                    Wrap(
+                                      spacing: 4,
+                                      children: _profile!.skills!
+                                          .split(',')
+                                          .map((s) {
+                                            return Chip(
+                                              label: Text(
+                                                s.trim(),
+                                                style: const TextStyle(
+                                                  fontSize: 9,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.indigo,
+                                                ),
+                                              ),
+                                              backgroundColor:
+                                                  Colors.indigo.shade50,
+                                              visualDensity:
+                                                  VisualDensity.compact,
+                                              padding: EdgeInsets.zero,
+                                            );
+                                          })
+                                          .toList(),
+                                    ),
+                                  ],
                                 ],
                               ),
                             ),
@@ -640,12 +919,25 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                                         CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text(
-                                        user.displayName,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                        ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            user.displayName,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            '⭐ ${(user.ratingAverage ?? 5.0).toStringAsFixed(1)}',
+                                            style: const TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.amber,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       Text(
                                         '${user.points} pts',
@@ -966,20 +1258,46 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                   ),
                 ),
                 if (req.status == 'Open')
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.indigo,
-                      foregroundColor: Colors.white,
-                      visualDensity: VisualDensity.compact,
-                    ),
-                    onPressed: () async {
-                      await client.helpRequest.claimHelpRequest(
-                        requestId: req.id!,
-                        helperEmail: _getUserEmail(),
-                      );
-                      _loadData();
-                    },
-                    child: const Text('Claim'),
+                  Row(
+                    children: [
+                      OutlinedButton.icon(
+                        icon: const Icon(
+                          Icons.flash_on,
+                          size: 14,
+                          color: Colors.amber,
+                        ),
+                        label: const Text(
+                          '+10',
+                          style: TextStyle(fontSize: 11),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        onPressed: () async {
+                          await client.helpRequest.boostRewardPoints(
+                            requestId: req.id!,
+                            boostAmount: 10,
+                          );
+                          _loadData();
+                        },
+                      ),
+                      const SizedBox(width: 6),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.indigo,
+                          foregroundColor: Colors.white,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        onPressed: () async {
+                          await client.helpRequest.claimHelpRequest(
+                            requestId: req.id!,
+                            helperEmail: _getUserEmail(),
+                          );
+                          _loadData();
+                        },
+                        child: const Text('Claim'),
+                      ),
+                    ],
                   )
                 else if (req.status == 'In Progress')
                   ElevatedButton(
@@ -999,7 +1317,24 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                 else
                   Row(
                     children: [
-                      if (req.helperUserId != null)
+                      if (req.helperUserId != null) ...[
+                        OutlinedButton.icon(
+                          icon: const Icon(
+                            Icons.star,
+                            size: 14,
+                            color: Colors.amber,
+                          ),
+                          label: const Text(
+                            'Rate',
+                            style: TextStyle(fontSize: 11),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            visualDensity: VisualDensity.compact,
+                          ),
+                          onPressed: () =>
+                              _showRatingDialog(req.id!, req.helperUserId!),
+                        ),
+                        const SizedBox(width: 4),
                         OutlinedButton.icon(
                           icon: const Icon(Icons.card_giftcard, size: 14),
                           label: const Text(
@@ -1026,6 +1361,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                             _loadData();
                           },
                         ),
+                      ],
                       const SizedBox(width: 8),
                       const Text(
                         'Completed ✓',
