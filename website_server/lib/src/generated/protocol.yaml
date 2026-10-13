@@ -22,3 +22,5 @@ helpRequest:
   - getComments:
   - submitRating:
   - getLeaderboard:
+  - getAnnouncements:
+  - createAnnouncement:

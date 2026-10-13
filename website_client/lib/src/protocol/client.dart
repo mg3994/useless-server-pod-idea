@@ -19,6 +19,8 @@ import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
 import 'package:website_client/src/protocol/greetings/greeting.dart'
     as _ik0mmf5h;
+import 'package:website_client/src/protocol/helphub/community_announcement.dart'
+    as _if9166ew;
 import 'package:website_client/src/protocol/helphub/help_request.dart'
     as _ilm5roly;
 import 'package:website_client/src/protocol/helphub/request_comment.dart'
@@ -412,6 +414,33 @@ class EndpointHelpRequest extends _isc.EndpointRef {
         'getLeaderboard',
         {},
       );
+
+  /// Fetches community announcements.
+  _ida.Future<List<_if9166ew.CommunityAnnouncement>> getAnnouncements() =>
+      caller.callServerEndpoint<List<_if9166ew.CommunityAnnouncement>>(
+        'helpRequest',
+        'getAnnouncements',
+        {},
+      );
+
+  /// Creates a new community announcement.
+  _ida.Future<_if9166ew.CommunityAnnouncement> createAnnouncement({
+    required String title,
+    required String content,
+    required String category,
+    required String authorEmail,
+    bool? isPinned,
+  }) => caller.callServerEndpoint<_if9166ew.CommunityAnnouncement>(
+    'helpRequest',
+    'createAnnouncement',
+    {
+      'title': title,
+      'content': content,
+      'category': category,
+      'authorEmail': authorEmail,
+      'isPinned': isPinned,
+    },
+  );
 }
 
 class Modules {

@@ -17,6 +17,8 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
+import 'package:website_server/src/generated/helphub/community_announcement.dart'
+    as _io88z89c;
 import 'package:website_server/src/generated/helphub/help_request.dart'
     as _i62gi6d1;
 import 'package:website_server/src/generated/helphub/request_comment.dart'
@@ -24,11 +26,13 @@ import 'package:website_server/src/generated/helphub/request_comment.dart'
 import 'package:website_server/src/generated/helphub/user_profile.dart'
     as _ivj3h5rp;
 import 'greetings/greeting.dart' as _izw8z7ou;
+import 'helphub/community_announcement.dart' as _iw40l365;
 import 'helphub/help_request.dart' as _i2hcnfb8;
 import 'helphub/request_comment.dart' as _il3090nm;
 import 'helphub/request_rating.dart' as _ivm2zgp6;
 import 'helphub/user_profile.dart' as _i2208dl4;
 export 'greetings/greeting.dart';
+export 'helphub/community_announcement.dart';
 export 'helphub/help_request.dart';
 export 'helphub/request_comment.dart';
 export 'helphub/request_rating.dart';
@@ -42,6 +46,60 @@ class Protocol extends _is.DatabaseSerializationManager {
   static final Protocol _instance = Protocol._().._registerHostProtocols();
 
   static List<_isp.TableDefinition> get targetTableDefinitions => [
+    _isp.TableDefinition(
+      name: 'community_announcement',
+      dartName: 'CommunityAnnouncement',
+      schema: 'public',
+      module: 'website',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'title',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'content',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'category',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'authorEmail',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'isPinned',
+          columnType: _isp.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
     _isp.TableDefinition(
       name: 'help_request',
       dartName: 'HelpRequest',
@@ -341,6 +399,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _izw8z7ou.Greeting) {
       return _izw8z7ou.Greeting.fromJson(data) as T;
     }
+    if (t == _iw40l365.CommunityAnnouncement) {
+      return _iw40l365.CommunityAnnouncement.fromJson(data) as T;
+    }
     if (t == _i2hcnfb8.HelpRequest) {
       return _i2hcnfb8.HelpRequest.fromJson(data) as T;
     }
@@ -355,6 +416,12 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (t == _is.getType<_izw8z7ou.Greeting?>()) {
       return (data != null ? _izw8z7ou.Greeting.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_iw40l365.CommunityAnnouncement?>()) {
+      return (data != null
+              ? _iw40l365.CommunityAnnouncement.fromJson(data)
+              : null)
+          as T;
     }
     if (t == _is.getType<_i2hcnfb8.HelpRequest?>()) {
       return (data != null ? _i2hcnfb8.HelpRequest.fromJson(data) : null) as T;
@@ -388,6 +455,12 @@ class Protocol extends _is.DatabaseSerializationManager {
               .toList()
           as T;
     }
+    if (t == List<_io88z89c.CommunityAnnouncement>) {
+      return (data as List)
+              .map((e) => deserialize<_io88z89c.CommunityAnnouncement>(e))
+              .toList()
+          as T;
+    }
     try {
       return _iais.Protocol().deserialize<T>(data, t);
     } on _is.DeserializationTypeNotFoundException catch (_) {}
@@ -403,6 +476,7 @@ class Protocol extends _is.DatabaseSerializationManager {
   static String? getClassNameForType(Type type) {
     return switch (type) {
       _izw8z7ou.Greeting => 'Greeting',
+      _iw40l365.CommunityAnnouncement => 'CommunityAnnouncement',
       _i2hcnfb8.HelpRequest => 'HelpRequest',
       _il3090nm.RequestComment => 'RequestComment',
       _ivm2zgp6.RequestRating => 'RequestRating',
@@ -423,6 +497,8 @@ class Protocol extends _is.DatabaseSerializationManager {
     switch (data) {
       case _izw8z7ou.Greeting():
         return 'Greeting';
+      case _iw40l365.CommunityAnnouncement():
+        return 'CommunityAnnouncement';
       case _i2hcnfb8.HelpRequest():
         return 'HelpRequest';
       case _il3090nm.RequestComment():
@@ -459,6 +535,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'Greeting') {
       return deserialize<_izw8z7ou.Greeting>(data['data']);
+    }
+    if (dataClassName == 'CommunityAnnouncement') {
+      return deserialize<_iw40l365.CommunityAnnouncement>(data['data']);
     }
     if (dataClassName == 'HelpRequest') {
       return deserialize<_i2hcnfb8.HelpRequest>(data['data']);
@@ -513,6 +592,8 @@ class Protocol extends _is.DatabaseSerializationManager {
       }
     }
     switch (t) {
+      case _iw40l365.CommunityAnnouncement:
+        return _iw40l365.CommunityAnnouncement.t;
       case _i2hcnfb8.HelpRequest:
         return _i2hcnfb8.HelpRequest.t;
       case _il3090nm.RequestComment:

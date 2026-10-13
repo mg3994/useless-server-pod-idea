@@ -281,6 +281,61 @@ class HelpRequestEndpoint extends Endpoint {
     return profiles.take(10).toList();
   }
 
+  /// Fetches community announcements.
+  Future<List<CommunityAnnouncement>> getAnnouncements(Session session) async {
+    var announcements = await CommunityAnnouncement.db.find(
+      session,
+      orderBy: (t) => t.createdAt,
+    );
+
+    if (announcements.isEmpty) {
+      // Seed default announcement
+      final defaultAnn = CommunityAnnouncement(
+        title: 'Welcome to HelpHub Community Network!',
+        content:
+            'Connect with neighbors and fellow students to exchange favors, lend items, and build a stronger local community.',
+        category: '📢 System Announcement',
+        authorEmail: 'admin@helphub.com',
+        isPinned: true,
+        createdAt: DateTime.now().toUtc(),
+      );
+      final inserted = await CommunityAnnouncement.db.insertRow(
+        session,
+        defaultAnn,
+      );
+      return [inserted];
+    }
+
+    announcements.sort((a, b) {
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+      return b.createdAt.compareTo(a.createdAt);
+    });
+
+    return announcements;
+  }
+
+  /// Creates a new community announcement.
+  Future<CommunityAnnouncement> createAnnouncement(
+    Session session, {
+    required String title,
+    required String content,
+    required String category,
+    required String authorEmail,
+    bool? isPinned,
+  }) async {
+    final announcement = CommunityAnnouncement(
+      title: title,
+      content: content,
+      category: category,
+      authorEmail: authorEmail,
+      isPinned: isPinned ?? false,
+      createdAt: DateTime.now().toUtc(),
+    );
+
+    return await CommunityAnnouncement.db.insertRow(session, announcement);
+  }
+
   Future<void> _incrementRequestedCount(
     Session session,
     int userId,

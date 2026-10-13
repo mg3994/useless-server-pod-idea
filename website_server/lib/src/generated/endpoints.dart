@@ -577,6 +577,61 @@ class Endpoints extends _is.EndpointDispatch {
                   (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
                       .getLeaderboard(session),
         ),
+        'getAnnouncements': _is.MethodConnector(
+          name: 'getAnnouncements',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getAnnouncements(session),
+        ),
+        'createAnnouncement': _is.MethodConnector(
+          name: 'createAnnouncement',
+          params: {
+            'title': _is.ParameterDescription(
+              name: 'title',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'content': _is.ParameterDescription(
+              name: 'content',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'category': _is.ParameterDescription(
+              name: 'category',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'authorEmail': _is.ParameterDescription(
+              name: 'authorEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'isPinned': _is.ParameterDescription(
+              name: 'isPinned',
+              type: _is.getType<bool?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .createAnnouncement(
+                        session,
+                        title: params['title'],
+                        content: params['content'],
+                        category: params['category'],
+                        authorEmail: params['authorEmail'],
+                        isPinned: params['isPinned'],
+                      ),
+        ),
       },
     );
     modules['serverpod_auth_idp'] = _iais.Endpoints()

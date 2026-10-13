@@ -237,9 +237,47 @@ Component landingHero() {
         ],
       ),
 
+      // Community Announcements Banner
+      div(
+        {'class': 'max-w-6xl mx-auto px-4 mt-6'},
+        [
+          div(
+            {
+              'id': 'announcements-container',
+              'class': 'p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200/60 dark:border-indigo-800/60 flex items-start gap-3',
+            },
+            [
+              span({'class': 'text-2xl'}, [Text('📢')]),
+              div(
+                {'class': 'flex-1'},
+                [
+                  h4(
+                    {
+                      'class': 'text-sm font-bold text-indigo-900 dark:text-indigo-200',
+                    },
+                    [Text('Community Announcement')],
+                  ),
+                  p(
+                    {
+                      'class':
+                          'text-xs text-indigo-700 dark:text-indigo-300 mt-0.5',
+                    },
+                    [
+                      Text(
+                        'Welcome to HelpHub Community Network! Connect with neighbors and fellow students to exchange favors and lents.',
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+
       // Profile Bar & Stats Card
       div(
-        {'class': 'max-w-6xl mx-auto px-4 mt-8'},
+        {'class': 'max-w-6xl mx-auto px-4 mt-6'},
         [
           div(
             {

@@ -3,13 +3,6 @@ import 'dart:js_interop';
 import 'package:web/web.dart' as web;
 import 'package:website_client/website_client.dart' as wc;
 
-/// Extension to invoke insertAdjacentHTML safely on Element using web.Element.
-extension ElementInsertExtension on web.Element {
-  void insertHtml(String position, String text) {
-    insertAdjacentHTML(position, text.toJS);
-  }
-}
-
 /// Manages interactive logic for HelpHub in the webpage frontend.
 class HelpHubController {
   final wc.Client client;
@@ -26,6 +19,7 @@ class HelpHubController {
   void init() {
     _bindEvents();
     loadUserProfile();
+    loadAnnouncements();
     loadLeaderboard();
     loadHelpRequests();
   }
@@ -109,9 +103,9 @@ class HelpHubController {
     final submitCommentBtn = web.document.querySelector('#submit-comment-btn');
     submitCommentBtn?.addEventListener(
       'click',
-      ((web.Event e) async {
+      ((web.Event e) {
         e.preventDefault();
-        await _submitComment();
+        _submitComment();
       }).toJS,
     );
 
@@ -119,9 +113,9 @@ class HelpHubController {
     final submitBtn = web.document.querySelector('#submit-create-btn');
     submitBtn?.addEventListener(
       'click',
-      ((web.Event e) async {
+      ((web.Event e) {
         e.preventDefault();
-        await _submitNewRequest();
+        _submitNewRequest();
       }).toJS,
     );
 
@@ -203,6 +197,30 @@ class HelpHubController {
     }
   }
 
+  Future<void> loadAnnouncements() async {
+    final container = web.document.querySelector('#announcements-container');
+    if (container == null) return;
+
+    try {
+      final announcements = await client.helpRequest.getAnnouncements();
+      if (announcements.isNotEmpty) {
+        final ann = announcements.first;
+        container.textContent = '';
+        final annHtml =
+            '''
+          <span class="text-2xl">📢</span>
+          <div class="flex-1">
+            <h4 class="text-sm font-bold text-indigo-900 dark:text-indigo-200">${_escapeHtml(ann.title)}</h4>
+            <p class="text-xs text-indigo-700 dark:text-indigo-300 mt-0.5">${_escapeHtml(ann.content)}</p>
+          </div>
+        ''';
+        (container as dynamic).insertAdjacentHTML('beforeend', annHtml);
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+
   Future<void> loadLeaderboard() async {
     final container = web.document.querySelector('#leaderboard-container');
     if (container == null) return;
@@ -212,7 +230,7 @@ class HelpHubController {
       container.textContent = '';
 
       if (topUsers.isEmpty) {
-        container.insertHtml(
+        (container as dynamic).insertAdjacentHTML(
           'beforeend',
           '<p class="text-xs text-surface-400 col-span-full">No leaderboard entries yet.</p>',
         );
@@ -233,7 +251,7 @@ class HelpHubController {
             <span class="text-xs font-extrabold text-amber-500">${u.points} pts</span>
           </div>
         ''';
-        container.insertHtml('beforeend', cardHtml);
+        (container as dynamic).insertAdjacentHTML('beforeend', cardHtml);
       }
     } catch (e) {
       // Ignore
@@ -255,7 +273,7 @@ class HelpHubController {
       container.textContent = '';
 
       if (requests.isEmpty) {
-        container.insertHtml('beforeend', '''
+        (container as dynamic).insertAdjacentHTML('beforeend', '''
             <div class="col-span-full py-12 text-center text-surface-500 dark:text-surface-400">
               <span class="text-4xl block mb-2">🔍</span>
               <p class="text-base font-semibold">No help requests found.</p>
@@ -267,7 +285,7 @@ class HelpHubController {
 
       for (final req in requests) {
         final cardHtml = _buildCardHtml(req);
-        container.insertHtml('beforeend', cardHtml);
+        (container as dynamic).insertAdjacentHTML('beforeend', cardHtml);
       }
 
       _bindCardActionButtons();
@@ -368,7 +386,7 @@ class HelpHubController {
       final btn = claimBtns.item(i) as web.HTMLElement?;
       btn?.addEventListener(
         'click',
-        ((web.Event e) async {
+        ((web.Event e) {
           final idStr = btn.getAttribute('data-id');
           if (idStr != null) {
             final id = int.tryParse(idStr);
@@ -376,13 +394,13 @@ class HelpHubController {
               final emailEl = web.document.querySelector('#user-email');
               final email = emailEl?.textContent ?? 'helper@helphub.com';
 
-              await client.helpRequest.claimHelpRequest(
-                requestId: id,
-                helperEmail: email,
-              );
-              await loadHelpRequests();
-              await loadUserProfile();
-              await loadLeaderboard();
+              client.helpRequest
+                  .claimHelpRequest(requestId: id, helperEmail: email)
+                  .then((_) {
+                    loadHelpRequests();
+                    loadUserProfile();
+                    loadLeaderboard();
+                  });
             }
           }
         }).toJS,
@@ -394,15 +412,16 @@ class HelpHubController {
       final btn = completeBtns.item(i) as web.HTMLElement?;
       btn?.addEventListener(
         'click',
-        ((web.Event e) async {
+        ((web.Event e) {
           final idStr = btn.getAttribute('data-id');
           if (idStr != null) {
             final id = int.tryParse(idStr);
             if (id != null) {
-              await client.helpRequest.completeHelpRequest(requestId: id);
-              await loadHelpRequests();
-              await loadUserProfile();
-              await loadLeaderboard();
+              client.helpRequest.completeHelpRequest(requestId: id).then((_) {
+                loadHelpRequests();
+                loadUserProfile();
+                loadLeaderboard();
+              });
             }
           }
         }).toJS,
@@ -414,17 +433,19 @@ class HelpHubController {
       final btn = tipBtns.item(i) as web.HTMLElement?;
       btn?.addEventListener(
         'click',
-        ((web.Event e) async {
+        ((web.Event e) {
           final helperIdStr = btn.getAttribute('data-helper-id');
           if (helperIdStr != null) {
             final helperId = int.tryParse(helperIdStr);
             if (helperId != null) {
-              await client.helpRequest.tipHelper(
-                helperUserId: helperId,
-                tipAmount: 15,
-              );
-              web.window.alert('Tipped 15 bonus points to the helper! 🎁');
-              await loadLeaderboard();
+              client.helpRequest
+                  .tipHelper(helperUserId: helperId, tipAmount: 15)
+                  .then((_) {
+                    web.window.alert(
+                      'Tipped 15 bonus points to the helper! 🎁',
+                    );
+                    loadLeaderboard();
+                  });
             }
           }
         }).toJS,
@@ -436,13 +457,13 @@ class HelpHubController {
       final btn = commentsBtns.item(i) as web.HTMLElement?;
       btn?.addEventListener(
         'click',
-        ((web.Event e) async {
+        ((web.Event e) {
           final idStr = btn.getAttribute('data-id');
           if (idStr != null) {
             final id = int.tryParse(idStr);
             if (id != null) {
               activeCommentsRequestId = id;
-              await _openCommentsModal(id);
+              _openCommentsModal(id);
             }
           }
         }).toJS,
@@ -466,7 +487,7 @@ class HelpHubController {
       listEl.textContent = '';
 
       if (comments.isEmpty) {
-        listEl.insertHtml(
+        (listEl as dynamic).insertAdjacentHTML(
           'beforeend',
           '<p class="text-xs text-surface-400 text-center py-4">No comments yet. Be the first to start the discussion!</p>',
         );
@@ -484,7 +505,7 @@ class HelpHubController {
             <p class="text-xs text-surface-700 dark:text-surface-200">${_escapeHtml(c.content)}</p>
           </div>
         ''';
-        listEl.insertHtml('beforeend', commentHtml);
+        (listEl as dynamic).insertAdjacentHTML('beforeend', commentHtml);
       }
     } catch (e) {
       // Ignore

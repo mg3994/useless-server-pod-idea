@@ -12,6 +12,7 @@ class HelpHubScreen extends StatefulWidget {
 class _HelpHubScreenState extends State<HelpHubScreen> {
   List<HelpRequest> _requests = [];
   List<UserProfile> _leaderboard = [];
+  List<CommunityAnnouncement> _announcements = [];
   UserProfile? _profile;
   bool _isLoading = true;
 
@@ -45,10 +46,14 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
     super.dispose();
   }
 
+  String _getUserEmail() {
+    return 'user@helphub.com';
+  }
+
   Future<void> _loadData() async {
     setState(() => _isLoading = true);
     try {
-      const userEmail = 'user@helphub.com';
+      final userEmail = _getUserEmail();
 
       final requests = await client.helpRequest.getHelpRequests(
         category: _selectedCategory,
@@ -59,11 +64,13 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
 
       final profile = await client.helpRequest.getUserProfile(email: userEmail);
       final leaderboard = await client.helpRequest.getLeaderboard();
+      final announcements = await client.helpRequest.getAnnouncements();
 
       setState(() {
         _requests = requests;
         _profile = profile;
         _leaderboard = leaderboard;
+        _announcements = announcements;
         _isLoading = false;
       });
     } catch (e) {
@@ -194,7 +201,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                           await client.helpRequest.addComment(
                             requestId: req.id!,
                             content: text,
-                            authorEmail: 'user@helphub.com',
+                            authorEmail: _getUserEmail(),
                           );
 
                           commentController.clear();
@@ -249,7 +256,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String>(
-                      initialValue: category,
+                      value: category,
                       decoration: const InputDecoration(labelText: 'Category'),
                       items: _categories
                           .where((c) => c != 'All')
@@ -263,7 +270,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String>(
-                      initialValue: urgency,
+                      value: urgency,
                       decoration: const InputDecoration(labelText: 'Urgency'),
                       items: const [
                         DropdownMenuItem(
@@ -358,7 +365,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                       urgency: urgency,
                       rewardPoints: points,
                       isEmergency: isEmergency,
-                      creatorEmail: 'user@helphub.com',
+                      creatorEmail: _getUserEmail(),
                     );
 
                     if (dialogContext.mounted) {
@@ -413,6 +420,48 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Community Announcement Card
+              if (_announcements.isNotEmpty) ...[
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.indigo.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.indigo.shade100),
+                  ),
+                  child: Row(
+                    children: [
+                      const Text('📢 ', style: TextStyle(fontSize: 20)),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _announcements.first.title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: Colors.indigo,
+                              ),
+                            ),
+                            Text(
+                              _announcements.first.content,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: Colors.black87,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
+
               // User Profile Header Card
               if (_profile != null) ...[
                 Card(
@@ -926,7 +975,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     onPressed: () async {
                       await client.helpRequest.claimHelpRequest(
                         requestId: req.id!,
-                        helperEmail: 'helper@helphub.com',
+                        helperEmail: _getUserEmail(),
                       );
                       _loadData();
                     },

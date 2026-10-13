@@ -19,6 +19,8 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
 import 'package:serverpod_test/serverpod_test.dart' as _ist;
 import 'package:website_server/src/generated/greetings/greeting.dart'
     as _iv7sgnpu;
+import 'package:website_server/src/generated/helphub/community_announcement.dart'
+    as _io88z89c;
 import 'package:website_server/src/generated/helphub/help_request.dart'
     as _i62gi6d1;
 import 'package:website_server/src/generated/helphub/request_comment.dart'
@@ -913,6 +915,77 @@ class _HelpRequestEndpoint {
                   _localCallContext.arguments,
                 )
                 as _ida.Future<List<_ivj3h5rp.UserProfile>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<List<_io88z89c.CommunityAnnouncement>> getAnnouncements(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'getAnnouncements',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'getAnnouncements',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_io88z89c.CommunityAnnouncement>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_io88z89c.CommunityAnnouncement> createAnnouncement(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String title,
+    required String content,
+    required String category,
+    required String authorEmail,
+    bool? isPinned,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'createAnnouncement',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'createAnnouncement',
+          parameters: _ist.testObjectToJson({
+            'title': title,
+            'content': content,
+            'category': category,
+            'authorEmail': authorEmail,
+            'isPinned': isPinned,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_io88z89c.CommunityAnnouncement>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
