@@ -1,6 +1,7 @@
 name: webpage
 description: A sample webpage.
 version: 1.0.0
+publish_to: none
 # repository: https://github.com/my_org/my_repo
 
 environment:
@@ -13,6 +14,9 @@ dependencies:
     path: ../website_client
   path: ^1.9.0
   web: ^1.1.1
+  serverpod_auth_core_client: 4.1.0-beta.3
+  serverpod_auth_idp_client: 4.1.0-beta.3
+  serverpod_client: 4.1.0-beta.3
 
 dev_dependencies:
   lints: ^6.0.0

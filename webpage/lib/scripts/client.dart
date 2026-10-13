@@ -17,5 +17,6 @@ Future<Client> getClient([FlavorConfig myFBConfig = currentFBConfig]) async {
     ..connectivityMonitor = WebConnectivityMonitor()
     ..authSessionManager = WebAuthSessionManager();
   unawaited(client.auth.initialize());
+  client.cookieAuth = true;
   return client;
 }

@@ -1,0 +1,65 @@
+{
+  "@@locale": "en",
+  "@@last_modified": "2026-10-13T01:30:00Z",
+
+  "pageTitle": "Serverpod Greeting Demo",
+  "@pageTitle": {
+    "description": "The main page title shown in the browser tab and hero section"
+  },
+  "pageDescription": "Enter a name below and click \"Send Greeting\" to call the server and see the response.",
+  "@pageDescription": {
+    "description": "Subtitle description under the hero title"
+  },
+  "nameLabel": "Your Name",
+  "@nameLabel": {
+    "description": "Label for the name input field"
+  },
+  "namePlaceholder": "Enter your name...",
+  "@namePlaceholder": {
+    "description": "Placeholder text in the name input field"
+  },
+  "sendGreeting": "Send Greeting",
+  "@sendGreeting": {
+    "description": "Text on the submit button"
+  },
+  "sending": "Sending...",
+  "@sending": {
+    "description": "Button text while the request is in progress"
+  },
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Loading state message"
+  },
+  "emptyNameError": "Please enter a name first.",
+  "@emptyNameError": {
+    "description": "Error message when the name field is empty"
+  },
+  "noInternet": "No internet connection",
+  "@noInternet": {
+    "description": "Snackbar message when offline"
+  },
+  "backOnline": "Back online",
+  "@backOnline": {
+    "description": "Snackbar message when connection is restored"
+  },
+  "dismiss": "DISMISS",
+  "@dismiss": {
+    "description": "Dismiss button text in snackbar"
+  },
+  "errorPrefix": "Error:",
+  "@errorPrefix": {
+    "description": "Prefix for error messages"
+  },
+  "authorLabel": "Author:",
+  "@authorLabel": {
+    "description": "Label before the author name in the response"
+  },
+  "timeLabel": "Time:",
+  "@timeLabel": {
+    "description": "Label before the timestamp in the response"
+  },
+  "selectLanguage": "Language",
+  "@selectLanguage": {
+    "description": "Label for the language selector dropdown"
+  }
+}

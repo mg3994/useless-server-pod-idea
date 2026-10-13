@@ -1,0 +1,20 @@
+{
+  "@@locale": "hi",
+  "@@last_modified": "2026-10-13T01:30:00Z",
+
+  "pageTitle": "Serverpod अग्रिम डेमो",
+  "pageDescription": "नीचे एक नाम दर्ज करें और सर्वर को कॉल करने और प्रतिक्रिया देखने के लिए \"अग्रिम भेजें\" पर क्लिक करें।",
+  "nameLabel": "आपका नाम",
+  "namePlaceholder": "अपना नाम दर्ज करें...",
+  "sendGreeting": "अग्रिम भेजें",
+  "sending": "भेजा जा रहा है...",
+  "loading": "लोड हो रहा है...",
+  "emptyNameError": "कृपया पहले एक नाम दर्ज करें।",
+  "noInternet": "इंटरनेट कनेक्शन नहीं है",
+  "backOnline": "वापस ऑनलाइन",
+  "dismiss": "बंद करें",
+  "errorPrefix": "त्रुटि:",
+  "authorLabel": "लेखक:",
+  "timeLabel": "समय:",
+  "selectLanguage": "भाषा"
+}

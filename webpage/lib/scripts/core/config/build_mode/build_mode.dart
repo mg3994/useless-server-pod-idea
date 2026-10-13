@@ -6,6 +6,7 @@ enum BuildMode() implements BuildModeInterface {
   profile,
   release;
 
+  // TODO:
   static const BuildMode current = // let ignore this for now , let be on debug
       // kProfileMode //
       bool.fromEnvironment('dart.vm.profile')

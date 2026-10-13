@@ -10,7 +10,9 @@ String generate(Component component) {
 }
 
 void main() async {
-  final landingPage = await webpage.main();
+  final landingPage = await webpage
+      .main(); // render extension is enough to make HTML
+  // going  to a long format
   final landingPageHtmlTextOutput = generate(landingPage);
 
   // Write to build/index.html

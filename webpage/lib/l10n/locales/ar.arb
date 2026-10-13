@@ -1,0 +1,20 @@
+{
+  "@@locale": "ar",
+  "@@last_modified": "2026-10-13T01:30:00Z",
+
+  "pageTitle": "عرض ترحيب Serverpod",
+  "pageDescription": "أدخل اسمًا أدناه وانقر على \"إرسال الترحيب\" لاستدعاء الخادم وعرض الاستجابة.",
+  "nameLabel": "اسمك",
+  "namePlaceholder": "أدخل اسمك...",
+  "sendGreeting": "إرسال الترحيب",
+  "sending": "جارٍ الإرسال...",
+  "loading": "جارٍ التحميل...",
+  "emptyNameError": "يرجى إدخال اسم أولاً.",
+  "noInternet": "لا يوجد اتصال بالإنترنت",
+  "backOnline": "العودة إلى الإنترنت",
+  "dismiss": "تجاهل",
+  "errorPrefix": "خطأ:",
+  "authorLabel": "المؤلف:",
+  "timeLabel": "الوقت:",
+  "selectLanguage": "اللغة"
+}
