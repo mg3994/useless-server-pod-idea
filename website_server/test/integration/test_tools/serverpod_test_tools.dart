@@ -19,6 +19,8 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
 import 'package:serverpod_test/serverpod_test.dart' as _ist;
 import 'package:website_server/src/generated/greetings/greeting.dart'
     as _iv7sgnpu;
+import 'package:website_server/src/generated/helphub/borrowable_item.dart'
+    as _irz6m6c4;
 import 'package:website_server/src/generated/helphub/community_announcement.dart'
     as _io88z89c;
 import 'package:website_server/src/generated/helphub/community_group.dart'
@@ -37,6 +39,8 @@ import 'package:website_server/src/generated/helphub/user_notification.dart'
     as _irisjcz6;
 import 'package:website_server/src/generated/helphub/user_profile.dart'
     as _ivj3h5rp;
+import 'package:website_server/src/generated/helphub/volunteer_event.dart'
+    as _iag6romm;
 import 'package:website_server/src/generated/protocol.dart';
 import 'package:website_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -574,6 +578,224 @@ class _HelpRequestEndpoint {
   final _is.EndpointDispatch _endpointDispatch;
 
   final _is.SerializationManager _serializationManager;
+
+  _ida.Future<_irz6m6c4.BorrowableItem> createBorrowableItem(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String title,
+    required String description,
+    required String category,
+    required String ownerEmail,
+    String? depositRequired,
+    required String neighborhoodZone,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'createBorrowableItem',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'createBorrowableItem',
+          parameters: _ist.testObjectToJson({
+            'title': title,
+            'description': description,
+            'category': category,
+            'ownerEmail': ownerEmail,
+            'depositRequired': depositRequired,
+            'neighborhoodZone': neighborhoodZone,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_irz6m6c4.BorrowableItem>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<List<_irz6m6c4.BorrowableItem>> getBorrowableItems(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'getBorrowableItems',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'getBorrowableItems',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_irz6m6c4.BorrowableItem>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_irz6m6c4.BorrowableItem> requestBorrowItem(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int itemId,
+    required String borrowerEmail,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'requestBorrowItem',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'requestBorrowItem',
+          parameters: _ist.testObjectToJson({
+            'itemId': itemId,
+            'borrowerEmail': borrowerEmail,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_irz6m6c4.BorrowableItem>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_iag6romm.VolunteerEvent> createVolunteerEvent(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String title,
+    required String description,
+    required String organizerEmail,
+    required String eventDate,
+    required String location,
+    required String neighborhoodZone,
+    int? pointsReward,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'createVolunteerEvent',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'createVolunteerEvent',
+          parameters: _ist.testObjectToJson({
+            'title': title,
+            'description': description,
+            'organizerEmail': organizerEmail,
+            'eventDate': eventDate,
+            'location': location,
+            'neighborhoodZone': neighborhoodZone,
+            'pointsReward': pointsReward,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_iag6romm.VolunteerEvent>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<List<_iag6romm.VolunteerEvent>> getVolunteerEvents(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'getVolunteerEvents',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'getVolunteerEvents',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_iag6romm.VolunteerEvent>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_iag6romm.VolunteerEvent> signUpVolunteerEvent(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int eventId,
+    required String volunteerEmail,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'signUpVolunteerEvent',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'signUpVolunteerEvent',
+          parameters: _ist.testObjectToJson({
+            'eventId': eventId,
+            'volunteerEmail': volunteerEmail,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_iag6romm.VolunteerEvent>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 
   _ida.Future<_ixk7xcy3.SkillOffer> createSkillOffer(
     _ist.TestSessionBuilder sessionBuilder, {

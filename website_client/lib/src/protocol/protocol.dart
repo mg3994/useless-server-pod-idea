@@ -16,6 +16,8 @@ import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _iaic;
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
+import 'package:website_client/src/protocol/helphub/borrowable_item.dart'
+    as _if3ypwc4;
 import 'package:website_client/src/protocol/helphub/community_announcement.dart'
     as _if9166ew;
 import 'package:website_client/src/protocol/helphub/community_group.dart'
@@ -34,7 +36,10 @@ import 'package:website_client/src/protocol/helphub/user_notification.dart'
     as _ihs35lap;
 import 'package:website_client/src/protocol/helphub/user_profile.dart'
     as _if5f0yyd;
+import 'package:website_client/src/protocol/helphub/volunteer_event.dart'
+    as _ijz6y5wx;
 import 'greetings/greeting.dart' as _izw8z7ou;
+import 'helphub/borrowable_item.dart' as _i391fcoh;
 import 'helphub/community_announcement.dart' as _iw40l365;
 import 'helphub/community_group.dart' as _izwlcf28;
 import 'helphub/favor_bookmark.dart' as _ia1oh19d;
@@ -45,7 +50,9 @@ import 'helphub/request_rating.dart' as _ivm2zgp6;
 import 'helphub/skill_offer.dart' as _i7dv48qr;
 import 'helphub/user_notification.dart' as _inwdejad;
 import 'helphub/user_profile.dart' as _i2208dl4;
+import 'helphub/volunteer_event.dart' as _i5ar5pru;
 export 'greetings/greeting.dart';
+export 'helphub/borrowable_item.dart';
 export 'helphub/community_announcement.dart';
 export 'helphub/community_group.dart';
 export 'helphub/favor_bookmark.dart';
@@ -56,6 +63,7 @@ export 'helphub/request_rating.dart';
 export 'helphub/skill_offer.dart';
 export 'helphub/user_notification.dart';
 export 'helphub/user_profile.dart';
+export 'helphub/volunteer_event.dart';
 export 'client.dart';
 
 class Protocol extends _isc.SerializationManager {
@@ -95,6 +103,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _izw8z7ou.Greeting) {
       return _izw8z7ou.Greeting.fromJson(data) as T;
     }
+    if (t == _i391fcoh.BorrowableItem) {
+      return _i391fcoh.BorrowableItem.fromJson(data) as T;
+    }
     if (t == _iw40l365.CommunityAnnouncement) {
       return _iw40l365.CommunityAnnouncement.fromJson(data) as T;
     }
@@ -125,8 +136,15 @@ class Protocol extends _isc.SerializationManager {
     if (t == _i2208dl4.UserProfile) {
       return _i2208dl4.UserProfile.fromJson(data) as T;
     }
+    if (t == _i5ar5pru.VolunteerEvent) {
+      return _i5ar5pru.VolunteerEvent.fromJson(data) as T;
+    }
     if (t == _isc.getType<_izw8z7ou.Greeting?>()) {
       return (data != null ? _izw8z7ou.Greeting.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_i391fcoh.BorrowableItem?>()) {
+      return (data != null ? _i391fcoh.BorrowableItem.fromJson(data) : null)
+          as T;
     }
     if (t == _isc.getType<_iw40l365.CommunityAnnouncement?>()) {
       return (data != null
@@ -166,6 +184,22 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _isc.getType<_i2208dl4.UserProfile?>()) {
       return (data != null ? _i2208dl4.UserProfile.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_i5ar5pru.VolunteerEvent?>()) {
+      return (data != null ? _i5ar5pru.VolunteerEvent.fromJson(data) : null)
+          as T;
+    }
+    if (t == List<_if3ypwc4.BorrowableItem>) {
+      return (data as List)
+              .map((e) => deserialize<_if3ypwc4.BorrowableItem>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_ijz6y5wx.VolunteerEvent>) {
+      return (data as List)
+              .map((e) => deserialize<_ijz6y5wx.VolunteerEvent>(e))
+              .toList()
+          as T;
     }
     if (t == List<_ipzxy2lt.SkillOffer>) {
       return (data as List)
@@ -239,6 +273,7 @@ class Protocol extends _isc.SerializationManager {
   static String? getClassNameForType(Type type) {
     return switch (type) {
       _izw8z7ou.Greeting => 'Greeting',
+      _i391fcoh.BorrowableItem => 'BorrowableItem',
       _iw40l365.CommunityAnnouncement => 'CommunityAnnouncement',
       _izwlcf28.CommunityGroup => 'CommunityGroup',
       _ia1oh19d.FavorBookmark => 'FavorBookmark',
@@ -249,6 +284,7 @@ class Protocol extends _isc.SerializationManager {
       _i7dv48qr.SkillOffer => 'SkillOffer',
       _inwdejad.UserNotification => 'UserNotification',
       _i2208dl4.UserProfile => 'UserProfile',
+      _i5ar5pru.VolunteerEvent => 'VolunteerEvent',
       _ => null,
     };
   }
@@ -265,6 +301,8 @@ class Protocol extends _isc.SerializationManager {
     switch (data) {
       case _izw8z7ou.Greeting():
         return 'Greeting';
+      case _i391fcoh.BorrowableItem():
+        return 'BorrowableItem';
       case _iw40l365.CommunityAnnouncement():
         return 'CommunityAnnouncement';
       case _izwlcf28.CommunityGroup():
@@ -285,6 +323,8 @@ class Protocol extends _isc.SerializationManager {
         return 'UserNotification';
       case _i2208dl4.UserProfile():
         return 'UserProfile';
+      case _i5ar5pru.VolunteerEvent():
+        return 'VolunteerEvent';
     }
     className = _iaic.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -309,6 +349,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'Greeting') {
       return deserialize<_izw8z7ou.Greeting>(data['data']);
+    }
+    if (dataClassName == 'BorrowableItem') {
+      return deserialize<_i391fcoh.BorrowableItem>(data['data']);
     }
     if (dataClassName == 'CommunityAnnouncement') {
       return deserialize<_iw40l365.CommunityAnnouncement>(data['data']);
@@ -339,6 +382,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'UserProfile') {
       return deserialize<_i2208dl4.UserProfile>(data['data']);
+    }
+    if (dataClassName == 'VolunteerEvent') {
+      return deserialize<_i5ar5pru.VolunteerEvent>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);

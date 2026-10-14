@@ -17,6 +17,8 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
+import 'package:website_server/src/generated/helphub/borrowable_item.dart'
+    as _irz6m6c4;
 import 'package:website_server/src/generated/helphub/community_announcement.dart'
     as _io88z89c;
 import 'package:website_server/src/generated/helphub/community_group.dart'
@@ -35,7 +37,10 @@ import 'package:website_server/src/generated/helphub/user_notification.dart'
     as _irisjcz6;
 import 'package:website_server/src/generated/helphub/user_profile.dart'
     as _ivj3h5rp;
+import 'package:website_server/src/generated/helphub/volunteer_event.dart'
+    as _iag6romm;
 import 'greetings/greeting.dart' as _izw8z7ou;
+import 'helphub/borrowable_item.dart' as _i391fcoh;
 import 'helphub/community_announcement.dart' as _iw40l365;
 import 'helphub/community_group.dart' as _izwlcf28;
 import 'helphub/favor_bookmark.dart' as _ia1oh19d;
@@ -46,7 +51,9 @@ import 'helphub/request_rating.dart' as _ivm2zgp6;
 import 'helphub/skill_offer.dart' as _i7dv48qr;
 import 'helphub/user_notification.dart' as _inwdejad;
 import 'helphub/user_profile.dart' as _i2208dl4;
+import 'helphub/volunteer_event.dart' as _i5ar5pru;
 export 'greetings/greeting.dart';
+export 'helphub/borrowable_item.dart';
 export 'helphub/community_announcement.dart';
 export 'helphub/community_group.dart';
 export 'helphub/favor_bookmark.dart';
@@ -57,6 +64,7 @@ export 'helphub/request_rating.dart';
 export 'helphub/skill_offer.dart';
 export 'helphub/user_notification.dart';
 export 'helphub/user_profile.dart';
+export 'helphub/volunteer_event.dart';
 
 class Protocol extends _is.DatabaseSerializationManager {
   Protocol._();
@@ -349,6 +357,84 @@ class Protocol extends _is.DatabaseSerializationManager {
       managed: true,
     ),
     _isp.TableDefinition(
+      name: 'helphub_borrowable_item',
+      dartName: 'BorrowableItem',
+      schema: 'public',
+      module: 'website',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'title',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'description',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'category',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'ownerUserId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'ownerEmail',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'depositRequired',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'neighborhoodZone',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'isAvailable',
+          columnType: _isp.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _isp.ColumnDefinition(
+          name: 'borrowedByEmail',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
+    _isp.TableDefinition(
       name: 'helphub_community_group',
       dartName: 'CommunityGroup',
       schema: 'public',
@@ -480,6 +566,84 @@ class Protocol extends _is.DatabaseSerializationManager {
           columnType: _isp.ColumnType.text,
           isNullable: true,
           dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
+    _isp.TableDefinition(
+      name: 'helphub_volunteer_event',
+      dartName: 'VolunteerEvent',
+      schema: 'public',
+      module: 'website',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'title',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'description',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'organizerEmail',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'eventDate',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'location',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'neighborhoodZone',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'volunteersCount',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'volunteersList',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'pointsReward',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
         ),
         _isp.ColumnDefinition(
           name: 'createdAt',
@@ -767,6 +931,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _izw8z7ou.Greeting) {
       return _izw8z7ou.Greeting.fromJson(data) as T;
     }
+    if (t == _i391fcoh.BorrowableItem) {
+      return _i391fcoh.BorrowableItem.fromJson(data) as T;
+    }
     if (t == _iw40l365.CommunityAnnouncement) {
       return _iw40l365.CommunityAnnouncement.fromJson(data) as T;
     }
@@ -797,8 +964,15 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _i2208dl4.UserProfile) {
       return _i2208dl4.UserProfile.fromJson(data) as T;
     }
+    if (t == _i5ar5pru.VolunteerEvent) {
+      return _i5ar5pru.VolunteerEvent.fromJson(data) as T;
+    }
     if (t == _is.getType<_izw8z7ou.Greeting?>()) {
       return (data != null ? _izw8z7ou.Greeting.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_i391fcoh.BorrowableItem?>()) {
+      return (data != null ? _i391fcoh.BorrowableItem.fromJson(data) : null)
+          as T;
     }
     if (t == _is.getType<_iw40l365.CommunityAnnouncement?>()) {
       return (data != null
@@ -838,6 +1012,22 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (t == _is.getType<_i2208dl4.UserProfile?>()) {
       return (data != null ? _i2208dl4.UserProfile.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_i5ar5pru.VolunteerEvent?>()) {
+      return (data != null ? _i5ar5pru.VolunteerEvent.fromJson(data) : null)
+          as T;
+    }
+    if (t == List<_irz6m6c4.BorrowableItem>) {
+      return (data as List)
+              .map((e) => deserialize<_irz6m6c4.BorrowableItem>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_iag6romm.VolunteerEvent>) {
+      return (data as List)
+              .map((e) => deserialize<_iag6romm.VolunteerEvent>(e))
+              .toList()
+          as T;
     }
     if (t == List<_ixk7xcy3.SkillOffer>) {
       return (data as List)
@@ -914,6 +1104,7 @@ class Protocol extends _is.DatabaseSerializationManager {
   static String? getClassNameForType(Type type) {
     return switch (type) {
       _izw8z7ou.Greeting => 'Greeting',
+      _i391fcoh.BorrowableItem => 'BorrowableItem',
       _iw40l365.CommunityAnnouncement => 'CommunityAnnouncement',
       _izwlcf28.CommunityGroup => 'CommunityGroup',
       _ia1oh19d.FavorBookmark => 'FavorBookmark',
@@ -924,6 +1115,7 @@ class Protocol extends _is.DatabaseSerializationManager {
       _i7dv48qr.SkillOffer => 'SkillOffer',
       _inwdejad.UserNotification => 'UserNotification',
       _i2208dl4.UserProfile => 'UserProfile',
+      _i5ar5pru.VolunteerEvent => 'VolunteerEvent',
       _ => null,
     };
   }
@@ -940,6 +1132,8 @@ class Protocol extends _is.DatabaseSerializationManager {
     switch (data) {
       case _izw8z7ou.Greeting():
         return 'Greeting';
+      case _i391fcoh.BorrowableItem():
+        return 'BorrowableItem';
       case _iw40l365.CommunityAnnouncement():
         return 'CommunityAnnouncement';
       case _izwlcf28.CommunityGroup():
@@ -960,6 +1154,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'UserNotification';
       case _i2208dl4.UserProfile():
         return 'UserProfile';
+      case _i5ar5pru.VolunteerEvent():
+        return 'VolunteerEvent';
     }
     className = _iais.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -988,6 +1184,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'Greeting') {
       return deserialize<_izw8z7ou.Greeting>(data['data']);
+    }
+    if (dataClassName == 'BorrowableItem') {
+      return deserialize<_i391fcoh.BorrowableItem>(data['data']);
     }
     if (dataClassName == 'CommunityAnnouncement') {
       return deserialize<_iw40l365.CommunityAnnouncement>(data['data']);
@@ -1018,6 +1217,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'UserProfile') {
       return deserialize<_i2208dl4.UserProfile>(data['data']);
+    }
+    if (dataClassName == 'VolunteerEvent') {
+      return deserialize<_i5ar5pru.VolunteerEvent>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
@@ -1060,6 +1262,8 @@ class Protocol extends _is.DatabaseSerializationManager {
       }
     }
     switch (t) {
+      case _i391fcoh.BorrowableItem:
+        return _i391fcoh.BorrowableItem.t;
       case _iw40l365.CommunityAnnouncement:
         return _iw40l365.CommunityAnnouncement.t;
       case _izwlcf28.CommunityGroup:
@@ -1080,6 +1284,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return _inwdejad.UserNotification.t;
       case _i2208dl4.UserProfile:
         return _i2208dl4.UserProfile.t;
+      case _i5ar5pru.VolunteerEvent:
+        return _i5ar5pru.VolunteerEvent.t;
     }
     return null;
   }

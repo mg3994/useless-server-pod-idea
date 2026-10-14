@@ -1,0 +1,13 @@
+class: VolunteerEvent
+table: helphub_volunteer_event
+fields:
+  title: String
+  description: String
+  organizerEmail: String
+  eventDate: String
+  location: String
+  neighborhoodZone: String
+  volunteersCount: int
+  volunteersList: String?
+  pointsReward: int
+  createdAt: DateTime

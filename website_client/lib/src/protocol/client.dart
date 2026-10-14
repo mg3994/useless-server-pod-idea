@@ -19,6 +19,8 @@ import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
 import 'package:website_client/src/protocol/greetings/greeting.dart'
     as _ik0mmf5h;
+import 'package:website_client/src/protocol/helphub/borrowable_item.dart'
+    as _if3ypwc4;
 import 'package:website_client/src/protocol/helphub/community_announcement.dart'
     as _if9166ew;
 import 'package:website_client/src/protocol/helphub/community_group.dart'
@@ -37,6 +39,8 @@ import 'package:website_client/src/protocol/helphub/user_notification.dart'
     as _ihs35lap;
 import 'package:website_client/src/protocol/helphub/user_profile.dart'
     as _if5f0yyd;
+import 'package:website_client/src/protocol/helphub/volunteer_event.dart'
+    as _ijz6y5wx;
 import 'protocol.dart' as _il2as5qe;
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
@@ -288,6 +292,92 @@ class EndpointHelpRequest extends _isc.EndpointRef {
 
   @override
   String get name => 'helpRequest';
+
+  /// Adds a borrowable tool/equipment item to the registry.
+  _ida.Future<_if3ypwc4.BorrowableItem> createBorrowableItem({
+    required String title,
+    required String description,
+    required String category,
+    required String ownerEmail,
+    String? depositRequired,
+    required String neighborhoodZone,
+  }) => caller.callServerEndpoint<_if3ypwc4.BorrowableItem>(
+    'helpRequest',
+    'createBorrowableItem',
+    {
+      'title': title,
+      'description': description,
+      'category': category,
+      'ownerEmail': ownerEmail,
+      'depositRequired': depositRequired,
+      'neighborhoodZone': neighborhoodZone,
+    },
+  );
+
+  /// Gets list of borrowable items.
+  _ida.Future<List<_if3ypwc4.BorrowableItem>> getBorrowableItems() =>
+      caller.callServerEndpoint<List<_if3ypwc4.BorrowableItem>>(
+        'helpRequest',
+        'getBorrowableItems',
+        {},
+      );
+
+  /// Requests to borrow an item.
+  _ida.Future<_if3ypwc4.BorrowableItem> requestBorrowItem({
+    required int itemId,
+    required String borrowerEmail,
+  }) => caller.callServerEndpoint<_if3ypwc4.BorrowableItem>(
+    'helpRequest',
+    'requestBorrowItem',
+    {
+      'itemId': itemId,
+      'borrowerEmail': borrowerEmail,
+    },
+  );
+
+  /// Creates a community volunteer event.
+  _ida.Future<_ijz6y5wx.VolunteerEvent> createVolunteerEvent({
+    required String title,
+    required String description,
+    required String organizerEmail,
+    required String eventDate,
+    required String location,
+    required String neighborhoodZone,
+    int? pointsReward,
+  }) => caller.callServerEndpoint<_ijz6y5wx.VolunteerEvent>(
+    'helpRequest',
+    'createVolunteerEvent',
+    {
+      'title': title,
+      'description': description,
+      'organizerEmail': organizerEmail,
+      'eventDate': eventDate,
+      'location': location,
+      'neighborhoodZone': neighborhoodZone,
+      'pointsReward': pointsReward,
+    },
+  );
+
+  /// Gets community volunteer events.
+  _ida.Future<List<_ijz6y5wx.VolunteerEvent>> getVolunteerEvents() =>
+      caller.callServerEndpoint<List<_ijz6y5wx.VolunteerEvent>>(
+        'helpRequest',
+        'getVolunteerEvents',
+        {},
+      );
+
+  /// Signs up a user for a volunteer event.
+  _ida.Future<_ijz6y5wx.VolunteerEvent> signUpVolunteerEvent({
+    required int eventId,
+    required String volunteerEmail,
+  }) => caller.callServerEndpoint<_ijz6y5wx.VolunteerEvent>(
+    'helpRequest',
+    'signUpVolunteerEvent',
+    {
+      'eventId': eventId,
+      'volunteerEmail': volunteerEmail,
+    },
+  );
 
   /// Creates a new Skill/Item Offer.
   _ida.Future<_ipzxy2lt.SkillOffer> createSkillOffer({

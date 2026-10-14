@@ -2,6 +2,189 @@ import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 
 class HelpRequestEndpoint extends Endpoint {
+  /// Adds a borrowable tool/equipment item to the registry.
+  Future<BorrowableItem> createBorrowableItem(
+    Session session, {
+    required String title,
+    required String description,
+    required String category,
+    required String ownerEmail,
+    String? depositRequired,
+    required String neighborhoodZone,
+  }) async {
+    final authInfo = session.authenticated;
+    final userId = authInfo != null
+        ? (int.tryParse(authInfo.userIdentifier) ??
+              authInfo.userIdentifier.hashCode)
+        : (ownerEmail.isNotEmpty ? ownerEmail.hashCode : 1);
+
+    final item = BorrowableItem(
+      title: title,
+      description: description,
+      category: category,
+      ownerUserId: userId,
+      ownerEmail: ownerEmail.isNotEmpty ? ownerEmail : 'neighbor@helphub.com',
+      depositRequired: depositRequired ?? 'None',
+      neighborhoodZone: neighborhoodZone.isNotEmpty
+          ? neighborhoodZone
+          : 'North Campus',
+      isAvailable: true,
+      createdAt: DateTime.now().toUtc(),
+    );
+
+    return await BorrowableItem.db.insertRow(session, item);
+  }
+
+  /// Gets list of borrowable items.
+  Future<List<BorrowableItem>> getBorrowableItems(Session session) async {
+    var items = await BorrowableItem.db.find(
+      session,
+      orderBy: (t) => t.createdAt,
+    );
+
+    if (items.isEmpty) {
+      final sampleItem = BorrowableItem(
+        title: '🔧 Dewalt Cordless Power Drill & Bit Set',
+        description:
+            'Heavy duty drill with 20V battery pack. Perfect for hanging shelves or assembling furniture.',
+        category: 'Tools & Hardware',
+        ownerUserId: 1,
+        ownerEmail: 'craftsman@helphub.com',
+        depositRequired: 'ID Copy',
+        neighborhoodZone: 'North Campus',
+        isAvailable: true,
+        createdAt: DateTime.now().toUtc(),
+      );
+      final inserted = await BorrowableItem.db.insertRow(session, sampleItem);
+      return [inserted];
+    }
+
+    items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return items;
+  }
+
+  /// Requests to borrow an item.
+  Future<BorrowableItem> requestBorrowItem(
+    Session session, {
+    required int itemId,
+    required String borrowerEmail,
+  }) async {
+    final item = await BorrowableItem.db.findById(session, itemId);
+    if (item == null) {
+      throw Exception('Borrowable item not found');
+    }
+
+    final updated = item.copyWith(
+      isAvailable: false,
+      borrowedByEmail: borrowerEmail,
+    );
+
+    final saved = await BorrowableItem.db.updateRow(session, updated);
+
+    await _createNotification(
+      session,
+      recipientEmail: saved.ownerEmail,
+      title: '🔧 Item Borrow Request!',
+      message: '$borrowerEmail requested to borrow "${saved.title}".',
+    );
+
+    return saved;
+  }
+
+  /// Creates a community volunteer event.
+  Future<VolunteerEvent> createVolunteerEvent(
+    Session session, {
+    required String title,
+    required String description,
+    required String organizerEmail,
+    required String eventDate,
+    required String location,
+    required String neighborhoodZone,
+    int? pointsReward,
+  }) async {
+    final event = VolunteerEvent(
+      title: title,
+      description: description,
+      organizerEmail: organizerEmail.isNotEmpty
+          ? organizerEmail
+          : 'volunteer@helphub.com',
+      eventDate: eventDate,
+      location: location,
+      neighborhoodZone: neighborhoodZone,
+      volunteersCount: 1,
+      volunteersList: organizerEmail,
+      pointsReward: pointsReward ?? 50,
+      createdAt: DateTime.now().toUtc(),
+    );
+
+    return await VolunteerEvent.db.insertRow(session, event);
+  }
+
+  /// Gets community volunteer events.
+  Future<List<VolunteerEvent>> getVolunteerEvents(Session session) async {
+    var events = await VolunteerEvent.db.find(
+      session,
+      orderBy: (t) => t.createdAt,
+    );
+
+    if (events.isEmpty) {
+      final sampleEvent = VolunteerEvent(
+        title: '🧹 Campus Quad & Park Clean-Up Drive',
+        description:
+            'Join neighbors for a 2-hour morning clean-up drive! Trash bags and gloves provided.',
+        organizerEmail: 'green@helphub.com',
+        eventDate: 'This Saturday @ 9:00 AM',
+        location: 'Main Campus Quad Park',
+        neighborhoodZone: 'North Campus',
+        volunteersCount: 18,
+        volunteersList: 'green@helphub.com, neighbor@helphub.com',
+        pointsReward: 50,
+        createdAt: DateTime.now().toUtc(),
+      );
+      final inserted = await VolunteerEvent.db.insertRow(session, sampleEvent);
+      return [inserted];
+    }
+
+    events.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return events;
+  }
+
+  /// Signs up a user for a volunteer event.
+  Future<VolunteerEvent> signUpVolunteerEvent(
+    Session session, {
+    required int eventId,
+    required String volunteerEmail,
+  }) async {
+    final event = await VolunteerEvent.db.findById(session, eventId);
+    if (event == null) {
+      throw Exception('Volunteer event not found');
+    }
+
+    final currentList = event.volunteersList ?? '';
+    if (currentList.contains(volunteerEmail)) {
+      return event;
+    }
+
+    final updated = event.copyWith(
+      volunteersCount: event.volunteersCount + 1,
+      volunteersList: currentList.isEmpty
+          ? volunteerEmail
+          : '$currentList, $volunteerEmail',
+    );
+
+    final saved = await VolunteerEvent.db.updateRow(session, updated);
+
+    await _createNotification(
+      session,
+      recipientEmail: volunteerEmail,
+      title: '🧹 Volunteer Event Confirmation!',
+      message:
+          'You signed up for "${saved.title}" (+${saved.pointsReward} bonus pts upon completion)!',
+    );
+
+    return saved;
+  }
+
   /// Creates a new Skill/Item Offer.
   Future<SkillOffer> createSkillOffer(
     Session session, {

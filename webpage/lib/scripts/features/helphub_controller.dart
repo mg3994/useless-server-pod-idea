@@ -33,6 +33,8 @@ class HelpHubController {
     loadHelpRequests();
     loadSkillOffers();
     loadCommunityGroups();
+    loadBorrowableItems();
+    loadVolunteerEvents();
     loadNotifications();
   }
 
@@ -433,6 +435,148 @@ class HelpHubController {
     }
   }
 
+  Future<void> loadBorrowableItems() async {
+    final container = web.document.querySelector('#borrow-items-container');
+    if (container == null) return;
+
+    try {
+      final items = await client.helpRequest.getBorrowableItems();
+      container.textContent = '';
+
+      if (items.isEmpty) {
+        container.insertAdjacentHTML(
+          'beforeend',
+          '<p class="text-xs text-surface-400 py-4 col-span-full">No tools available to borrow right now.</p>',
+        );
+        return;
+      }
+
+      for (final item in items) {
+        final itemHtml =
+            '''
+          <div class="p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">${_escapeHtml(item.category)}</span>
+                <span class="text-[10px] text-surface-400">${_escapeHtml(item.neighborhoodZone)}</span>
+              </div>
+              <h4 class="text-sm font-bold text-surface-900 dark:text-white mb-1">${_escapeHtml(item.title)}</h4>
+              <p class="text-xs text-surface-600 dark:text-surface-300 mb-2">${_escapeHtml(item.description)}</p>
+              <div class="text-[11px] text-slate-500 font-medium">Deposit: ${_escapeHtml(item.depositRequired ?? 'None')}</div>
+            </div>
+            <div class="mt-3 pt-2 border-t border-surface-100 dark:border-surface-800 flex items-center justify-between">
+              <span class="text-[11px] text-surface-400">Owner: ${_escapeHtml(item.ownerEmail)}</span>
+              <button class="borrow-item-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors" data-id="${item.id}">
+                ${item.isAvailable ? 'Request Borrow' : 'Borrowed'}
+              </button>
+            </div>
+          </div>
+        ''';
+        container.insertAdjacentHTML('beforeend', itemHtml);
+      }
+
+      final borrowBtns = web.document.querySelectorAll('.borrow-item-btn');
+      for (var i = 0; i < borrowBtns.length; i++) {
+        final btn = borrowBtns.item(i) as web.HTMLElement?;
+        btn?.addEventListener(
+          'click',
+          ((web.Event e) {
+            final idStr = btn.getAttribute('data-id');
+            if (idStr != null) {
+              final id = int.tryParse(idStr);
+              if (id != null) {
+                final userEmailEl = web.document.querySelector('#user-email');
+                final email = userEmailEl?.textContent ?? 'guest@helphub.com';
+
+                client.helpRequest
+                    .requestBorrowItem(itemId: id, borrowerEmail: email)
+                    .then((_) {
+                      web.window.alert('Tool borrow request sent to owner! 🔧');
+                      loadBorrowableItems();
+                      loadNotifications();
+                    });
+              }
+            }
+          }).toJS,
+        );
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+
+  Future<void> loadVolunteerEvents() async {
+    final container = web.document.querySelector('#volunteer-events-container');
+    if (container == null) return;
+
+    try {
+      final events = await client.helpRequest.getVolunteerEvents();
+      container.textContent = '';
+
+      if (events.isEmpty) {
+        container.insertAdjacentHTML(
+          'beforeend',
+          '<p class="text-xs text-surface-400 py-4 col-span-full">No volunteer drives right now.</p>',
+        );
+        return;
+      }
+
+      for (final evt in events) {
+        final evtHtml =
+            '''
+          <div class="p-4 rounded-2xl bg-white dark:bg-surface-900 border border-emerald-100 dark:border-emerald-900/50 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">🧹 Drive</span>
+                <span class="text-[10px] font-extrabold text-amber-500">🪙 +${evt.pointsReward} pts</span>
+              </div>
+              <h4 class="text-sm font-bold text-surface-900 dark:text-white mb-1">${_escapeHtml(evt.title)}</h4>
+              <p class="text-xs text-surface-600 dark:text-surface-300 mb-2">${_escapeHtml(evt.description)}</p>
+              <div class="text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold mb-1">📅 ${_escapeHtml(evt.eventDate)} @ ${_escapeHtml(evt.location)}</div>
+            </div>
+            <div class="mt-3 pt-2 border-t border-surface-100 dark:border-surface-800 flex items-center justify-between">
+              <span class="text-[11px] text-surface-400">👥 ${evt.volunteersCount} signed up</span>
+              <button class="signup-event-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-colors" data-id="${evt.id}">
+                Sign Up Drive
+              </button>
+            </div>
+          </div>
+        ''';
+        container.insertAdjacentHTML('beforeend', evtHtml);
+      }
+
+      final signupBtns = web.document.querySelectorAll('.signup-event-btn');
+      for (var i = 0; i < signupBtns.length; i++) {
+        final btn = signupBtns.item(i) as web.HTMLElement?;
+        btn?.addEventListener(
+          'click',
+          ((web.Event e) {
+            final idStr = btn.getAttribute('data-id');
+            if (idStr != null) {
+              final id = int.tryParse(idStr);
+              if (id != null) {
+                final userEmailEl = web.document.querySelector('#user-email');
+                final email = userEmailEl?.textContent ?? 'guest@helphub.com';
+
+                client.helpRequest
+                    .signUpVolunteerEvent(eventId: id, volunteerEmail: email)
+                    .then((_) {
+                      web.window.alert(
+                        'Signed up for volunteer drive! Thank you 🧹',
+                      );
+                      loadVolunteerEvents();
+                      loadNotifications();
+                    });
+              }
+            }
+          }).toJS,
+        );
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+
   Future<void> loadSkillOffers() async {
     final container = web.document.querySelector('#offers-container');
     if (container == null) return;
@@ -444,8 +588,7 @@ class HelpHubController {
       if (offers.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 py-4 col-span-full">No skill/item offers available right now.</p>'
-              .toJS,
+          '<p class="text-xs text-surface-400 py-4 col-span-full">No skill/item offers available right now.</p>',
         );
         return;
       }
@@ -471,7 +614,7 @@ class HelpHubController {
             </div>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', offerHtml.toJS);
+        container.insertAdjacentHTML('beforeend', offerHtml);
       }
 
       // Bind claim offer buttons
@@ -518,8 +661,7 @@ class HelpHubController {
       if (groups.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 py-4 col-span-full">No community circles available right now.</p>'
-              .toJS,
+          '<p class="text-xs text-surface-400 py-4 col-span-full">No community circles available right now.</p>',
         );
         return;
       }
@@ -544,7 +686,7 @@ class HelpHubController {
             </div>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', groupHtml.toJS);
+        container.insertAdjacentHTML('beforeend', groupHtml);
       }
 
       // Bind join group buttons
@@ -604,8 +746,7 @@ class HelpHubController {
       if (activities.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 py-2">No recent timeline activity.</p>'
-              .toJS,
+          '<p class="text-xs text-surface-400 py-2">No recent timeline activity.</p>',
         );
         return;
       }
@@ -618,7 +759,7 @@ class HelpHubController {
             <div class="text-[11px] text-surface-600 dark:text-surface-300 mt-0.5">${_escapeHtml(a.message)}</div>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', actHtml.toJS);
+        container.insertAdjacentHTML('beforeend', actHtml);
       }
     } catch (e) {
       // Ignore
@@ -644,8 +785,7 @@ class HelpHubController {
       if (messages.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 text-center py-4">No direct messages yet. Coordinate details here!</p>'
-              .toJS,
+          '<p class="text-xs text-surface-400 text-center py-4">No direct messages yet. Coordinate details here!</p>',
         );
         return;
       }
@@ -661,7 +801,7 @@ class HelpHubController {
             <p class="text-xs text-surface-800 dark:text-surface-100">${_escapeHtml(m.message)}</p>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', msgHtml.toJS);
+        container.insertAdjacentHTML('beforeend', msgHtml);
       }
     } catch (e) {
       // Ignore
@@ -803,7 +943,7 @@ class HelpHubController {
         for (final skill in skillsList) {
           final tagHtml =
               '<span class="text-[10px] px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 rounded-md font-semibold border border-indigo-200 dark:border-indigo-800">${_escapeHtml(skill.trim())}</span>';
-          skillsContainer.insertAdjacentHTML('beforeend', tagHtml.toJS);
+          skillsContainer.insertAdjacentHTML('beforeend', tagHtml);
         }
       }
 
@@ -925,8 +1065,7 @@ class HelpHubController {
       if (notifications.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 text-center py-4">No notifications yet.</p>'
-              .toJS,
+          '<p class="text-xs text-surface-400 text-center py-4">No notifications yet.</p>',
         );
         return;
       }
@@ -942,7 +1081,7 @@ class HelpHubController {
             <p class="text-xs text-surface-600 dark:text-surface-300">${_escapeHtml(notif.message)}</p>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', notifHtml.toJS);
+        container.insertAdjacentHTML('beforeend', notifHtml);
 
         if (!notif.isRead && notif.id != null) {
           await client.helpRequest.markNotificationRead(
@@ -974,7 +1113,7 @@ class HelpHubController {
             <p class="text-xs text-indigo-700 dark:text-indigo-300 mt-0.5">${_escapeHtml(ann.content)}</p>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', annHtml.toJS);
+        container.insertAdjacentHTML('beforeend', annHtml);
       }
     } catch (e) {
       // Ignore
@@ -992,8 +1131,7 @@ class HelpHubController {
       if (topUsers.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 col-span-full">No leaderboard entries yet.</p>'
-              .toJS,
+          '<p class="text-xs text-surface-400 col-span-full">No leaderboard entries yet.</p>',
         );
         return;
       }
@@ -1017,7 +1155,7 @@ class HelpHubController {
             <span class="text-xs font-extrabold text-amber-500">${u.points} pts</span>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', cardHtml.toJS);
+        container.insertAdjacentHTML('beforeend', cardHtml);
       }
     } catch (e) {
       // Ignore
@@ -1048,23 +1186,19 @@ class HelpHubController {
       container.textContent = '';
 
       if (requests.isEmpty) {
-        container.insertAdjacentHTML(
-          'beforeend',
-          '''
+        container.insertAdjacentHTML('beforeend', '''
             <div class="col-span-full py-12 text-center text-surface-500 dark:text-surface-400">
               <span class="text-4xl block mb-2">🔍</span>
               <p class="text-base font-semibold">No help requests found.</p>
               <p class="text-xs">Be the first to create one!</p>
             </div>
-          '''
-              .toJS,
-        );
+          ''');
         return;
       }
 
       for (final req in requests) {
         final cardHtml = _buildCardHtml(req);
-        container.insertAdjacentHTML('beforeend', cardHtml.toJS);
+        container.insertAdjacentHTML('beforeend', cardHtml);
       }
 
       _bindCardActionButtons();
@@ -1483,8 +1617,7 @@ class HelpHubController {
       if (comments.isEmpty) {
         listEl.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 text-center py-4">No comments yet. Be the first to start the discussion!</p>'
-              .toJS,
+          '<p class="text-xs text-surface-400 text-center py-4">No comments yet. Be the first to start the discussion!</p>',
         );
         return;
       }
@@ -1500,7 +1633,7 @@ class HelpHubController {
             <p class="text-xs text-surface-700 dark:text-surface-200">${_escapeHtml(c.content)}</p>
           </div>
         ''';
-        listEl.insertAdjacentHTML('beforeend', commentHtml.toJS);
+        listEl.insertAdjacentHTML('beforeend', commentHtml);
       }
     } catch (e) {
       // Ignore

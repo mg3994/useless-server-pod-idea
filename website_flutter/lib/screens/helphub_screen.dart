@@ -13,6 +13,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
   List<HelpRequest> _requests = [];
   List<SkillOffer> _skillOffers = [];
   List<CommunityGroup> _communityGroups = [];
+  List<BorrowableItem> _borrowableItems = [];
+  List<VolunteerEvent> _volunteerEvents = [];
   List<UserProfile> _leaderboard = [];
   List<CommunityAnnouncement> _announcements = [];
   List<UserNotification> _notifications = [];
@@ -100,6 +102,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
 
       final skillOffers = await client.helpRequest.getSkillOffers();
       final communityGroups = await client.helpRequest.getCommunityGroups();
+      final borrowableItems = await client.helpRequest.getBorrowableItems();
+      final volunteerEvents = await client.helpRequest.getVolunteerEvents();
       final profile = await client.helpRequest.getUserProfile(email: userEmail);
       final leaderboard = await client.helpRequest.getLeaderboard();
       final announcements = await client.helpRequest.getAnnouncements();
@@ -114,6 +118,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         _requests = requests;
         _skillOffers = skillOffers;
         _communityGroups = communityGroups;
+        _borrowableItems = borrowableItems;
+        _volunteerEvents = volunteerEvents;
         _profile = profile;
         _leaderboard = leaderboard;
         _announcements = announcements;
@@ -1300,220 +1306,195 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                 const SizedBox(height: 12),
               ],
 
-              // Community Announcement Card
-              if (_announcements.isNotEmpty) ...[
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.indigo.shade50,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.indigo.shade100),
-                  ),
-                  child: Row(
-                    children: [
-                      const Text('📢 ', style: TextStyle(fontSize: 20)),
-                      Expanded(
+              // Tool Borrowing Registry Carousel
+              if (_borrowableItems.isNotEmpty) ...[
+                const Text(
+                  '🔧 Tool & Gear Borrowing Registry',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+                const SizedBox(height: 6),
+                SizedBox(
+                  height: 95,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _borrowableItems.length,
+                    itemBuilder: (context, index) {
+                      final item = _borrowableItems[index];
+                      return Container(
+                        width: 210,
+                        margin: const EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.blueGrey.shade50,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: Colors.blueGrey.shade200),
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              _announcements.first.title,
+                              item.title,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: Colors.indigo,
+                                fontSize: 11,
+                                color: Colors.blueGrey,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              _announcements.first.content,
+                              item.description,
                               style: const TextStyle(
-                                fontSize: 11,
+                                fontSize: 10,
                                 color: Colors.black87,
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: InkWell(
+                                onTap: () async {
+                                  final messenger = ScaffoldMessenger.of(
+                                    context,
+                                  );
+                                  await client.helpRequest.requestBorrowItem(
+                                    itemId: item.id!,
+                                    borrowerEmail: _getUserEmail(),
+                                  );
+                                  if (!mounted) return;
+                                  messenger.showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Borrow request sent to owner! 🔧',
+                                      ),
+                                    ),
+                                  );
+                                  _loadData();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: item.isAvailable
+                                        ? Colors.blueGrey
+                                        : Colors.grey,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    item.isAvailable
+                                        ? 'Request Borrow'
+                                        : 'Borrowed',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
               ],
 
-              // User Profile Header Card
-              if (_profile != null) ...[
-                Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 24,
-                              backgroundColor: Colors.indigo.shade100,
-                              child: Text(
-                                _profile!.displayName.isNotEmpty
-                                    ? _profile!.displayName[0].toUpperCase()
-                                    : '👤',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colors.indigo,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        _profile!.displayName,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 6),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 6,
-                                          vertical: 2,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.amber.shade50,
-                                          borderRadius: BorderRadius.circular(
-                                            6,
-                                          ),
-                                          border: Border.all(
-                                            color: Colors.amber.shade300,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          '⭐ ${(_profile!.ratingAverage ?? 5.0).toStringAsFixed(1)}',
-                                          style: const TextStyle(
-                                            color: Colors.amber,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 4),
-                                      InkWell(
-                                        onTap: _showEditProfileDialog,
-                                        child: const Icon(
-                                          Icons.edit_outlined,
-                                          size: 16,
-                                          color: Colors.indigo,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    _profile!.avatarBadge,
-                                    style: const TextStyle(
-                                      color: Colors.indigo,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  if (_profile!.unlockedBadges != null) ...[
-                                    const SizedBox(height: 4),
-                                    Wrap(
-                                      spacing: 4,
-                                      children: _profile!.unlockedBadges!
-                                          .split(',')
-                                          .map((b) {
-                                            return Chip(
-                                              label: Text(
-                                                b.trim(),
-                                                style: const TextStyle(
-                                                  fontSize: 9,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.amber,
-                                                ),
-                                              ),
-                                              backgroundColor:
-                                                  Colors.amber.shade50,
-                                              visualDensity:
-                                                  VisualDensity.compact,
-                                              padding: EdgeInsets.zero,
-                                            );
-                                          })
-                                          .toList(),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  '🪙 ${_profile!.points} pts',
-                                  style: const TextStyle(
-                                    color: Colors.amber,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Text(
-                                  '${_profile!.completedCount} done • ${_profile!.requestedCount} requested',
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+              // Volunteer Events Drives Carousel
+              if (_volunteerEvents.isNotEmpty) ...[
+                const Text(
+                  '🧹 Community Volunteer Drives',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+                const SizedBox(height: 6),
+                SizedBox(
+                  height: 95,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _volunteerEvents.length,
+                    itemBuilder: (context, index) {
+                      final evt = _volunteerEvents[index];
+                      return Container(
+                        width: 220,
+                        margin: const EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.emerald.shade50,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: Colors.emerald.shade200),
                         ),
-                        const SizedBox(height: 12),
-                        Column(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Milestone Progress',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                Text(
-                                  '${_profile!.completedCount} / $targetMilestone Favors',
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.indigo,
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              evt.title,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11,
+                                color: Colors.emerald.shade900,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 4),
-                            LinearProgressIndicator(
-                              value: milestonePct,
-                              borderRadius: BorderRadius.circular(8),
-                              backgroundColor: Colors.grey.shade200,
-                              color: Colors.indigo,
-                              minHeight: 6,
+                            Text(
+                              '${evt.eventDate} • +${evt.pointsReward} pts',
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: InkWell(
+                                onTap: () async {
+                                  final messenger = ScaffoldMessenger.of(
+                                    context,
+                                  );
+                                  await client.helpRequest.signUpVolunteerEvent(
+                                    eventId: evt.id!,
+                                    volunteerEmail: _getUserEmail(),
+                                  );
+                                  if (!mounted) return;
+                                  messenger.showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Signed up for volunteer drive! 🧹',
+                                      ),
+                                    ),
+                                  );
+                                  _loadData();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.emerald,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: const Text(
+                                    'Sign Up',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(height: 16),

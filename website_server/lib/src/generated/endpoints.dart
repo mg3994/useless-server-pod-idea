@@ -284,6 +284,186 @@ class Endpoints extends _is.EndpointDispatch {
       name: 'helpRequest',
       endpoint: endpoints['helpRequest']!,
       methodConnectors: {
+        'createBorrowableItem': _is.MethodConnector(
+          name: 'createBorrowableItem',
+          params: {
+            'title': _is.ParameterDescription(
+              name: 'title',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'description': _is.ParameterDescription(
+              name: 'description',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'category': _is.ParameterDescription(
+              name: 'category',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'ownerEmail': _is.ParameterDescription(
+              name: 'ownerEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'depositRequired': _is.ParameterDescription(
+              name: 'depositRequired',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+            'neighborhoodZone': _is.ParameterDescription(
+              name: 'neighborhoodZone',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .createBorrowableItem(
+                        session,
+                        title: params['title'],
+                        description: params['description'],
+                        category: params['category'],
+                        ownerEmail: params['ownerEmail'],
+                        depositRequired: params['depositRequired'],
+                        neighborhoodZone: params['neighborhoodZone'],
+                      ),
+        ),
+        'getBorrowableItems': _is.MethodConnector(
+          name: 'getBorrowableItems',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getBorrowableItems(session),
+        ),
+        'requestBorrowItem': _is.MethodConnector(
+          name: 'requestBorrowItem',
+          params: {
+            'itemId': _is.ParameterDescription(
+              name: 'itemId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'borrowerEmail': _is.ParameterDescription(
+              name: 'borrowerEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .requestBorrowItem(
+                        session,
+                        itemId: params['itemId'],
+                        borrowerEmail: params['borrowerEmail'],
+                      ),
+        ),
+        'createVolunteerEvent': _is.MethodConnector(
+          name: 'createVolunteerEvent',
+          params: {
+            'title': _is.ParameterDescription(
+              name: 'title',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'description': _is.ParameterDescription(
+              name: 'description',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'organizerEmail': _is.ParameterDescription(
+              name: 'organizerEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'eventDate': _is.ParameterDescription(
+              name: 'eventDate',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'location': _is.ParameterDescription(
+              name: 'location',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'neighborhoodZone': _is.ParameterDescription(
+              name: 'neighborhoodZone',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'pointsReward': _is.ParameterDescription(
+              name: 'pointsReward',
+              type: _is.getType<int?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .createVolunteerEvent(
+                        session,
+                        title: params['title'],
+                        description: params['description'],
+                        organizerEmail: params['organizerEmail'],
+                        eventDate: params['eventDate'],
+                        location: params['location'],
+                        neighborhoodZone: params['neighborhoodZone'],
+                        pointsReward: params['pointsReward'],
+                      ),
+        ),
+        'getVolunteerEvents': _is.MethodConnector(
+          name: 'getVolunteerEvents',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getVolunteerEvents(session),
+        ),
+        'signUpVolunteerEvent': _is.MethodConnector(
+          name: 'signUpVolunteerEvent',
+          params: {
+            'eventId': _is.ParameterDescription(
+              name: 'eventId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'volunteerEmail': _is.ParameterDescription(
+              name: 'volunteerEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .signUpVolunteerEvent(
+                        session,
+                        eventId: params['eventId'],
+                        volunteerEmail: params['volunteerEmail'],
+                      ),
+        ),
         'createSkillOffer': _is.MethodConnector(
           name: 'createSkillOffer',
           params: {

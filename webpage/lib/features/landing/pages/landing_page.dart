@@ -60,11 +60,27 @@ Component navbar() {
               ),
               a(
                 {
+                  'href': '#tools-registry',
+                  'id': 'nav-tools-link',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                },
+                [Text('🔧 Tool Registry')],
+              ),
+              a(
+                {
+                  'href': '#volunteer-drives',
+                  'id': 'nav-volunteer-link',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                },
+                [Text('🧹 Volunteer Drives')],
+              ),
+              a(
+                {
                   'href': '#skill-marketplace',
                   'id': 'nav-skills-link',
                   'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
                 },
-                [Text('🌱 Skill Marketplace')],
+                [Text('🌱 Skills & Items')],
               ),
               a(
                 {
@@ -72,23 +88,7 @@ Component navbar() {
                   'id': 'nav-groups-link',
                   'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
                 },
-                [Text('🚲 Neighborhood Circles')],
-              ),
-              a(
-                {
-                  'href': '#leaderboard',
-                  'id': 'nav-leaderboard-link',
-                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
-                },
-                [Text('🏆 Leaderboard')],
-              ),
-              a(
-                {
-                  'href': '#create',
-                  'id': 'nav-create-shortcut',
-                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
-                },
-                [Text('Post Favor Request')],
+                [Text('🚲 Circles')],
               ),
             ],
           ),
@@ -540,6 +540,56 @@ Component landingHero() {
               ),
             ],
           ),
+        ],
+      ),
+
+      // Tool & Equipment Borrowing Registry Section
+      div(
+        {'id': 'tools-registry', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        [
+          div(
+            {'class': 'flex items-center justify-between mb-4'},
+            [
+              h2(
+                {
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                },
+                [
+                  span({'class': 'text-2xl'}, [Text('🔧')]),
+                  Text('Tool & Equipment Borrowing Registry'),
+                ],
+              ),
+            ],
+          ),
+          div({
+            'id': 'borrow-items-container',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+          }, []),
+        ],
+      ),
+
+      // Community Volunteer Events Drives Section
+      div(
+        {'id': 'volunteer-drives', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        [
+          div(
+            {'class': 'flex items-center justify-between mb-4'},
+            [
+              h2(
+                {
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                },
+                [
+                  span({'class': 'text-2xl'}, [Text('🧹')]),
+                  Text('Community Volunteer Drives & Events'),
+                ],
+              ),
+            ],
+          ),
+          div({
+            'id': 'volunteer-events-container',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+          }, []),
         ],
       ),
 

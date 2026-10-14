@@ -12,6 +12,12 @@ jwtRefresh:
 greeting:
   - hello:
 helpRequest:
+  - createBorrowableItem:
+  - getBorrowableItems:
+  - requestBorrowItem:
+  - createVolunteerEvent:
+  - getVolunteerEvents:
+  - signUpVolunteerEvent:
   - createSkillOffer:
   - getSkillOffers:
   - claimSkillOffer:
