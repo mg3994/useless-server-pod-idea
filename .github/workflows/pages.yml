@@ -2,9 +2,11 @@ name: Deploy Webpage to GitHub Pages
 
 on:
   push:
-    branches: ["*"]
+    branches:
+      - "**"
   pull_request:
-    branches: ["*"]
+    branches:
+      - "**"
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -40,16 +42,30 @@ jobs:
         with:
           channel: 'beta'
 
-      - name: Install Node Dependencies & Build UnoCSS
+      - name: Export Dart SDK to PATH
+        run: |
+          echo "$FLUTTER_ROOT/bin" >> "$GITHUB_PATH"
+          echo "$FLUTTER_ROOT/bin/cache/dart-sdk/bin" >> "$GITHUB_PATH"
+
+      - name: Install Dependencies
+        run: |
+          cd website_client && dart pub get
+          cd ../webpage && dart pub get
+          npm install
+
+      - name: Build UnoCSS Styles
         run: |
           cd webpage
-          npm install
           npm run build
 
-      - name: Install Dart Dependencies & Generate Webpage HTML
+      - name: Verify Client Script Compilation
         run: |
           cd webpage
-          dart pub get
+          dart compile js lib/scripts/script.dart -o /tmp/script_test.js
+
+      - name: Generate Webpage Static HTML
+        run: |
+          cd webpage
           dart bin/main.dart
 
       - name: Upload GitHub Pages Artifact
