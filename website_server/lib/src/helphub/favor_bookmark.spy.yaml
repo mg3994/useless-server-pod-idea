@@ -1,0 +1,7 @@
+class: FavorBookmark
+table: favor_bookmark
+fields:
+  userId: int
+  userEmail: String
+  requestId: int
+  createdAt: DateTime

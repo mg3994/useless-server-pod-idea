@@ -571,6 +571,71 @@ class _HelpRequestEndpoint {
 
   final _is.SerializationManager _serializationManager;
 
+  _ida.Future<bool> bookmarkHelpRequest(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int requestId,
+    required String userEmail,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'bookmarkHelpRequest',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'bookmarkHelpRequest',
+          parameters: _ist.testObjectToJson({
+            'requestId': requestId,
+            'userEmail': userEmail,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<bool>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<List<_irisjcz6.UserNotification>> getCommunityActivityStream(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'getCommunityActivityStream',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'getCommunityActivityStream',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_irisjcz6.UserNotification>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
   _ida.Future<_ifpz7dq1.FavorChatMessage> sendChatMessage(
     _ist.TestSessionBuilder sessionBuilder, {
     required int requestId,

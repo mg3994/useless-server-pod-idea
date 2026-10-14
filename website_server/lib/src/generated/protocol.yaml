@@ -12,6 +12,8 @@ jwtRefresh:
 greeting:
   - hello:
 helpRequest:
+  - bookmarkHelpRequest:
+  - getCommunityActivityStream:
   - sendChatMessage:
   - getChatMessages:
   - completeHelpRequestWithProof:

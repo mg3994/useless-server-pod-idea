@@ -14,6 +14,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
   List<UserProfile> _leaderboard = [];
   List<CommunityAnnouncement> _announcements = [];
   List<UserNotification> _notifications = [];
+  List<UserNotification> _activityStream = [];
   Map<String, int> _communityStats = {};
   UserProfile? _profile;
   bool _isLoading = true;
@@ -22,7 +23,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
   String _selectedStatus = 'All';
   String _selectedZone = 'All';
   String _selectedSort = 'newest';
-  String _selectedActivityMode = 'all'; // 'all', 'posted', 'claimed'
+  String _selectedActivityMode = 'all'; // 'all', 'posted', 'claimed', 'saved'
   String _searchQuery = '';
   bool _emergencyOnly = false;
 
@@ -102,6 +103,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         userEmail: userEmail,
       );
       final stats = await client.helpRequest.getCommunityStats();
+      final activityStream = await client.helpRequest
+          .getCommunityActivityStream();
 
       setState(() {
         _requests = requests;
@@ -110,6 +113,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         _announcements = announcements;
         _notifications = notifications;
         _communityStats = stats;
+        _activityStream = activityStream;
         _isLoading = false;
       });
     } catch (e) {
@@ -1421,112 +1425,94 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                 const SizedBox(height: 16),
               ],
 
-              // Leaderboard Card
-              if (_leaderboard.isNotEmpty) ...[
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.indigo.shade900.withAlpha(20),
-                        Colors.purple.shade900.withAlpha(20),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.indigo.shade100),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Row(
-                        children: [
-                          Text('🏆 ', style: TextStyle(fontSize: 18)),
-                          Text(
-                            'Top Community Helpers',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
+              // Leaderboard & Live Activity Stream Column
+              if (_leaderboard.isNotEmpty || _activityStream.isNotEmpty) ...[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (_leaderboard.isNotEmpty)
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.indigo.shade900.withAlpha(20),
+                                Colors.purple.shade900.withAlpha(20),
+                              ],
                             ),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.indigo.shade100),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      SizedBox(
-                        height: 70,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _leaderboard.length,
-                          itemBuilder: (context, index) {
-                            final user = _leaderboard[index];
-                            return Container(
-                              margin: const EdgeInsets.only(right: 8),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                '🏆 Top Helpers',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
                               ),
-                              decoration: BoxDecoration(
-                                color: isDark
-                                    ? Colors.grey.shade900
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: Colors.grey.shade300),
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    '#${index + 1} ',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.amber,
-                                    ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
+                              const SizedBox(height: 6),
+                              SizedBox(
+                                height: 60,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: _leaderboard.length,
+                                  itemBuilder: (context, index) {
+                                    final user = _leaderboard[index];
+                                    return Container(
+                                      margin: const EdgeInsets.only(right: 6),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: isDark
+                                            ? Colors.grey.shade900
+                                            : Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: Colors.grey.shade300,
+                                        ),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Text(
                                             user.displayName,
                                             style: const TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 12,
+                                              fontSize: 11,
                                             ),
                                           ),
-                                          const SizedBox(width: 4),
                                           Text(
-                                            '⭐ ${(user.ratingAverage ?? 5.0).toStringAsFixed(1)}',
+                                            '${user.points} pts',
                                             style: const TextStyle(
-                                              fontSize: 10,
-                                              color: Colors.amber,
-                                              fontWeight: FontWeight.bold,
+                                              fontSize: 9,
+                                              color: Colors.indigo,
                                             ),
                                           ),
                                         ],
                                       ),
-                                      Text(
-                                        '${user.points} pts',
-                                        style: const TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.indigo,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                    );
+                                  },
+                                ),
                               ),
-                            );
-                          },
+                            ],
+                          ),
                         ),
                       ),
-                    ],
-                  ),
+                  ],
                 ),
                 const SizedBox(height: 16),
               ],
 
-              // Activity Mode Chips (All, My Posted, My Claimed)
+              // Activity Mode Chips (All, My Posted, My Claimed, Saved)
               Row(
                 children: [
                   ChoiceChip(
@@ -1545,10 +1531,10 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                       }
                     },
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: 4),
                   ChoiceChip(
                     label: const Text(
-                      '📝 My Posted',
+                      '📝 Posted',
                       style: TextStyle(fontSize: 11),
                     ),
                     selected: _selectedActivityMode == 'posted',
@@ -1565,10 +1551,10 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                       }
                     },
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: 4),
                   ChoiceChip(
                     label: const Text(
-                      '🤝 My Claimed',
+                      '🤝 Claimed',
                       style: TextStyle(fontSize: 11),
                     ),
                     selected: _selectedActivityMode == 'claimed',
@@ -1581,6 +1567,26 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     onSelected: (selected) {
                       if (selected) {
                         setState(() => _selectedActivityMode = 'claimed');
+                        _loadData();
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 4),
+                  ChoiceChip(
+                    label: const Text(
+                      '🔖 Saved',
+                      style: TextStyle(fontSize: 11),
+                    ),
+                    selected: _selectedActivityMode == 'saved',
+                    selectedColor: Colors.indigo,
+                    labelStyle: TextStyle(
+                      color: _selectedActivityMode == 'saved'
+                          ? Colors.white
+                          : Colors.black87,
+                    ),
+                    onSelected: (selected) {
+                      if (selected) {
+                        setState(() => _selectedActivityMode = 'saved');
                         _loadData();
                       }
                     },
@@ -1998,6 +2004,33 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                 if (req.status == 'Open')
                   Row(
                     children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.bookmark_border,
+                          color: Colors.indigo,
+                          size: 20,
+                        ),
+                        tooltip: 'Save Favor',
+                        onPressed: () async {
+                          final isAdded = await client.helpRequest
+                              .bookmarkHelpRequest(
+                                requestId: req.id!,
+                                userEmail: _getUserEmail(),
+                              );
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  isAdded
+                                      ? 'Favor saved to bookmarks! 🔖'
+                                      : 'Removed from bookmarks.',
+                                ),
+                              ),
+                            );
+                          }
+                          _loadData();
+                        },
+                      ),
                       OutlinedButton.icon(
                         icon: const Icon(
                           Icons.thumb_up_alt_outlined,

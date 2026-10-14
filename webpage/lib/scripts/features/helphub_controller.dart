@@ -12,7 +12,7 @@ class HelpHubController {
   String currentZone = 'All';
   String currentSearch = '';
   String currentSortBy = 'newest';
-  String currentActivityMode = 'all'; // 'all', 'posted', 'claimed'
+  String currentActivityMode = 'all'; // 'all', 'posted', 'claimed', 'saved'
   bool emergencyOnly = false;
 
   int? activeCommentsRequestId;
@@ -29,6 +29,7 @@ class HelpHubController {
     loadAnnouncements();
     loadLeaderboard();
     loadCommunityStats();
+    loadActivityStream();
     loadHelpRequests();
     loadNotifications();
   }
@@ -372,10 +373,11 @@ class HelpHubController {
     final tabAll = web.document.querySelector('#tab-all');
     final tabPosted = web.document.querySelector('#tab-posted');
     final tabClaimed = web.document.querySelector('#tab-claimed');
+    final tabSaved = web.document.querySelector('#tab-saved');
 
     void updateTabStyles(String mode) {
       currentActivityMode = mode;
-      final tabs = [tabAll, tabPosted, tabClaimed];
+      final tabs = [tabAll, tabPosted, tabClaimed, tabSaved];
       for (final t in tabs) {
         if (t == null) continue;
         final modeAttr = t.getAttribute('data-mode');
@@ -399,6 +401,10 @@ class HelpHubController {
     tabClaimed?.addEventListener(
       'click',
       ((web.Event e) => updateTabStyles('claimed')).toJS,
+    );
+    tabSaved?.addEventListener(
+      'click',
+      ((web.Event e) => updateTabStyles('saved')).toJS,
     );
   }
 
@@ -436,6 +442,38 @@ class HelpHubController {
           (stats['completedCount'] ?? 0).toString();
       web.document.querySelector('#stat-points-count')?.textContent =
           (stats['totalPointsAwarded'] ?? 0).toString();
+    } catch (e) {
+      // Ignore
+    }
+  }
+
+  Future<void> loadActivityStream() async {
+    final container = web.document.querySelector('#activity-stream-container');
+    if (container == null) return;
+
+    try {
+      final activities = await client.helpRequest.getCommunityActivityStream();
+      container.textContent = '';
+
+      if (activities.isEmpty) {
+        container.insertAdjacentHTML(
+          'beforeend',
+          '<p class="text-xs text-surface-400 py-2">No recent timeline activity.</p>'
+              .toJS,
+        );
+        return;
+      }
+
+      for (final a in activities) {
+        final actHtml =
+            '''
+          <div class="p-2 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200/50 dark:border-surface-700/50">
+            <div class="font-bold text-indigo-900 dark:text-indigo-200">${_escapeHtml(a.title)}</div>
+            <div class="text-[11px] text-surface-600 dark:text-surface-300 mt-0.5">${_escapeHtml(a.message)}</div>
+          </div>
+        ''';
+        container.insertAdjacentHTML('beforeend', actHtml.toJS);
+      }
     } catch (e) {
       // Ignore
     }
@@ -505,6 +543,7 @@ class HelpHubController {
       if (inputEl != null) inputEl.value = '';
       await _loadChatMessagesList(activeChatRequestId!);
       await loadNotifications();
+      await loadActivityStream();
     } catch (e) {
       web.window.alert('Failed to send chat message.');
     }
@@ -532,6 +571,7 @@ class HelpHubController {
       await loadLeaderboard();
       await loadCommunityStats();
       await loadNotifications();
+      await loadActivityStream();
     } catch (e) {
       web.window.alert('Failed to confirm completion.');
     }
@@ -577,6 +617,7 @@ class HelpHubController {
       await loadHelpRequests();
       await loadCommunityStats();
       await loadNotifications();
+      await loadActivityStream();
     } catch (e) {
       web.window.alert('Failed to dispatch SOS alert.');
     }
@@ -923,6 +964,9 @@ class HelpHubController {
       actionButtonHtml =
           '''
         <div class="flex items-center gap-1">
+          <button class="bookmark-btn px-2 py-1 text-[11px] font-bold rounded-lg text-indigo-600 bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition-colors" data-id="${req.id}">
+            🔖 Save
+          </button>
           <button class="upvote-btn px-2 py-1 text-[11px] font-bold rounded-lg text-emerald-700 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 transition-colors" data-id="${req.id}">
             👍 $upvotes
           </button>
@@ -1013,6 +1057,35 @@ class HelpHubController {
   }
 
   void _bindCardActionButtons() {
+    final bookmarkBtns = web.document.querySelectorAll('.bookmark-btn');
+    for (var i = 0; i < bookmarkBtns.length; i++) {
+      final btn = bookmarkBtns.item(i) as web.HTMLElement?;
+      btn?.addEventListener(
+        'click',
+        ((web.Event e) {
+          final idStr = btn.getAttribute('data-id');
+          if (idStr != null) {
+            final id = int.tryParse(idStr);
+            if (id != null) {
+              final userEmailEl = web.document.querySelector('#user-email');
+              final email = userEmailEl?.textContent ?? 'user@helphub.com';
+
+              client.helpRequest
+                  .bookmarkHelpRequest(requestId: id, userEmail: email)
+                  .then((isAdded) {
+                    web.window.alert(
+                      isAdded
+                          ? 'Favor saved to bookmarks! 🔖'
+                          : 'Removed from bookmarks.',
+                    );
+                    loadHelpRequests();
+                  });
+            }
+          }
+        }).toJS,
+      );
+    }
+
     final chatBtns = web.document.querySelectorAll('.direct-chat-btn');
     for (var i = 0; i < chatBtns.length; i++) {
       final btn = chatBtns.item(i) as web.HTMLElement?;
@@ -1131,6 +1204,7 @@ class HelpHubController {
                     loadLeaderboard();
                     loadCommunityStats();
                     loadNotifications();
+                    loadActivityStream();
                   });
             }
           }
@@ -1292,6 +1366,7 @@ class HelpHubController {
       if (inputEl != null) inputEl.value = '';
       await _loadCommentsList(activeCommentsRequestId!);
       await loadNotifications();
+      await loadActivityStream();
     } catch (e) {
       web.window.alert('Failed to post comment.');
     }
@@ -1358,6 +1433,7 @@ class HelpHubController {
       await loadLeaderboard();
       await loadCommunityStats();
       await loadNotifications();
+      await loadActivityStream();
     } catch (e) {
       web.window.alert('Failed to publish request. Please try again.');
     }

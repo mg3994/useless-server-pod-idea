@@ -2,6 +2,52 @@ import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 
 class HelpRequestEndpoint extends Endpoint {
+  /// Bookmarks or un-bookmarks a help request for a user.
+  Future<bool> bookmarkHelpRequest(
+    Session session, {
+    required int requestId,
+    required String userEmail,
+  }) async {
+    final authInfo = session.authenticated;
+    final userId = authInfo != null
+        ? (int.tryParse(authInfo.userIdentifier) ??
+              authInfo.userIdentifier.hashCode)
+        : (userEmail.isNotEmpty ? userEmail.hashCode : 1);
+
+    final existing = await FavorBookmark.db.findFirstRow(
+      session,
+      where: (t) =>
+          t.requestId.equals(requestId) & t.userEmail.equals(userEmail),
+    );
+
+    if (existing != null) {
+      await FavorBookmark.db.deleteRow(session, existing);
+      return false; // Removed bookmark
+    } else {
+      final bookmark = FavorBookmark(
+        userId: userId,
+        userEmail: userEmail,
+        requestId: requestId,
+        createdAt: DateTime.now().toUtc(),
+      );
+      await FavorBookmark.db.insertRow(session, bookmark);
+      return true; // Added bookmark
+    }
+  }
+
+  /// Gets recent community activity stream log.
+  Future<List<UserNotification>> getCommunityActivityStream(
+    Session session,
+  ) async {
+    var notifs = await UserNotification.db.find(
+      session,
+      orderBy: (t) => t.createdAt,
+    );
+
+    notifs.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return notifs.take(15).toList();
+  }
+
   /// Sends a direct chat message for a claimed favor request.
   Future<FavorChatMessage> sendChatMessage(
     Session session, {
@@ -159,6 +205,7 @@ class HelpRequestEndpoint extends Endpoint {
       neighborhoodZone: neighborhoodZone ?? 'North Campus',
       estimatedDuration: 'Immediate',
       upvotes: 5,
+      expiresAt: DateTime.now().toUtc().add(const Duration(hours: 24)),
       createdAt: DateTime.now().toUtc(),
     );
 
@@ -191,8 +238,26 @@ class HelpRequestEndpoint extends Endpoint {
     String? searchQuery,
     String? sortBy,
     String? myEmailFilter,
-    String? myActivityMode, // 'posted', 'claimed'
+    String? myActivityMode, // 'posted', 'claimed', 'saved'
   }) async {
+    if (myActivityMode == 'saved' &&
+        myEmailFilter != null &&
+        myEmailFilter.isNotEmpty) {
+      final bookmarks = await FavorBookmark.db.find(
+        session,
+        where: (t) => t.userEmail.equals(myEmailFilter),
+      );
+      final bookmarkedIds = bookmarks.map((b) => b.requestId).toSet();
+      if (bookmarkedIds.isEmpty) return [];
+
+      var requests = await HelpRequest.db.find(
+        session,
+        where: (t) => t.id.inSet(bookmarkedIds),
+      );
+      requests.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return requests;
+    }
+
     Expression where = Constant.bool(true);
 
     if (category != null && category.isNotEmpty && category != 'All') {
@@ -296,6 +361,7 @@ class HelpRequestEndpoint extends Endpoint {
       neighborhoodZone: neighborhoodZone ?? 'North Campus',
       estimatedDuration: estimatedDuration ?? '15-30 mins',
       upvotes: 0,
+      expiresAt: DateTime.now().toUtc().add(const Duration(days: 3)),
       createdAt: DateTime.now().toUtc(),
     );
 

@@ -68,6 +68,14 @@ Component navbar() {
               ),
               a(
                 {
+                  'href': '#activity-stream',
+                  'id': 'nav-activity-link',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                },
+                [Text('⚡ Live Timeline')],
+              ),
+              a(
+                {
                   'href': '#create',
                   'id': 'nav-create-shortcut',
                   'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
@@ -528,13 +536,16 @@ Component landingHero() {
         ],
       ),
 
-      // Leaderboard Section
+      // Leaderboard & Live Activity Stream Section
       div(
-        {'id': 'leaderboard', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        {
+          'id': 'leaderboard',
+          'class': 'max-w-6xl mx-auto px-4 mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6',
+        },
         [
           div(
             {
-              'class': 'bg-gradient-to-r from-indigo-900/10 via-purple-900/10 to-transparent p-6 rounded-2xl border border-indigo-200/50 dark:border-indigo-800/50',
+              'class': 'lg:col-span-2 bg-gradient-to-r from-indigo-900/10 via-purple-900/10 to-transparent p-6 rounded-2xl border border-indigo-200/50 dark:border-indigo-800/50',
             },
             [
               div(
@@ -559,7 +570,30 @@ Component landingHero() {
               ),
               div({
                 'id': 'leaderboard-container',
-                'class': 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3',
+                'class': 'grid grid-cols-1 sm:grid-cols-2 gap-3',
+              }, []),
+            ],
+          ),
+
+          // Live Activity Stream
+          div(
+            {
+              'id': 'activity-stream',
+              'class': 'p-5 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-sm flex flex-col justify-between',
+            },
+            [
+              h3(
+                {
+                  'class': 'text-base font-bold text-surface-900 dark:text-white mb-3 flex items-center gap-2',
+                },
+                [
+                  span({'class': 'text-lg'}, [Text('⚡')]),
+                  Text('Live Community Timeline'),
+                ],
+              ),
+              div({
+                'id': 'activity-stream-container',
+                'class': 'space-y-2.5 max-h-48 overflow-y-auto text-xs',
               }, []),
             ],
           ),
@@ -588,7 +622,7 @@ Component landingHero() {
                 ],
               ),
 
-              // Activity Mode Tabs (All, My Posted, My Claimed)
+              // Activity Mode Tabs (All, My Posted, My Claimed, Saved)
               div(
                 {
                   'id': 'activity-mode-tabs',
@@ -618,6 +652,14 @@ Component landingHero() {
                       'data-mode': 'claimed',
                     },
                     [Text('🤝 My Claimed')],
+                  ),
+                  button(
+                    {
+                      'id': 'tab-saved',
+                      'class': 'px-3 py-1.5 rounded-lg text-surface-600 dark:text-surface-300 hover:text-indigo-600 transition-all cursor-pointer',
+                      'data-mode': 'saved',
+                    },
+                    [Text('🔖 Saved')],
                   ),
                 ],
               ),

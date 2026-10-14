@@ -285,6 +285,27 @@ class EndpointHelpRequest extends _isc.EndpointRef {
   @override
   String get name => 'helpRequest';
 
+  /// Bookmarks or un-bookmarks a help request for a user.
+  _ida.Future<bool> bookmarkHelpRequest({
+    required int requestId,
+    required String userEmail,
+  }) => caller.callServerEndpoint<bool>(
+    'helpRequest',
+    'bookmarkHelpRequest',
+    {
+      'requestId': requestId,
+      'userEmail': userEmail,
+    },
+  );
+
+  /// Gets recent community activity stream log.
+  _ida.Future<List<_ihs35lap.UserNotification>> getCommunityActivityStream() =>
+      caller.callServerEndpoint<List<_ihs35lap.UserNotification>>(
+        'helpRequest',
+        'getCommunityActivityStream',
+        {},
+      );
+
   /// Sends a direct chat message for a claimed favor request.
   _ida.Future<_irf5posj.FavorChatMessage> sendChatMessage({
     required int requestId,

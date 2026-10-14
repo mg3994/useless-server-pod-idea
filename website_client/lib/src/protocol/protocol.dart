@@ -32,6 +32,7 @@ import 'package:website_client/src/protocol/helphub/user_profile.dart'
     as _if5f0yyd;
 import 'greetings/greeting.dart' as _izw8z7ou;
 import 'helphub/community_announcement.dart' as _iw40l365;
+import 'helphub/favor_bookmark.dart' as _ia1oh19d;
 import 'helphub/favor_chat_message.dart' as _i2q04olh;
 import 'helphub/help_request.dart' as _i2hcnfb8;
 import 'helphub/request_comment.dart' as _il3090nm;
@@ -40,6 +41,7 @@ import 'helphub/user_notification.dart' as _inwdejad;
 import 'helphub/user_profile.dart' as _i2208dl4;
 export 'greetings/greeting.dart';
 export 'helphub/community_announcement.dart';
+export 'helphub/favor_bookmark.dart';
 export 'helphub/favor_chat_message.dart';
 export 'helphub/help_request.dart';
 export 'helphub/request_comment.dart';
@@ -88,6 +90,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _iw40l365.CommunityAnnouncement) {
       return _iw40l365.CommunityAnnouncement.fromJson(data) as T;
     }
+    if (t == _ia1oh19d.FavorBookmark) {
+      return _ia1oh19d.FavorBookmark.fromJson(data) as T;
+    }
     if (t == _i2q04olh.FavorChatMessage) {
       return _i2q04olh.FavorChatMessage.fromJson(data) as T;
     }
@@ -115,6 +120,10 @@ class Protocol extends _isc.SerializationManager {
               : null)
           as T;
     }
+    if (t == _isc.getType<_ia1oh19d.FavorBookmark?>()) {
+      return (data != null ? _ia1oh19d.FavorBookmark.fromJson(data) : null)
+          as T;
+    }
     if (t == _isc.getType<_i2q04olh.FavorChatMessage?>()) {
       return (data != null ? _i2q04olh.FavorChatMessage.fromJson(data) : null)
           as T;
@@ -136,6 +145,12 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _isc.getType<_i2208dl4.UserProfile?>()) {
       return (data != null ? _i2208dl4.UserProfile.fromJson(data) : null) as T;
+    }
+    if (t == List<_ihs35lap.UserNotification>) {
+      return (data as List)
+              .map((e) => deserialize<_ihs35lap.UserNotification>(e))
+              .toList()
+          as T;
     }
     if (t == List<_irf5posj.FavorChatMessage>) {
       return (data as List)
@@ -167,12 +182,6 @@ class Protocol extends _isc.SerializationManager {
               .toList()
           as T;
     }
-    if (t == List<_ihs35lap.UserNotification>) {
-      return (data as List)
-              .map((e) => deserialize<_ihs35lap.UserNotification>(e))
-              .toList()
-          as T;
-    }
     if (t == List<_if5f0yyd.UserProfile>) {
       return (data as List)
               .map((e) => deserialize<_if5f0yyd.UserProfile>(e))
@@ -198,6 +207,7 @@ class Protocol extends _isc.SerializationManager {
     return switch (type) {
       _izw8z7ou.Greeting => 'Greeting',
       _iw40l365.CommunityAnnouncement => 'CommunityAnnouncement',
+      _ia1oh19d.FavorBookmark => 'FavorBookmark',
       _i2q04olh.FavorChatMessage => 'FavorChatMessage',
       _i2hcnfb8.HelpRequest => 'HelpRequest',
       _il3090nm.RequestComment => 'RequestComment',
@@ -222,6 +232,8 @@ class Protocol extends _isc.SerializationManager {
         return 'Greeting';
       case _iw40l365.CommunityAnnouncement():
         return 'CommunityAnnouncement';
+      case _ia1oh19d.FavorBookmark():
+        return 'FavorBookmark';
       case _i2q04olh.FavorChatMessage():
         return 'FavorChatMessage';
       case _i2hcnfb8.HelpRequest():
@@ -261,6 +273,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'CommunityAnnouncement') {
       return deserialize<_iw40l365.CommunityAnnouncement>(data['data']);
+    }
+    if (dataClassName == 'FavorBookmark') {
+      return deserialize<_ia1oh19d.FavorBookmark>(data['data']);
     }
     if (dataClassName == 'FavorChatMessage') {
       return deserialize<_i2q04olh.FavorChatMessage>(data['data']);

@@ -284,6 +284,43 @@ class Endpoints extends _is.EndpointDispatch {
       name: 'helpRequest',
       endpoint: endpoints['helpRequest']!,
       methodConnectors: {
+        'bookmarkHelpRequest': _is.MethodConnector(
+          name: 'bookmarkHelpRequest',
+          params: {
+            'requestId': _is.ParameterDescription(
+              name: 'requestId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'userEmail': _is.ParameterDescription(
+              name: 'userEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .bookmarkHelpRequest(
+                        session,
+                        requestId: params['requestId'],
+                        userEmail: params['userEmail'],
+                      ),
+        ),
+        'getCommunityActivityStream': _is.MethodConnector(
+          name: 'getCommunityActivityStream',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getCommunityActivityStream(session),
+        ),
         'sendChatMessage': _is.MethodConnector(
           name: 'sendChatMessage',
           params: {
