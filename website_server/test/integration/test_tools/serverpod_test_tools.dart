@@ -27,12 +27,16 @@ import 'package:website_server/src/generated/helphub/community_group.dart'
     as _ivzqtrjb;
 import 'package:website_server/src/generated/helphub/favor_chat_message.dart'
     as _ifpz7dq1;
+import 'package:website_server/src/generated/helphub/hazard_report.dart'
+    as _itsw36ae;
 import 'package:website_server/src/generated/helphub/help_request.dart'
     as _i62gi6d1;
 import 'package:website_server/src/generated/helphub/request_comment.dart'
     as _itygqzxa;
 import 'package:website_server/src/generated/helphub/request_rating.dart'
     as _iopw990x;
+import 'package:website_server/src/generated/helphub/reward_redemption.dart'
+    as _i9g6rfrl;
 import 'package:website_server/src/generated/helphub/skill_offer.dart'
     as _ixk7xcy3;
 import 'package:website_server/src/generated/helphub/user_notification.dart'
@@ -578,6 +582,149 @@ class _HelpRequestEndpoint {
   final _is.EndpointDispatch _endpointDispatch;
 
   final _is.SerializationManager _serializationManager;
+
+  _ida.Future<_itsw36ae.HazardReport> createHazardReport(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String title,
+    required String description,
+    required String severity,
+    required String location,
+    required String neighborhoodZone,
+    required String reporterEmail,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'createHazardReport',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'createHazardReport',
+          parameters: _ist.testObjectToJson({
+            'title': title,
+            'description': description,
+            'severity': severity,
+            'location': location,
+            'neighborhoodZone': neighborhoodZone,
+            'reporterEmail': reporterEmail,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_itsw36ae.HazardReport>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<List<_itsw36ae.HazardReport>> getHazardReports(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'getHazardReports',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'getHazardReports',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_itsw36ae.HazardReport>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_itsw36ae.HazardReport> resolveHazardReport(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int reportId,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'resolveHazardReport',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'resolveHazardReport',
+          parameters: _ist.testObjectToJson({'reportId': reportId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_itsw36ae.HazardReport>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_i9g6rfrl.RewardRedemption> redeemPerk(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String perkTitle,
+    required int pointsCost,
+    required String partnerName,
+    required String userEmail,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'redeemPerk',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'redeemPerk',
+          parameters: _ist.testObjectToJson({
+            'perkTitle': perkTitle,
+            'pointsCost': pointsCost,
+            'partnerName': partnerName,
+            'userEmail': userEmail,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i9g6rfrl.RewardRedemption>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 
   _ida.Future<_irz6m6c4.BorrowableItem> createBorrowableItem(
     _ist.TestSessionBuilder sessionBuilder, {

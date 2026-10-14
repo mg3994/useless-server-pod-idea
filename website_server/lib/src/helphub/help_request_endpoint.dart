@@ -2,6 +2,135 @@ import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 
 class HelpRequestEndpoint extends Endpoint {
+  /// Reports a neighborhood safety hazard or alert.
+  Future<HazardReport> createHazardReport(
+    Session session, {
+    required String title,
+    required String description,
+    required String severity,
+    required String location,
+    required String neighborhoodZone,
+    required String reporterEmail,
+  }) async {
+    final report = HazardReport(
+      title: title,
+      description: description,
+      severity: severity,
+      location: location,
+      neighborhoodZone: neighborhoodZone.isNotEmpty
+          ? neighborhoodZone
+          : 'North Campus',
+      reporterEmail: reporterEmail.isNotEmpty
+          ? reporterEmail
+          : 'safety@helphub.com',
+      isResolved: false,
+      createdAt: DateTime.now().toUtc(),
+    );
+
+    final inserted = await HazardReport.db.insertRow(session, report);
+
+    final profiles = await UserProfile.db.find(session);
+    for (final p in profiles.take(10)) {
+      if (p.email != reporterEmail) {
+        await _createNotification(
+          session,
+          recipientEmail: p.email,
+          title: '⚠️ Safety Hazard Reported',
+          message: '$severity Hazard: "$title" at $location.',
+        );
+      }
+    }
+
+    return inserted;
+  }
+
+  /// Gets active hazard reports.
+  Future<List<HazardReport>> getHazardReports(Session session) async {
+    var reports = await HazardReport.db.find(
+      session,
+      orderBy: (t) => t.createdAt,
+    );
+
+    if (reports.isEmpty) {
+      final sampleHazard = HazardReport(
+        title: '🧊 Icy Footpath near Quad Library Entrance',
+        description:
+            'Slippery black ice formed on stairs and main walkway. Use side ramp.',
+        severity: 'Moderate',
+        location: 'Quad Library North Entrance',
+        neighborhoodZone: 'North Campus',
+        reporterEmail: 'campus-watch@helphub.com',
+        isResolved: false,
+        createdAt: DateTime.now().toUtc(),
+      );
+      final inserted = await HazardReport.db.insertRow(session, sampleHazard);
+      return [inserted];
+    }
+
+    reports.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return reports;
+  }
+
+  /// Resolves a hazard report.
+  Future<HazardReport> resolveHazardReport(
+    Session session, {
+    required int reportId,
+  }) async {
+    final report = await HazardReport.db.findById(session, reportId);
+    if (report == null) {
+      throw Exception('Hazard report not found');
+    }
+
+    final updated = report.copyWith(isResolved: true);
+    return await HazardReport.db.updateRow(session, updated);
+  }
+
+  /// Redeems karma points for local partner perks or vouchers.
+  Future<RewardRedemption> redeemPerk(
+    Session session, {
+    required String perkTitle,
+    required int pointsCost,
+    required String partnerName,
+    required String userEmail,
+  }) async {
+    var profile = await UserProfile.db.findFirstRow(
+      session,
+      where: (t) => t.email.equals(userEmail),
+    );
+
+    if (profile == null || profile.points < pointsCost) {
+      throw Exception('Insufficient points balance for this perk');
+    }
+
+    final updatedProfile = profile.copyWith(
+      points: profile.points - pointsCost,
+    );
+    await UserProfile.db.updateRow(session, updatedProfile);
+
+    final code =
+        'PERK-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
+
+    final redemption = RewardRedemption(
+      perkTitle: perkTitle,
+      pointsCost: pointsCost,
+      partnerName: partnerName,
+      userEmail: userEmail,
+      redemptionCode: code,
+      createdAt: DateTime.now().toUtc(),
+    );
+
+    final inserted = await RewardRedemption.db.insertRow(session, redemption);
+
+    await _createNotification(
+      session,
+      recipientEmail: userEmail,
+      title: '🎟️ Karma Perk Redeemed!',
+      message: 'Redeemed "$perkTitle" from $partnerName! Code: $code',
+    );
+
+    return inserted;
+  }
+
   /// Adds a borrowable tool/equipment item to the registry.
   Future<BorrowableItem> createBorrowableItem(
     Session session, {

@@ -27,12 +27,16 @@ import 'package:website_client/src/protocol/helphub/community_group.dart'
     as _iux57j0g;
 import 'package:website_client/src/protocol/helphub/favor_chat_message.dart'
     as _irf5posj;
+import 'package:website_client/src/protocol/helphub/hazard_report.dart'
+    as _i47xxilf;
 import 'package:website_client/src/protocol/helphub/help_request.dart'
     as _ilm5roly;
 import 'package:website_client/src/protocol/helphub/request_comment.dart'
     as _iq4ufam1;
 import 'package:website_client/src/protocol/helphub/request_rating.dart'
     as _ib2k1m8u;
+import 'package:website_client/src/protocol/helphub/reward_redemption.dart'
+    as _is9hzthp;
 import 'package:website_client/src/protocol/helphub/skill_offer.dart'
     as _ipzxy2lt;
 import 'package:website_client/src/protocol/helphub/user_notification.dart'
@@ -292,6 +296,61 @@ class EndpointHelpRequest extends _isc.EndpointRef {
 
   @override
   String get name => 'helpRequest';
+
+  /// Reports a neighborhood safety hazard or alert.
+  _ida.Future<_i47xxilf.HazardReport> createHazardReport({
+    required String title,
+    required String description,
+    required String severity,
+    required String location,
+    required String neighborhoodZone,
+    required String reporterEmail,
+  }) => caller.callServerEndpoint<_i47xxilf.HazardReport>(
+    'helpRequest',
+    'createHazardReport',
+    {
+      'title': title,
+      'description': description,
+      'severity': severity,
+      'location': location,
+      'neighborhoodZone': neighborhoodZone,
+      'reporterEmail': reporterEmail,
+    },
+  );
+
+  /// Gets active hazard reports.
+  _ida.Future<List<_i47xxilf.HazardReport>> getHazardReports() =>
+      caller.callServerEndpoint<List<_i47xxilf.HazardReport>>(
+        'helpRequest',
+        'getHazardReports',
+        {},
+      );
+
+  /// Resolves a hazard report.
+  _ida.Future<_i47xxilf.HazardReport> resolveHazardReport({
+    required int reportId,
+  }) => caller.callServerEndpoint<_i47xxilf.HazardReport>(
+    'helpRequest',
+    'resolveHazardReport',
+    {'reportId': reportId},
+  );
+
+  /// Redeems karma points for local partner perks or vouchers.
+  _ida.Future<_is9hzthp.RewardRedemption> redeemPerk({
+    required String perkTitle,
+    required int pointsCost,
+    required String partnerName,
+    required String userEmail,
+  }) => caller.callServerEndpoint<_is9hzthp.RewardRedemption>(
+    'helpRequest',
+    'redeemPerk',
+    {
+      'perkTitle': perkTitle,
+      'pointsCost': pointsCost,
+      'partnerName': partnerName,
+      'userEmail': userEmail,
+    },
+  );
 
   /// Adds a borrowable tool/equipment item to the registry.
   _ida.Future<_if3ypwc4.BorrowableItem> createBorrowableItem({

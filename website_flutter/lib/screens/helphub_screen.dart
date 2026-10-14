@@ -65,7 +65,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
   }
 
   String _getUserEmail() {
-    return 'user@helphub.com';
+    return client.auth.authInfo?.userIdentifier ?? 'user@helphub.com';
   }
 
   void _resetFilters() {

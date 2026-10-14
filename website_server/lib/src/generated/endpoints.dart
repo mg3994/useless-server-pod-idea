@@ -284,6 +284,125 @@ class Endpoints extends _is.EndpointDispatch {
       name: 'helpRequest',
       endpoint: endpoints['helpRequest']!,
       methodConnectors: {
+        'createHazardReport': _is.MethodConnector(
+          name: 'createHazardReport',
+          params: {
+            'title': _is.ParameterDescription(
+              name: 'title',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'description': _is.ParameterDescription(
+              name: 'description',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'severity': _is.ParameterDescription(
+              name: 'severity',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'location': _is.ParameterDescription(
+              name: 'location',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'neighborhoodZone': _is.ParameterDescription(
+              name: 'neighborhoodZone',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'reporterEmail': _is.ParameterDescription(
+              name: 'reporterEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .createHazardReport(
+                        session,
+                        title: params['title'],
+                        description: params['description'],
+                        severity: params['severity'],
+                        location: params['location'],
+                        neighborhoodZone: params['neighborhoodZone'],
+                        reporterEmail: params['reporterEmail'],
+                      ),
+        ),
+        'getHazardReports': _is.MethodConnector(
+          name: 'getHazardReports',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getHazardReports(session),
+        ),
+        'resolveHazardReport': _is.MethodConnector(
+          name: 'resolveHazardReport',
+          params: {
+            'reportId': _is.ParameterDescription(
+              name: 'reportId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .resolveHazardReport(
+                        session,
+                        reportId: params['reportId'],
+                      ),
+        ),
+        'redeemPerk': _is.MethodConnector(
+          name: 'redeemPerk',
+          params: {
+            'perkTitle': _is.ParameterDescription(
+              name: 'perkTitle',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'pointsCost': _is.ParameterDescription(
+              name: 'pointsCost',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'partnerName': _is.ParameterDescription(
+              name: 'partnerName',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'userEmail': _is.ParameterDescription(
+              name: 'userEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .redeemPerk(
+                        session,
+                        perkTitle: params['perkTitle'],
+                        pointsCost: params['pointsCost'],
+                        partnerName: params['partnerName'],
+                        userEmail: params['userEmail'],
+                      ),
+        ),
         'createBorrowableItem': _is.MethodConnector(
           name: 'createBorrowableItem',
           params: {

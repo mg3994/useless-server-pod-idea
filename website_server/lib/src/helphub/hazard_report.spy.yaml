@@ -1,0 +1,11 @@
+class: HazardReport
+table: helphub_hazard_report
+fields:
+  title: String
+  description: String
+  severity: String
+  location: String
+  neighborhoodZone: String
+  reporterEmail: String
+  isResolved: bool
+  createdAt: DateTime

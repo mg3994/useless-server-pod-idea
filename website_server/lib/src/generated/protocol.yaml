@@ -12,6 +12,10 @@ jwtRefresh:
 greeting:
   - hello:
 helpRequest:
+  - createHazardReport:
+  - getHazardReports:
+  - resolveHazardReport:
+  - redeemPerk:
   - createBorrowableItem:
   - getBorrowableItems:
   - requestBorrowItem:

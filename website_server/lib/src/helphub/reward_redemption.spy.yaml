@@ -1,0 +1,9 @@
+class: RewardRedemption
+table: helphub_reward_redemption
+fields:
+  perkTitle: String
+  pointsCost: int
+  partnerName: String
+  userEmail: String
+  redemptionCode: String
+  createdAt: DateTime
