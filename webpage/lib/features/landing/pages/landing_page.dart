@@ -626,39 +626,52 @@ Component landingHero() {
 
           // Quick Popular Search Tags
           div(
-            {'class': 'flex flex-wrap items-center gap-2 mb-4'},
+            {'class': 'flex flex-wrap items-center justify-between gap-2 mb-4'},
             [
-              span(
-                {'class': 'text-xs font-bold text-surface-500 mr-1'},
-                [Text('Popular:')],
+              div(
+                {'class': 'flex flex-wrap items-center gap-2'},
+                [
+                  span(
+                    {'class': 'text-xs font-bold text-surface-500 mr-1'},
+                    [Text('Popular:')],
+                  ),
+                  button(
+                    {
+                      'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
+                      'data-tag': 'ladder',
+                    },
+                    [Text('🛠️ #Tools')],
+                  ),
+                  button(
+                    {
+                      'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
+                      'data-tag': 'grocery',
+                    },
+                    [Text('🛵 #Grocery')],
+                  ),
+                  button(
+                    {
+                      'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
+                      'data-tag': 'math',
+                    },
+                    [Text('📚 #Study')],
+                  ),
+                  button(
+                    {
+                      'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
+                      'data-tag': 'cat',
+                    },
+                    [Text('🐱 #PetCare')],
+                  ),
+                ],
               ),
+
               button(
                 {
-                  'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
-                  'data-tag': 'ladder',
+                  'id': 'reset-filters-btn',
+                  'class': 'px-3 py-1 text-xs font-semibold text-rose-600 hover:underline cursor-pointer border border-rose-200 dark:border-rose-900 rounded-lg bg-rose-50/50 dark:bg-rose-950/30',
                 },
-                [Text('🛠️ #Tools')],
-              ),
-              button(
-                {
-                  'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
-                  'data-tag': 'grocery',
-                },
-                [Text('🛵 #Grocery')],
-              ),
-              button(
-                {
-                  'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
-                  'data-tag': 'math',
-                },
-                [Text('📚 #Study')],
-              ),
-              button(
-                {
-                  'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
-                  'data-tag': 'cat',
-                },
-                [Text('🐱 #PetCare')],
+                [Text('🔄 Reset Filters')],
               ),
             ],
           ),
@@ -785,6 +798,12 @@ Component landingHero() {
 
       // Modal Dialog for Emergency SOS
       _sosModal(),
+
+      // Modal Dialog for Direct Chat
+      _chatModal(),
+
+      // Modal Dialog for Completion Proof
+      _proofModal(),
     ],
   );
 }
@@ -1095,6 +1114,131 @@ Component _commentsModal() {
                 [Text('Send')],
               ),
             ],
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+Component _chatModal() {
+  return div(
+    {
+      'id': 'chat-modal',
+      'class': 'fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden',
+    },
+    [
+      div(
+        {
+          'class': 'bg-white dark:bg-surface-900 border border-indigo-300 dark:border-indigo-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative flex flex-col max-h-[85vh]',
+        },
+        [
+          button(
+            {
+              'id': 'close-chat-modal-btn',
+              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold',
+            },
+            [Text('✕')],
+          ),
+          h2(
+            {
+              'class': 'text-xl font-bold text-surface-900 dark:text-white mb-1 flex items-center gap-2',
+            },
+            [
+              span({'class': 'text-xl'}, [Text('💬')]),
+              Text('Direct Favor Chat'),
+            ],
+          ),
+          p(
+            {'class': 'text-xs text-surface-500 dark:text-surface-400 mb-4'},
+            [
+              Text(
+                'Private real-time coordinate chat between requester and helper.',
+              ),
+            ],
+          ),
+
+          div({
+            'id': 'chat-messages-container',
+            'class': 'flex-1 overflow-y-auto my-3 space-y-3 min-h-[180px] max-h-[300px] border-y border-surface-100 dark:border-surface-800 py-3',
+          }, []),
+
+          div(
+            {'class': 'mt-3 flex gap-2'},
+            [
+              input({
+                'id': 'chat-input',
+                'type': 'text',
+                'placeholder': 'Type a direct message...',
+                'class': 'flex-1 px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+              }),
+              button(
+                {
+                  'id': 'submit-chat-btn',
+                  'type': 'button',
+                  'class': 'px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all',
+                },
+                [Text('Send')],
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+Component _proofModal() {
+  return div(
+    {
+      'id': 'proof-modal',
+      'class': 'fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden',
+    },
+    [
+      div(
+        {
+          'class': 'bg-white dark:bg-surface-900 border border-emerald-300 dark:border-emerald-800 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center',
+        },
+        [
+          button(
+            {
+              'id': 'close-proof-modal-btn',
+              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold',
+            },
+            [Text('✕')],
+          ),
+          div({'class': 'text-4xl mb-2'}, [Text('🎉')]),
+          h2(
+            {
+              'class':
+                  'text-lg font-bold text-surface-900 dark:text-white mb-1',
+            },
+            [Text('Complete Favor with Proof Note')],
+          ),
+          p(
+            {'class': 'text-xs text-surface-500 dark:text-surface-400 mb-4'},
+            [
+              Text(
+                'Add an optional completion note or receipt detail for the requester.',
+              ),
+            ],
+          ),
+
+          textarea({
+            'id': 'proof-note-input',
+            'rows': '3',
+            'placeholder':
+                'e.g., Returned item to Dorm A desk / Picked up groceries!',
+            'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-emerald-500 mb-4',
+          }, []),
+
+          button(
+            {
+              'id': 'submit-proof-btn',
+              'type': 'button',
+              'class': 'w-full py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all shadow-md',
+            },
+            [Text('Confirm Favor Completion')],
           ),
         ],
       ),

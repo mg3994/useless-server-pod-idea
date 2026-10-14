@@ -16,5 +16,6 @@ fields:
   neighborhoodZone: String?
   estimatedDuration: String?
   upvotes: int?
+  completionProofNote: String?
   createdAt: DateTime
   updatedAt: DateTime?

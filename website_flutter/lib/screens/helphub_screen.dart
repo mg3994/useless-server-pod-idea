@@ -63,6 +63,20 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
     return 'user@helphub.com';
   }
 
+  void _resetFilters() {
+    setState(() {
+      _selectedCategory = 'All';
+      _selectedStatus = 'All';
+      _selectedZone = 'All';
+      _selectedSort = 'newest';
+      _selectedActivityMode = 'all';
+      _searchQuery = '';
+      _emergencyOnly = false;
+      _searchController.clear();
+    });
+    _loadData();
+  }
+
   Future<void> _loadData() async {
     setState(() => _isLoading = true);
     try {
@@ -103,6 +117,247 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         setState(() => _isLoading = false);
       }
     }
+  }
+
+  Future<void> _showChatBottomSheet(HelpRequest req) async {
+    final chatMsgController = TextEditingController();
+    List<FavorChatMessage> messages = [];
+    bool isLoadingChat = true;
+
+    Future<void> fetchMessages(StateSetter setModalState) async {
+      setModalState(() => isLoadingChat = true);
+      try {
+        final result = await client.helpRequest.getChatMessages(
+          requestId: req.id!,
+        );
+        setModalState(() {
+          messages = result;
+          isLoadingChat = false;
+        });
+      } catch (e) {
+        setModalState(() => isLoadingChat = false);
+      }
+    }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (bottomCtx) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            if (isLoadingChat) {
+              fetchMessages(setModalState);
+            }
+
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(bottomCtx).viewInsets.bottom,
+                left: 16,
+                right: 16,
+                top: 16,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '💬 Direct Chat: ${req.title}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(bottomCtx),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  SizedBox(
+                    height: 250,
+                    child: isLoadingChat
+                        ? const Center(child: CircularProgressIndicator())
+                        : messages.isEmpty
+                        ? const Center(
+                            child: Text(
+                              'No messages yet. Coordinate details here!',
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: messages.length,
+                            itemBuilder: (context, index) {
+                              final m = messages[index];
+                              final isMe = m.senderEmail == _getUserEmail();
+                              return Align(
+                                alignment: isMe
+                                    ? Alignment.centerRight
+                                    : Alignment.centerLeft,
+                                child: Container(
+                                  margin: const EdgeInsets.only(bottom: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isMe
+                                        ? Colors.indigo.shade600
+                                        : Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: isMe
+                                        ? CrossAxisAlignment.end
+                                        : CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        m.senderEmail,
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: isMe
+                                              ? Colors.white70
+                                              : Colors.black54,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        m.message,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: isMe
+                                              ? Colors.white
+                                              : Colors.black87,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: chatMsgController,
+                          decoration: const InputDecoration(
+                            hintText: 'Type a message...',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(12),
+                              ),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: const Icon(Icons.send, color: Colors.indigo),
+                        onPressed: () async {
+                          final text = chatMsgController.text.trim();
+                          if (text.isEmpty) return;
+
+                          await client.helpRequest.sendChatMessage(
+                            requestId: req.id!,
+                            message: text,
+                            senderEmail: _getUserEmail(),
+                          );
+
+                          chatMsgController.clear();
+                          await fetchMessages(setModalState);
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _showCompletionProofDialog(HelpRequest req) async {
+    final noteController = TextEditingController();
+
+    return showDialog(
+      context: context,
+      builder: (dialogCtx) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: const Row(
+            children: [
+              Text('🎉 ', style: TextStyle(fontSize: 22)),
+              Text(
+                'Complete Favor',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Add an optional completion note or proof detail:'),
+              const SizedBox(height: 12),
+              TextField(
+                controller: noteController,
+                maxLines: 2,
+                decoration: const InputDecoration(
+                  labelText: 'Proof Note / Comments',
+                  hintText: 'e.g. Left items at reception desk!',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogCtx),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () async {
+                final note = noteController.text.trim();
+                await client.helpRequest.completeHelpRequestWithProof(
+                  requestId: req.id!,
+                  proofNote: note.isNotEmpty
+                      ? note
+                      : 'Favor completed successfully.',
+                );
+                if (mounted && dialogCtx.mounted) {
+                  Navigator.pop(dialogCtx);
+                }
+                _loadData();
+              },
+              child: const Text('Confirm Completion'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _showSOSBroadcastDialog() async {
@@ -1330,9 +1585,22 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                       }
                     },
                   ),
+                  const Spacer(),
+                  TextButton.icon(
+                    icon: const Icon(
+                      Icons.refresh,
+                      size: 14,
+                      color: Colors.redAccent,
+                    ),
+                    label: const Text(
+                      'Reset',
+                      style: TextStyle(fontSize: 11, color: Colors.redAccent),
+                    ),
+                    onPressed: _resetFilters,
+                  ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
 
               // Filter & Sort Bar
               Row(
@@ -1565,6 +1833,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
     final zoneName = req.neighborhoodZone ?? 'North Campus';
     final duration = req.estimatedDuration ?? '15-30 mins';
     final upvotes = req.upvotes ?? 0;
+    final proofNote = req.completionProofNote ?? '';
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -1686,6 +1955,26 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
+            if (proofNote.isNotEmpty && req.status == 'Completed') ...[
+              const SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.teal.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.teal.shade200),
+                ),
+                child: Text(
+                  'Proof Note: $proofNote',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.teal.shade900,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
             const SizedBox(height: 8),
             TextButton.icon(
               icon: const Icon(Icons.chat_bubble_outline, size: 16),
@@ -1784,19 +2073,34 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     ],
                   )
                 else if (req.status == 'In Progress')
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
-                      foregroundColor: Colors.white,
-                      visualDensity: VisualDensity.compact,
-                    ),
-                    onPressed: () async {
-                      await client.helpRequest.completeHelpRequest(
-                        requestId: req.id!,
-                      );
-                      _loadData();
-                    },
-                    child: const Text('Complete'),
+                  Row(
+                    children: [
+                      OutlinedButton.icon(
+                        icon: const Icon(
+                          Icons.message_outlined,
+                          size: 14,
+                          color: Colors.indigo,
+                        ),
+                        label: const Text(
+                          'Chat',
+                          style: TextStyle(fontSize: 11),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        onPressed: () => _showChatBottomSheet(req),
+                      ),
+                      const SizedBox(width: 6),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.teal,
+                          foregroundColor: Colors.white,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        onPressed: () => _showCompletionProofDialog(req),
+                        child: const Text('Complete'),
+                      ),
+                    ],
                   )
                 else if (req.status == 'Completed')
                   Row(

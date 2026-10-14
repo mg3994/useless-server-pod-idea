@@ -12,6 +12,9 @@ jwtRefresh:
 greeting:
   - hello:
 helpRequest:
+  - sendChatMessage:
+  - getChatMessages:
+  - completeHelpRequestWithProof:
   - getCommunityStats:
   - broadcastEmergencySOS:
   - getHelpRequests:

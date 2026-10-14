@@ -21,6 +21,8 @@ import 'package:website_server/src/generated/greetings/greeting.dart'
     as _iv7sgnpu;
 import 'package:website_server/src/generated/helphub/community_announcement.dart'
     as _io88z89c;
+import 'package:website_server/src/generated/helphub/favor_chat_message.dart'
+    as _ifpz7dq1;
 import 'package:website_server/src/generated/helphub/help_request.dart'
     as _i62gi6d1;
 import 'package:website_server/src/generated/helphub/request_comment.dart'
@@ -568,6 +570,109 @@ class _HelpRequestEndpoint {
   final _is.EndpointDispatch _endpointDispatch;
 
   final _is.SerializationManager _serializationManager;
+
+  _ida.Future<_ifpz7dq1.FavorChatMessage> sendChatMessage(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int requestId,
+    required String message,
+    required String senderEmail,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'sendChatMessage',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'sendChatMessage',
+          parameters: _ist.testObjectToJson({
+            'requestId': requestId,
+            'message': message,
+            'senderEmail': senderEmail,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ifpz7dq1.FavorChatMessage>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<List<_ifpz7dq1.FavorChatMessage>> getChatMessages(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int requestId,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'getChatMessages',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'getChatMessages',
+          parameters: _ist.testObjectToJson({'requestId': requestId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_ifpz7dq1.FavorChatMessage>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_i62gi6d1.HelpRequest> completeHelpRequestWithProof(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int requestId,
+    String? proofNote,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'completeHelpRequestWithProof',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'completeHelpRequestWithProof',
+          parameters: _ist.testObjectToJson({
+            'requestId': requestId,
+            'proofNote': proofNote,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i62gi6d1.HelpRequest>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 
   _ida.Future<Map<String, int>> getCommunityStats(
     _ist.TestSessionBuilder sessionBuilder,

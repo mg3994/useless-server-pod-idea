@@ -21,6 +21,8 @@ import 'package:website_client/src/protocol/greetings/greeting.dart'
     as _ik0mmf5h;
 import 'package:website_client/src/protocol/helphub/community_announcement.dart'
     as _if9166ew;
+import 'package:website_client/src/protocol/helphub/favor_chat_message.dart'
+    as _irf5posj;
 import 'package:website_client/src/protocol/helphub/help_request.dart'
     as _ilm5roly;
 import 'package:website_client/src/protocol/helphub/request_comment.dart'
@@ -282,6 +284,43 @@ class EndpointHelpRequest extends _isc.EndpointRef {
 
   @override
   String get name => 'helpRequest';
+
+  /// Sends a direct chat message for a claimed favor request.
+  _ida.Future<_irf5posj.FavorChatMessage> sendChatMessage({
+    required int requestId,
+    required String message,
+    required String senderEmail,
+  }) => caller.callServerEndpoint<_irf5posj.FavorChatMessage>(
+    'helpRequest',
+    'sendChatMessage',
+    {
+      'requestId': requestId,
+      'message': message,
+      'senderEmail': senderEmail,
+    },
+  );
+
+  /// Gets chat messages for a favor request.
+  _ida.Future<List<_irf5posj.FavorChatMessage>> getChatMessages({
+    required int requestId,
+  }) => caller.callServerEndpoint<List<_irf5posj.FavorChatMessage>>(
+    'helpRequest',
+    'getChatMessages',
+    {'requestId': requestId},
+  );
+
+  /// Completes a help request with an optional completion proof note.
+  _ida.Future<_ilm5roly.HelpRequest> completeHelpRequestWithProof({
+    required int requestId,
+    String? proofNote,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'completeHelpRequestWithProof',
+    {
+      'requestId': requestId,
+      'proofNote': proofNote,
+    },
+  );
 
   /// Fetches community overall stats summary.
   _ida.Future<Map<String, int>> getCommunityStats() =>

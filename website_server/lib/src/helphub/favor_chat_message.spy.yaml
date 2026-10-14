@@ -1,0 +1,8 @@
+class: FavorChatMessage
+table: favor_chat_message
+fields:
+  requestId: int
+  senderUserId: int
+  senderEmail: String
+  message: String
+  createdAt: DateTime

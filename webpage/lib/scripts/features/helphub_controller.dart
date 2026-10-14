@@ -16,6 +16,8 @@ class HelpHubController {
   bool emergencyOnly = false;
 
   int? activeCommentsRequestId;
+  int? activeChatRequestId;
+  int? activeProofRequestId;
   int? activeRatingRequestId;
   int? activeRatingToUserId;
 
@@ -37,6 +39,16 @@ class HelpHubController {
 
     // Tag Chips
     _bindTagChips();
+
+    // Reset Filters Button
+    final resetBtn = web.document.querySelector('#reset-filters-btn');
+    resetBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        _resetFilters();
+      }).toJS,
+    );
 
     // SOS Modal Events
     final openSosBtn = web.document.querySelector('#open-sos-modal-btn');
@@ -63,6 +75,44 @@ class HelpHubController {
       ((web.Event e) {
         e.preventDefault();
         _submitEmergencySos();
+      }).toJS,
+    );
+
+    // Chat Modal Events
+    final closeChatBtn = web.document.querySelector('#close-chat-modal-btn');
+    closeChatBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        _toggleModal('chat-modal', show: false);
+      }).toJS,
+    );
+
+    final submitChatBtn = web.document.querySelector('#submit-chat-btn');
+    submitChatBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        _submitChatMessage();
+      }).toJS,
+    );
+
+    // Proof Modal Events
+    final closeProofBtn = web.document.querySelector('#close-proof-modal-btn');
+    closeProofBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        _toggleModal('proof-modal', show: false);
+      }).toJS,
+    );
+
+    final submitProofBtn = web.document.querySelector('#submit-proof-btn');
+    submitProofBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        _submitCompletionProof();
       }).toJS,
     );
 
@@ -286,6 +336,38 @@ class HelpHubController {
     );
   }
 
+  void _resetFilters() {
+    currentCategory = 'All';
+    currentStatus = 'All';
+    currentZone = 'All';
+    currentSearch = '';
+    currentSortBy = 'newest';
+    emergencyOnly = false;
+
+    final searchInput =
+        web.document.querySelector('#search-input') as web.HTMLInputElement?;
+    if (searchInput != null) searchInput.value = '';
+
+    final catSelect = web.document.querySelector(
+      '#category-filter',
+    ) as web.HTMLSelectElement?;
+    if (catSelect != null) catSelect.value = 'All';
+
+    final zoneSelect =
+        web.document.querySelector('#zone-filter') as web.HTMLSelectElement?;
+    if (zoneSelect != null) zoneSelect.value = 'All';
+
+    final statusSelect =
+        web.document.querySelector('#status-filter') as web.HTMLSelectElement?;
+    if (statusSelect != null) statusSelect.value = 'All';
+
+    final sortSelect =
+        web.document.querySelector('#sort-filter') as web.HTMLSelectElement?;
+    if (sortSelect != null) sortSelect.value = 'newest';
+
+    loadHelpRequests();
+  }
+
   void _bindActivityTabs() {
     final tabAll = web.document.querySelector('#tab-all');
     final tabPosted = web.document.querySelector('#tab-posted');
@@ -356,6 +438,102 @@ class HelpHubController {
           (stats['totalPointsAwarded'] ?? 0).toString();
     } catch (e) {
       // Ignore
+    }
+  }
+
+  Future<void> _openChatModal(int requestId) async {
+    activeChatRequestId = requestId;
+    _toggleModal('chat-modal', show: true);
+    await _loadChatMessagesList(requestId);
+  }
+
+  Future<void> _loadChatMessagesList(int requestId) async {
+    final container = web.document.querySelector('#chat-messages-container');
+    if (container == null) return;
+
+    try {
+      final messages = await client.helpRequest.getChatMessages(
+        requestId: requestId,
+      );
+      container.textContent = '';
+
+      if (messages.isEmpty) {
+        container.insertAdjacentHTML(
+          'beforeend',
+          '<p class="text-xs text-surface-400 text-center py-4">No direct messages yet. Coordinate details here!</p>'
+              .toJS,
+        );
+        return;
+      }
+
+      for (final m in messages) {
+        final msgHtml =
+            '''
+          <div class="p-2.5 rounded-xl bg-surface-50 dark:bg-surface-800 border border-indigo-100 dark:border-indigo-900">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400">${_escapeHtml(m.senderEmail)}</span>
+              <span class="text-[10px] text-surface-400">Just now</span>
+            </div>
+            <p class="text-xs text-surface-800 dark:text-surface-100">${_escapeHtml(m.message)}</p>
+          </div>
+        ''';
+        container.insertAdjacentHTML('beforeend', msgHtml.toJS);
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+
+  Future<void> _submitChatMessage() async {
+    if (activeChatRequestId == null) return;
+
+    final inputEl =
+        web.document.querySelector('#chat-input') as web.HTMLInputElement?;
+    final text = inputEl?.value.trim() ?? '';
+    if (text.isEmpty) return;
+
+    final userEmailEl = web.document.querySelector('#user-email');
+    final senderEmail = userEmailEl?.textContent ?? 'neighbor@helphub.com';
+
+    try {
+      await client.helpRequest.sendChatMessage(
+        requestId: activeChatRequestId!,
+        message: text,
+        senderEmail: senderEmail,
+      );
+
+      if (inputEl != null) inputEl.value = '';
+      await _loadChatMessagesList(activeChatRequestId!);
+      await loadNotifications();
+    } catch (e) {
+      web.window.alert('Failed to send chat message.');
+    }
+  }
+
+  Future<void> _submitCompletionProof() async {
+    if (activeProofRequestId == null) return;
+
+    final inputEl = web.document.querySelector(
+      '#proof-note-input',
+    ) as web.HTMLTextAreaElement?;
+    final note = inputEl?.value.trim() ?? 'Favor completed successfully.';
+
+    try {
+      await client.helpRequest.completeHelpRequestWithProof(
+        requestId: activeProofRequestId!,
+        proofNote: note,
+      );
+
+      _toggleModal('proof-modal', show: false);
+      if (inputEl != null) inputEl.value = '';
+
+      await loadHelpRequests();
+      await loadUserProfile();
+      await loadLeaderboard();
+      await loadCommunityStats();
+      await loadNotifications();
+    } catch (e) {
+      web.window.alert('Failed to confirm completion.');
     }
   }
 
@@ -738,6 +916,7 @@ class HelpHubController {
     final zoneName = req.neighborhoodZone ?? 'North Campus';
     final duration = req.estimatedDuration ?? '15-30 mins';
     final upvotes = req.upvotes ?? 0;
+    final proofNote = req.completionProofNote ?? '';
 
     String actionButtonHtml = '';
     if (req.status == 'Open') {
@@ -761,9 +940,14 @@ class HelpHubController {
     } else if (req.status == 'In Progress') {
       actionButtonHtml =
           '''
-        <button class="complete-btn px-4 py-1.5 text-xs font-semibold rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 transition-colors" data-id="${req.id}">
-          Mark Complete
-        </button>
+        <div class="flex items-center gap-1.5">
+          <button class="direct-chat-btn px-2.5 py-1 text-[11px] font-bold rounded-lg text-indigo-600 bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition-colors" data-id="${req.id}">
+            💬 Chat
+          </button>
+          <button class="complete-proof-btn px-3 py-1.5 text-xs font-semibold rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 transition-colors" data-id="${req.id}">
+            Complete
+          </button>
+        </div>
       ''';
     } else if (req.status == 'Completed') {
       actionButtonHtml =
@@ -779,6 +963,16 @@ class HelpHubController {
       ''';
     } else {
       actionButtonHtml = '''<span class="text-xs font-semibold text-surface-400">Cancelled</span>''';
+    }
+
+    String proofHtml = '';
+    if (proofNote.isNotEmpty && req.status == 'Completed') {
+      proofHtml =
+          '''
+        <div class="mt-2 text-[11px] p-2 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 rounded-lg border border-emerald-200 dark:border-emerald-800">
+          <strong>Proof Note:</strong> ${_escapeHtml(proofNote)}
+        </div>
+      ''';
     }
 
     return '''
@@ -798,8 +992,9 @@ class HelpHubController {
             <span>•</span>
             <span>⏱️ $duration</span>
           </div>
-          <p class="text-xs text-surface-400 dark:text-surface-500 mb-3">By: ${_escapeHtml(req.creatorEmail)}</p>
-          <p class="text-sm text-surface-600 dark:text-surface-300 line-clamp-3 mb-4">${_escapeHtml(req.description)}</p>
+          <p class="text-xs text-surface-400 dark:text-surface-500 mb-2">By: ${_escapeHtml(req.creatorEmail)}</p>
+          <p class="text-sm text-surface-600 dark:text-surface-300 line-clamp-3 mb-3">${_escapeHtml(req.description)}</p>
+          $proofHtml
         </div>
         <div>
           <button class="comments-btn text-xs text-indigo-600 dark:text-indigo-400 font-semibold mb-3 hover:underline flex items-center gap-1" data-id="${req.id}">
@@ -818,6 +1013,41 @@ class HelpHubController {
   }
 
   void _bindCardActionButtons() {
+    final chatBtns = web.document.querySelectorAll('.direct-chat-btn');
+    for (var i = 0; i < chatBtns.length; i++) {
+      final btn = chatBtns.item(i) as web.HTMLElement?;
+      btn?.addEventListener(
+        'click',
+        ((web.Event e) {
+          final idStr = btn.getAttribute('data-id');
+          if (idStr != null) {
+            final id = int.tryParse(idStr);
+            if (id != null) {
+              _openChatModal(id);
+            }
+          }
+        }).toJS,
+      );
+    }
+
+    final proofBtns = web.document.querySelectorAll('.complete-proof-btn');
+    for (var i = 0; i < proofBtns.length; i++) {
+      final btn = proofBtns.item(i) as web.HTMLElement?;
+      btn?.addEventListener(
+        'click',
+        ((web.Event e) {
+          final idStr = btn.getAttribute('data-id');
+          if (idStr != null) {
+            final id = int.tryParse(idStr);
+            if (id != null) {
+              activeProofRequestId = id;
+              _toggleModal('proof-modal', show: true);
+            }
+          }
+        }).toJS,
+      );
+    }
+
     final upvoteBtns = web.document.querySelectorAll('.upvote-btn');
     for (var i = 0; i < upvoteBtns.length; i++) {
       final btn = upvoteBtns.item(i) as web.HTMLElement?;
@@ -902,29 +1132,6 @@ class HelpHubController {
                     loadCommunityStats();
                     loadNotifications();
                   });
-            }
-          }
-        }).toJS,
-      );
-    }
-
-    final completeBtns = web.document.querySelectorAll('.complete-btn');
-    for (var i = 0; i < completeBtns.length; i++) {
-      final btn = completeBtns.item(i) as web.HTMLElement?;
-      btn?.addEventListener(
-        'click',
-        ((web.Event e) {
-          final idStr = btn.getAttribute('data-id');
-          if (idStr != null) {
-            final id = int.tryParse(idStr);
-            if (id != null) {
-              client.helpRequest.completeHelpRequest(requestId: id).then((_) {
-                loadHelpRequests();
-                loadUserProfile();
-                loadLeaderboard();
-                loadCommunityStats();
-                loadNotifications();
-              });
             }
           }
         }).toJS,

@@ -2,6 +2,107 @@ import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 
 class HelpRequestEndpoint extends Endpoint {
+  /// Sends a direct chat message for a claimed favor request.
+  Future<FavorChatMessage> sendChatMessage(
+    Session session, {
+    required int requestId,
+    required String message,
+    required String senderEmail,
+  }) async {
+    final authInfo = session.authenticated;
+    final userId = authInfo != null
+        ? (int.tryParse(authInfo.userIdentifier) ??
+              authInfo.userIdentifier.hashCode)
+        : (senderEmail.isNotEmpty ? senderEmail.hashCode : 1);
+
+    final chat = FavorChatMessage(
+      requestId: requestId,
+      senderUserId: userId,
+      senderEmail: senderEmail.isNotEmpty
+          ? senderEmail
+          : 'neighbor@helphub.com',
+      message: message,
+      createdAt: DateTime.now().toUtc(),
+    );
+
+    final inserted = await FavorChatMessage.db.insertRow(session, chat);
+
+    final request = await HelpRequest.db.findById(session, requestId);
+    if (request != null) {
+      final recipient = request.creatorEmail == senderEmail
+          ? (request.helperEmail ?? 'helper@helphub.com')
+          : request.creatorEmail;
+
+      await _createNotification(
+        session,
+        recipientEmail: recipient,
+        title: '💬 Direct Message on Favor',
+        message: '$senderEmail: "$message"',
+        requestId: requestId,
+      );
+    }
+
+    return inserted;
+  }
+
+  /// Gets chat messages for a favor request.
+  Future<List<FavorChatMessage>> getChatMessages(
+    Session session, {
+    required int requestId,
+  }) async {
+    final messages = await FavorChatMessage.db.find(
+      session,
+      where: (t) => t.requestId.equals(requestId),
+      orderBy: (t) => t.createdAt,
+    );
+    return messages;
+  }
+
+  /// Completes a help request with an optional completion proof note.
+  Future<HelpRequest> completeHelpRequestWithProof(
+    Session session, {
+    required int requestId,
+    String? proofNote,
+  }) async {
+    final request = await HelpRequest.db.findById(session, requestId);
+    if (request == null) {
+      throw Exception('Help request not found');
+    }
+
+    if (request.status == 'Completed') {
+      return request;
+    }
+
+    final updated = request.copyWith(
+      status: 'Completed',
+      completionProofNote: proofNote ?? 'Favor completed successfully.',
+      updatedAt: DateTime.now().toUtc(),
+    );
+
+    final saved = await HelpRequest.db.updateRow(session, updated);
+
+    if (saved.helperUserId != null) {
+      final helperEmail = saved.helperEmail ?? 'helper@helphub.com';
+      await _addRewardPointsAndCompletedCount(
+        session,
+        saved.helperUserId!,
+        helperEmail,
+        saved.rewardPoints,
+      );
+
+      await _createNotification(
+        session,
+        recipientEmail: helperEmail,
+        title: '🎉 Favor Completed & Rewarded!',
+        message:
+            'You earned +${saved.rewardPoints} pts for completing "${saved.title}"!',
+        requestId: saved.id,
+      );
+    }
+
+    return saved;
+  }
+
   /// Fetches community overall stats summary.
   Future<Map<String, int>> getCommunityStats(Session session) async {
     final allRequests = await HelpRequest.db.find(session);
@@ -64,7 +165,6 @@ class HelpRequestEndpoint extends Endpoint {
     final inserted = await HelpRequest.db.insertRow(session, request);
     await _incrementRequestedCount(session, userId, creatorEmail);
 
-    // Notify top community profiles about emergency SOS
     final profiles = await UserProfile.db.find(session);
     for (final p in profiles.take(10)) {
       if (p.email != creatorEmail) {
@@ -329,42 +429,11 @@ class HelpRequestEndpoint extends Endpoint {
     Session session, {
     required int requestId,
   }) async {
-    final request = await HelpRequest.db.findById(session, requestId);
-    if (request == null) {
-      throw Exception('Help request not found');
-    }
-
-    if (request.status == 'Completed') {
-      return request;
-    }
-
-    final updated = request.copyWith(
-      status: 'Completed',
-      updatedAt: DateTime.now().toUtc(),
+    return completeHelpRequestWithProof(
+      session,
+      requestId: requestId,
+      proofNote: 'Favor completed successfully.',
     );
-
-    final saved = await HelpRequest.db.updateRow(session, updated);
-
-    if (saved.helperUserId != null) {
-      final helperEmail = saved.helperEmail ?? 'helper@helphub.com';
-      await _addRewardPointsAndCompletedCount(
-        session,
-        saved.helperUserId!,
-        helperEmail,
-        saved.rewardPoints,
-      );
-
-      await _createNotification(
-        session,
-        recipientEmail: helperEmail,
-        title: '🎉 Favor Completed & Rewarded!',
-        message:
-            'You earned +${saved.rewardPoints} pts for completing "${saved.title}"!',
-        requestId: saved.id,
-      );
-    }
-
-    return saved;
   }
 
   /// Tips additional bonus points to a helper for exceptional help.

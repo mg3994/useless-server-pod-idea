@@ -31,6 +31,7 @@ abstract class HelpRequest
     this.neighborhoodZone,
     this.estimatedDuration,
     this.upvotes,
+    this.completionProofNote,
     required this.createdAt,
     this.updatedAt,
   });
@@ -52,6 +53,7 @@ abstract class HelpRequest
     String? neighborhoodZone,
     String? estimatedDuration,
     int? upvotes,
+    String? completionProofNote,
     required DateTime createdAt,
     DateTime? updatedAt,
   }) = _HelpRequestImpl;
@@ -76,6 +78,7 @@ abstract class HelpRequest
       neighborhoodZone: jsonSerialization['neighborhoodZone'] as String?,
       estimatedDuration: jsonSerialization['estimatedDuration'] as String?,
       upvotes: jsonSerialization['upvotes'] as int?,
+      completionProofNote: jsonSerialization['completionProofNote'] as String?,
       createdAt: _is.DateTimeJsonExtension.fromJson(
         jsonSerialization['createdAt'],
       ),
@@ -122,6 +125,8 @@ abstract class HelpRequest
 
   int? upvotes;
 
+  String? completionProofNote;
+
   DateTime createdAt;
 
   DateTime? updatedAt;
@@ -149,6 +154,7 @@ abstract class HelpRequest
     String? neighborhoodZone,
     String? estimatedDuration,
     int? upvotes,
+    String? completionProofNote,
     DateTime? createdAt,
     DateTime? updatedAt,
   });
@@ -172,6 +178,8 @@ abstract class HelpRequest
       if (neighborhoodZone != null) 'neighborhoodZone': neighborhoodZone,
       if (estimatedDuration != null) 'estimatedDuration': estimatedDuration,
       if (upvotes != null) 'upvotes': upvotes,
+      if (completionProofNote != null)
+        'completionProofNote': completionProofNote,
       'createdAt': createdAt.toJson(),
       if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
     };
@@ -197,6 +205,8 @@ abstract class HelpRequest
       if (neighborhoodZone != null) 'neighborhoodZone': neighborhoodZone,
       if (estimatedDuration != null) 'estimatedDuration': estimatedDuration,
       if (upvotes != null) 'upvotes': upvotes,
+      if (completionProofNote != null)
+        'completionProofNote': completionProofNote,
       'createdAt': createdAt.toJson(),
       if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
     };
@@ -250,6 +260,7 @@ class _HelpRequestImpl extends HelpRequest {
     String? neighborhoodZone,
     String? estimatedDuration,
     int? upvotes,
+    String? completionProofNote,
     required DateTime createdAt,
     DateTime? updatedAt,
   }) : super._(
@@ -269,6 +280,7 @@ class _HelpRequestImpl extends HelpRequest {
          neighborhoodZone: neighborhoodZone,
          estimatedDuration: estimatedDuration,
          upvotes: upvotes,
+         completionProofNote: completionProofNote,
          createdAt: createdAt,
          updatedAt: updatedAt,
        );
@@ -294,6 +306,7 @@ class _HelpRequestImpl extends HelpRequest {
     Object? neighborhoodZone = _Undefined,
     Object? estimatedDuration = _Undefined,
     Object? upvotes = _Undefined,
+    Object? completionProofNote = _Undefined,
     DateTime? createdAt,
     Object? updatedAt = _Undefined,
   }) {
@@ -318,6 +331,9 @@ class _HelpRequestImpl extends HelpRequest {
           ? estimatedDuration
           : this.estimatedDuration,
       upvotes: upvotes is int? ? upvotes : this.upvotes,
+      completionProofNote: completionProofNote is String?
+          ? completionProofNote
+          : this.completionProofNote,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt is DateTime? ? updatedAt : this.updatedAt,
     );
@@ -404,6 +420,12 @@ class HelpRequestUpdateTable extends _is.UpdateTable<HelpRequestTable> {
     value,
   );
 
+  _is.ColumnValue<String, String> completionProofNote(String? value) =>
+      _is.ColumnValue(
+        table.completionProofNote,
+        value,
+      );
+
   _is.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
       _is.ColumnValue(
         table.createdAt,
@@ -480,6 +502,10 @@ class HelpRequestTable extends _is.Table<int?> {
       'upvotes',
       this,
     );
+    completionProofNote = _is.ColumnString(
+      'completionProofNote',
+      this,
+    );
     createdAt = _is.ColumnDateTime(
       'createdAt',
       this,
@@ -522,6 +548,8 @@ class HelpRequestTable extends _is.Table<int?> {
 
   late final _is.ColumnInt upvotes;
 
+  late final _is.ColumnString completionProofNote;
+
   late final _is.ColumnDateTime createdAt;
 
   late final _is.ColumnDateTime updatedAt;
@@ -544,6 +572,7 @@ class HelpRequestTable extends _is.Table<int?> {
     neighborhoodZone,
     estimatedDuration,
     upvotes,
+    completionProofNote,
     createdAt,
     updatedAt,
   ];

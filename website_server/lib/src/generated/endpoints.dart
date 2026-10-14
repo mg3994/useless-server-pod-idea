@@ -284,6 +284,84 @@ class Endpoints extends _is.EndpointDispatch {
       name: 'helpRequest',
       endpoint: endpoints['helpRequest']!,
       methodConnectors: {
+        'sendChatMessage': _is.MethodConnector(
+          name: 'sendChatMessage',
+          params: {
+            'requestId': _is.ParameterDescription(
+              name: 'requestId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'message': _is.ParameterDescription(
+              name: 'message',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'senderEmail': _is.ParameterDescription(
+              name: 'senderEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .sendChatMessage(
+                        session,
+                        requestId: params['requestId'],
+                        message: params['message'],
+                        senderEmail: params['senderEmail'],
+                      ),
+        ),
+        'getChatMessages': _is.MethodConnector(
+          name: 'getChatMessages',
+          params: {
+            'requestId': _is.ParameterDescription(
+              name: 'requestId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getChatMessages(
+                        session,
+                        requestId: params['requestId'],
+                      ),
+        ),
+        'completeHelpRequestWithProof': _is.MethodConnector(
+          name: 'completeHelpRequestWithProof',
+          params: {
+            'requestId': _is.ParameterDescription(
+              name: 'requestId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'proofNote': _is.ParameterDescription(
+              name: 'proofNote',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .completeHelpRequestWithProof(
+                        session,
+                        requestId: params['requestId'],
+                        proofNote: params['proofNote'],
+                      ),
+        ),
         'getCommunityStats': _is.MethodConnector(
           name: 'getCommunityStats',
           params: {},
