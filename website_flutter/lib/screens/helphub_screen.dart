@@ -433,8 +433,9 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
               ),
               onPressed: () async {
                 if (titleController.text.trim().isEmpty ||
-                    locationController.text.trim().isEmpty)
+                    locationController.text.trim().isEmpty) {
                   return;
+                }
 
                 await client.helpRequest.broadcastEmergencySOS(
                   title: titleController.text.trim(),
@@ -965,8 +966,9 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                               ),
                             ],
                             onChanged: (val) {
-                              if (val != null)
+                              if (val != null) {
                                 setDialogState(() => duration = val);
+                              }
                             },
                           ),
                         ),

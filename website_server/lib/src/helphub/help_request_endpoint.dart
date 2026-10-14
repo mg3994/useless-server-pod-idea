@@ -893,15 +893,19 @@ class HelpRequestEndpoint extends Endpoint {
 
     if (newCompleted >= 10) {
       badge = '⚡ Community Hero';
-      if (!badges.contains('⚡ Community Pillar'))
+      if (!badges.contains('⚡ Community Pillar')) {
         badges += ', ⚡ Community Pillar';
+      }
     } else if (newCompleted >= 5) {
       badge = '🌟 Super Helper';
-      if (!badges.contains('🌟 Speedy Helper')) badges += ', 🌟 Speedy Helper';
+      if (!badges.contains('🌟 Speedy Helper')) {
+        badges += ', 🌟 Speedy Helper';
+      }
     } else if (newCompleted >= 1) {
       badge = '🤝 Active Neighbor';
-      if (!badges.contains('🏅 First Favor Done'))
+      if (!badges.contains('🏅 First Favor Done')) {
         badges += ', 🏅 First Favor Done';
+      }
     }
 
     if (profile == null) {

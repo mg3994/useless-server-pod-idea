@@ -9,13 +9,12 @@ class WebAuthSessionManager extends ClientAuthSessionManager {
   final StreamController<AuthSuccess?> _authInfoStreamController;
 
   WebAuthSessionManager._internal({
-    required StreamController<AuthSuccess?> authInfoStreamController,
+    required this._authInfoStreamController,
     required super.storage,
-    required void Function(AuthSuccess?) onAuthInfoChanged,
+    required super.onAuthInfoChanged,
     super.caller,
     super.authKeyProviderDelegates,
-  }) : _authInfoStreamController = authInfoStreamController,
-       super(onAuthInfoChanged: onAuthInfoChanged);
+  });
 
   factory WebAuthSessionManager({
     Caller? caller,
