@@ -19,6 +19,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
 
   String _selectedCategory = 'All';
   String _selectedStatus = 'All';
+  String _selectedSort = 'newest';
   String _searchQuery = '';
   bool _emergencyOnly = false;
 
@@ -61,6 +62,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         status: _selectedStatus,
         isEmergency: _emergencyOnly ? true : null,
         searchQuery: _searchQuery,
+        sortBy: _selectedSort,
       );
 
       final profile = await client.helpRequest.getUserProfile(email: userEmail);
@@ -83,6 +85,73 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         setState(() => _isLoading = false);
       }
     }
+  }
+
+  Future<void> _showEditProfileDialog() async {
+    if (_profile == null) return;
+
+    final nameController = TextEditingController(text: _profile!.displayName);
+    final skillsController = TextEditingController(
+      text: _profile!.skills ?? 'General',
+    );
+
+    return showDialog(
+      context: context,
+      builder: (dialogCtx) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: const Text(
+            'Edit Profile & Skills',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Display Name',
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: skillsController,
+                decoration: const InputDecoration(
+                  labelText: 'Skills / Specialties (comma separated)',
+                  hintText: 'e.g. Errands, Tutoring, Tech',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogCtx),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.indigo,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () async {
+                await client.helpRequest.updateUserProfile(
+                  email: _getUserEmail(),
+                  displayName: nameController.text.trim(),
+                  skills: skillsController.text.trim(),
+                );
+                if (dialogCtx.mounted) {
+                  Navigator.pop(dialogCtx);
+                }
+                _loadData();
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _showNotificationsBottomSheet() async {
@@ -170,7 +239,6 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
       },
     );
 
-    // Mark unread notifications as read
     for (final notif in unreadList) {
       if (notif.id != null) {
         await client.helpRequest.markNotificationRead(
@@ -752,6 +820,15 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                                           ),
                                         ),
                                       ),
+                                      const SizedBox(width: 4),
+                                      InkWell(
+                                        onTap: _showEditProfileDialog,
+                                        child: const Icon(
+                                          Icons.edit_outlined,
+                                          size: 16,
+                                          color: Colors.indigo,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                   Text(
@@ -960,7 +1037,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                 const SizedBox(height: 16),
               ],
 
-              // Filter Bar
+              // Filter & Sort Bar
               Row(
                 children: [
                   Expanded(
@@ -985,22 +1062,34 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                   ),
                   const SizedBox(width: 8),
                   DropdownButton<String>(
-                    value: _selectedCategory,
+                    value: _selectedSort,
                     underline: const SizedBox(),
-                    items: _categories
-                        .map(
-                          (c) => DropdownMenuItem(
-                            value: c,
-                            child: Text(
-                              c,
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          ),
-                        )
-                        .toList(),
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'newest',
+                        child: Text(
+                          '🕒 Newest',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: 'reward',
+                        child: Text(
+                          '🪙 Reward',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: 'urgency',
+                        child: Text(
+                          '⚡ Urgency',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ],
                     onChanged: (val) {
                       if (val != null) {
-                        setState(() => _selectedCategory = val);
+                        setState(() => _selectedSort = val);
                         _loadData();
                       }
                     },
@@ -1260,6 +1349,20 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                 if (req.status == 'Open')
                   Row(
                     children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.cancel_outlined,
+                          color: Colors.redAccent,
+                          size: 20,
+                        ),
+                        tooltip: 'Cancel Request',
+                        onPressed: () async {
+                          await client.helpRequest.cancelHelpRequest(
+                            requestId: req.id!,
+                          );
+                          _loadData();
+                        },
+                      ),
                       OutlinedButton.icon(
                         icon: const Icon(
                           Icons.flash_on,
@@ -1314,7 +1417,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     },
                     child: const Text('Complete'),
                   )
-                else
+                else if (req.status == 'Completed')
                   Row(
                     children: [
                       if (req.helperUserId != null) ...[
@@ -1372,6 +1475,15 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                         ),
                       ),
                     ],
+                  )
+                else
+                  const Text(
+                    'Cancelled',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
                   ),
               ],
             ),

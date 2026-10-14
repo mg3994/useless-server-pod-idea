@@ -307,6 +307,11 @@ class Endpoints extends _is.EndpointDispatch {
               type: _is.getType<String?>(),
               nullable: true,
             ),
+            'sortBy': _is.ParameterDescription(
+              name: 'sortBy',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -320,6 +325,7 @@ class Endpoints extends _is.EndpointDispatch {
                         status: params['status'],
                         isEmergency: params['isEmergency'],
                         searchQuery: params['searchQuery'],
+                        sortBy: params['sortBy'],
                       ),
         ),
         'createHelpRequest': _is.MethodConnector(
@@ -382,6 +388,26 @@ class Endpoints extends _is.EndpointDispatch {
                         rewardPoints: params['rewardPoints'],
                         isEmergency: params['isEmergency'],
                         creatorEmail: params['creatorEmail'],
+                      ),
+        ),
+        'cancelHelpRequest': _is.MethodConnector(
+          name: 'cancelHelpRequest',
+          params: {
+            'requestId': _is.ParameterDescription(
+              name: 'requestId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .cancelHelpRequest(
+                        session,
+                        requestId: params['requestId'],
                       ),
         ),
         'boostRewardPoints': _is.MethodConnector(
@@ -500,6 +526,38 @@ class Endpoints extends _is.EndpointDispatch {
                       .getUserProfile(
                         session,
                         email: params['email'],
+                      ),
+        ),
+        'updateUserProfile': _is.MethodConnector(
+          name: 'updateUserProfile',
+          params: {
+            'email': _is.ParameterDescription(
+              name: 'email',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'displayName': _is.ParameterDescription(
+              name: 'displayName',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'skills': _is.ParameterDescription(
+              name: 'skills',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .updateUserProfile(
+                        session,
+                        email: params['email'],
+                        displayName: params['displayName'],
+                        skills: params['skills'],
                       ),
         ),
         'addComment': _is.MethodConnector(

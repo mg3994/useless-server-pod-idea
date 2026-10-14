@@ -575,6 +575,7 @@ class _HelpRequestEndpoint {
     String? status,
     bool? isEmergency,
     String? searchQuery,
+    String? sortBy,
   }) async {
     return _ist.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -592,6 +593,7 @@ class _HelpRequestEndpoint {
             'status': status,
             'isEmergency': isEmergency,
             'searchQuery': searchQuery,
+            'sortBy': sortBy,
           }),
           serializationManager: _serializationManager,
         );
@@ -640,6 +642,37 @@ class _HelpRequestEndpoint {
             'isEmergency': isEmergency,
             'creatorEmail': creatorEmail,
           }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i62gi6d1.HelpRequest>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_i62gi6d1.HelpRequest> cancelHelpRequest(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int requestId,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'cancelHelpRequest',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'cancelHelpRequest',
+          parameters: _ist.testObjectToJson({'requestId': requestId}),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =
@@ -807,6 +840,43 @@ class _HelpRequestEndpoint {
           endpointPath: 'helpRequest',
           methodName: 'getUserProfile',
           parameters: _ist.testObjectToJson({'email': email}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ivj3h5rp.UserProfile>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_ivj3h5rp.UserProfile> updateUserProfile(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String email,
+    required String displayName,
+    required String skills,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'updateUserProfile',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'updateUserProfile',
+          parameters: _ist.testObjectToJson({
+            'email': email,
+            'displayName': displayName,
+            'skills': skills,
+          }),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =

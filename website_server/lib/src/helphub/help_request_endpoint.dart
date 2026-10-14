@@ -2,13 +2,14 @@ import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 
 class HelpRequestEndpoint extends Endpoint {
-  /// Fetches all help requests, optionally filtered by category, status, or emergency mode.
+  /// Fetches all help requests, optionally filtered by category, status, emergency mode, or search query, and sorted.
   Future<List<HelpRequest>> getHelpRequests(
     Session session, {
     String? category,
     String? status,
     bool? isEmergency,
     String? searchQuery,
+    String? sortBy,
   }) async {
     Expression where = Constant.bool(true);
 
@@ -30,8 +31,6 @@ class HelpRequestEndpoint extends Endpoint {
       orderBy: (t) => t.createdAt,
     );
 
-    requests.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-
     if (searchQuery != null && searchQuery.trim().isNotEmpty) {
       final q = searchQuery.trim().toLowerCase();
       requests = requests.where((r) {
@@ -39,6 +38,25 @@ class HelpRequestEndpoint extends Endpoint {
             r.description.toLowerCase().contains(q) ||
             r.location.toLowerCase().contains(q);
       }).toList();
+    }
+
+    // Sorting logic
+    if (sortBy == 'reward') {
+      requests.sort((a, b) => b.rewardPoints.compareTo(a.rewardPoints));
+    } else if (sortBy == 'urgency') {
+      int getUrgencyRank(String urgency) {
+        if (urgency == 'Urgent') return 3;
+        if (urgency == 'Normal') return 2;
+        return 1;
+      }
+
+      requests.sort(
+        (a, b) =>
+            getUrgencyRank(b.urgency).compareTo(getUrgencyRank(a.urgency)),
+      );
+    } else {
+      // Default: newest first
+      requests.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     }
 
     return requests;
@@ -84,6 +102,34 @@ class HelpRequestEndpoint extends Endpoint {
     return inserted;
   }
 
+  /// Cancels an open or in-progress help request.
+  Future<HelpRequest> cancelHelpRequest(
+    Session session, {
+    required int requestId,
+  }) async {
+    final request = await HelpRequest.db.findById(session, requestId);
+    if (request == null) {
+      throw Exception('Help request not found');
+    }
+
+    final updated = request.copyWith(
+      status: 'Cancelled',
+      updatedAt: DateTime.now().toUtc(),
+    );
+
+    final saved = await HelpRequest.db.updateRow(session, updated);
+
+    await _createNotification(
+      session,
+      recipientEmail: saved.creatorEmail,
+      title: '🚫 Request Cancelled',
+      message: 'Your help request "${saved.title}" was cancelled.',
+      requestId: saved.id,
+    );
+
+    return saved;
+  }
+
   /// Boosts reward points for an open request.
   Future<HelpRequest> boostRewardPoints(
     Session session, {
@@ -102,7 +148,6 @@ class HelpRequestEndpoint extends Endpoint {
 
     final saved = await HelpRequest.db.updateRow(session, updated);
 
-    // Notify request creator
     await _createNotification(
       session,
       recipientEmail: saved.creatorEmail,
@@ -145,7 +190,6 @@ class HelpRequestEndpoint extends Endpoint {
 
     final saved = await HelpRequest.db.updateRow(session, updated);
 
-    // Notify request creator
     await _createNotification(
       session,
       recipientEmail: saved.creatorEmail,
@@ -188,7 +232,6 @@ class HelpRequestEndpoint extends Endpoint {
         saved.rewardPoints,
       );
 
-      // Notify helper
       await _createNotification(
         session,
         recipientEmail: helperEmail,
@@ -273,6 +316,22 @@ class HelpRequestEndpoint extends Endpoint {
     return profile;
   }
 
+  /// Updates user profile display name and skills tags.
+  Future<UserProfile> updateUserProfile(
+    Session session, {
+    required String email,
+    required String displayName,
+    required String skills,
+  }) async {
+    var profile = await getUserProfile(session, email: email);
+    final updated = profile.copyWith(
+      displayName: displayName.isNotEmpty ? displayName : profile.displayName,
+      skills: skills,
+    );
+
+    return await UserProfile.db.updateRow(session, updated);
+  }
+
   /// Adds a comment to a request.
   Future<RequestComment> addComment(
     Session session, {
@@ -350,7 +409,6 @@ class HelpRequestEndpoint extends Endpoint {
 
     final saved = await RequestRating.db.insertRow(session, requestRating);
 
-    // Recalculate target user's rating average
     var targetProfile = await UserProfile.db.findFirstRow(
       session,
       where: (t) => t.userId.equals(toUserId),
@@ -405,7 +463,6 @@ class HelpRequestEndpoint extends Endpoint {
     );
 
     if (notifications.isEmpty) {
-      // Seed welcome notification
       final welcomeNotif = UserNotification(
         recipientEmail: userEmail,
         title: '👋 Welcome to HelpHub!',

@@ -14,11 +14,13 @@ greeting:
 helpRequest:
   - getHelpRequests:
   - createHelpRequest:
+  - cancelHelpRequest:
   - boostRewardPoints:
   - claimHelpRequest:
   - completeHelpRequest:
   - tipHelper:
   - getUserProfile:
+  - updateUserProfile:
   - addComment:
   - getComments:
   - submitRating:

@@ -309,7 +309,7 @@ Component landingHero() {
                 [
                   div(
                     {
-                      'class': 'w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl font-bold',
+                      'class': 'w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl font-bold relative group',
                     },
                     [
                       span({'id': 'profile-avatar-char'}, [Text('👤')]),
@@ -332,6 +332,13 @@ Component landingHero() {
                             'class': 'text-xs font-bold text-amber-500 bg-amber-50 dark:bg-amber-950/50 px-2 py-0.5 rounded-md border border-amber-200 dark:border-amber-800',
                           },
                           [Text('⭐ 5.0')],
+                        ),
+                        button(
+                          {
+                            'id': 'open-edit-profile-btn',
+                            'class': 'text-[11px] font-semibold text-indigo-600 hover:underline border border-indigo-200 dark:border-indigo-800 px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/50',
+                          },
+                          [Text('✏️ Edit')],
                         ),
                       ],
                     ),
@@ -533,7 +540,7 @@ Component landingHero() {
                     'id': 'search-input',
                     'type': 'text',
                     'placeholder': 'Search requests...',
-                    'class': 'px-3.5 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 focus:outline-none focus:border-indigo-500 w-48 md:w-56',
+                    'class': 'px-3.5 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 focus:outline-none focus:border-indigo-500 w-44 md:w-52',
                   }),
 
                   // Category Filter Dropdown
@@ -583,6 +590,19 @@ Component landingHero() {
                       option({'value': 'Completed'}, [Text('🔵 Completed')]),
                     ],
                   ),
+
+                  // Sort Selector Dropdown
+                  select(
+                    {
+                      'id': 'sort-filter',
+                      'class': 'px-3 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-indigo-500',
+                    },
+                    [
+                      option({'value': 'newest'}, [Text('🕒 Newest First')]),
+                      option({'value': 'reward'}, [Text('🪙 Highest Reward')]),
+                      option({'value': 'urgency'}, [Text('⚡ Most Urgent')]),
+                    ],
+                  ),
                 ],
               ),
             ],
@@ -607,6 +627,9 @@ Component landingHero() {
 
       // Modal Dialog for Rating
       _ratingModal(),
+
+      // Modal Dialog for Profile Edit
+      _editProfileModal(),
     ],
   );
 }
@@ -975,6 +998,86 @@ Component _ratingModal() {
               'class': 'w-full py-2.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md',
             },
             [Text('Submit Rating')],
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+Component _editProfileModal() {
+  return div(
+    {
+      'id': 'edit-profile-modal',
+      'class': 'fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden',
+    },
+    [
+      div(
+        {
+          'class': 'bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative',
+        },
+        [
+          button(
+            {
+              'id': 'close-edit-profile-modal-btn',
+              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold',
+            },
+            [Text('✕')],
+          ),
+          h2(
+            {
+              'class':
+                  'text-lg font-bold text-surface-900 dark:text-white mb-1',
+            },
+            [Text('Edit Profile & Skills')],
+          ),
+          p(
+            {'class': 'text-xs text-surface-500 dark:text-surface-400 mb-4'},
+            [Text('Customize how fellow neighbors see you on HelpHub.')],
+          ),
+
+          div(
+            {'class': 'flex flex-col gap-3'},
+            [
+              div([
+                label(
+                  {
+                    'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1',
+                  },
+                  [Text('Display Name')],
+                ),
+                input({
+                  'id': 'edit-profile-name-input',
+                  'type': 'text',
+                  'placeholder': 'e.g., Alex Rivers',
+                  'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                }),
+              ]),
+
+              div([
+                label(
+                  {
+                    'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1',
+                  },
+                  [Text('Skills & Specialties (comma separated)')],
+                ),
+                input({
+                  'id': 'edit-profile-skills-input',
+                  'type': 'text',
+                  'placeholder': 'e.g., Errands, Tutoring, Tech, Bike Repair',
+                  'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                }),
+              ]),
+
+              button(
+                {
+                  'id': 'submit-edit-profile-btn',
+                  'type': 'button',
+                  'class': 'w-full mt-2 py-2.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md',
+                },
+                [Text('Save Changes')],
+              ),
+            ],
           ),
         ],
       ),

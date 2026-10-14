@@ -10,6 +10,7 @@ class HelpHubController {
   String currentCategory = 'All';
   String currentStatus = 'All';
   String currentSearch = '';
+  String currentSortBy = 'newest';
   bool emergencyOnly = false;
 
   int? activeCommentsRequestId;
@@ -49,6 +50,38 @@ class HelpHubController {
           emergencyBtn.classList.remove('text-white');
         }
         loadHelpRequests();
+      }).toJS,
+    );
+
+    // Profile Edit Modal
+    final editProfileBtn = web.document.querySelector('#open-edit-profile-btn');
+    editProfileBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        _openEditProfileModal();
+      }).toJS,
+    );
+
+    final closeEditProfileBtn = web.document.querySelector(
+      '#close-edit-profile-modal-btn',
+    );
+    closeEditProfileBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        _toggleModal('edit-profile-modal', show: false);
+      }).toJS,
+    );
+
+    final submitEditProfileBtn = web.document.querySelector(
+      '#submit-edit-profile-btn',
+    );
+    submitEditProfileBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        _submitEditProfile();
       }).toJS,
     );
 
@@ -163,7 +196,7 @@ class HelpHubController {
       }).toJS,
     );
 
-    // Filters
+    // Filters & Sorts
     final catSelect = web.document.querySelector(
       '#category-filter',
     ) as web.HTMLSelectElement?;
@@ -181,6 +214,16 @@ class HelpHubController {
       'change',
       ((web.Event e) {
         currentStatus = statusSelect.value;
+        loadHelpRequests();
+      }).toJS,
+    );
+
+    final sortSelect =
+        web.document.querySelector('#sort-filter') as web.HTMLSelectElement?;
+    sortSelect?.addEventListener(
+      'change',
+      ((web.Event e) {
+        currentSortBy = sortSelect.value;
         loadHelpRequests();
       }).toJS,
     );
@@ -256,6 +299,57 @@ class HelpHubController {
       }
     } catch (e) {
       // Fallback display
+    }
+  }
+
+  Future<void> _openEditProfileModal() async {
+    final userEmailEl = web.document.querySelector('#user-email');
+    final email = userEmailEl?.textContent ?? 'guest@helphub.com';
+
+    try {
+      final profile = await client.helpRequest.getUserProfile(email: email);
+      final nameInput = web.document.querySelector(
+        '#edit-profile-name-input',
+      ) as web.HTMLInputElement?;
+      final skillsInput = web.document.querySelector(
+        '#edit-profile-skills-input',
+      ) as web.HTMLInputElement?;
+
+      if (nameInput != null) nameInput.value = profile.displayName;
+      if (skillsInput != null) skillsInput.value = profile.skills ?? 'General';
+
+      _toggleModal('edit-profile-modal', show: true);
+    } catch (e) {
+      // Ignore
+    }
+  }
+
+  Future<void> _submitEditProfile() async {
+    final userEmailEl = web.document.querySelector('#user-email');
+    final email = userEmailEl?.textContent ?? 'guest@helphub.com';
+
+    final nameInput = web.document.querySelector(
+      '#edit-profile-name-input',
+    ) as web.HTMLInputElement?;
+    final skillsInput = web.document.querySelector(
+      '#edit-profile-skills-input',
+    ) as web.HTMLInputElement?;
+
+    final name = nameInput?.value.trim() ?? '';
+    final skills = skillsInput?.value.trim() ?? '';
+
+    try {
+      await client.helpRequest.updateUserProfile(
+        email: email,
+        displayName: name,
+        skills: skills,
+      );
+
+      _toggleModal('edit-profile-modal', show: false);
+      await loadUserProfile();
+      await loadLeaderboard();
+    } catch (e) {
+      web.window.alert('Failed to update profile.');
     }
   }
 
@@ -410,6 +504,7 @@ class HelpHubController {
         status: currentStatus,
         isEmergency: emergencyOnly ? true : null,
         searchQuery: currentSearch,
+        sortBy: currentSortBy,
       );
 
       container.textContent = '';
@@ -459,6 +554,8 @@ class HelpHubController {
       statusBadge = '🟡 In Progress';
     } else if (req.status == 'Completed') {
       statusBadge = '🔵 Completed';
+    } else if (req.status == 'Cancelled') {
+      statusBadge = '⚪ Cancelled';
     }
 
     String actionButtonHtml = '';
@@ -466,8 +563,11 @@ class HelpHubController {
       actionButtonHtml =
           '''
         <div class="flex items-center gap-1">
+          <button class="cancel-req-btn px-2.5 py-1 text-[11px] font-bold rounded-lg text-rose-600 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 hover:bg-rose-100 transition-colors" data-id="${req.id}">
+            Cancel
+          </button>
           <button class="boost-btn px-2.5 py-1 text-[11px] font-bold rounded-lg text-indigo-600 bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition-colors" data-id="${req.id}">
-            🪙 Boost +10
+            🪙 +10
           </button>
           <button class="claim-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors" data-id="${req.id}">
             Claim
@@ -481,7 +581,7 @@ class HelpHubController {
           Mark Complete
         </button>
       ''';
-    } else {
+    } else if (req.status == 'Completed') {
       actionButtonHtml =
           '''
         <div class="flex items-center gap-1.5">
@@ -493,6 +593,8 @@ class HelpHubController {
           </button>
         </div>
       ''';
+    } else {
+      actionButtonHtml = '''<span class="text-xs font-semibold text-surface-400">Cancelled</span>''';
     }
 
     return '''
@@ -530,6 +632,26 @@ class HelpHubController {
   }
 
   void _bindCardActionButtons() {
+    final cancelReqBtns = web.document.querySelectorAll('.cancel-req-btn');
+    for (var i = 0; i < cancelReqBtns.length; i++) {
+      final btn = cancelReqBtns.item(i) as web.HTMLElement?;
+      btn?.addEventListener(
+        'click',
+        ((web.Event e) {
+          final idStr = btn.getAttribute('data-id');
+          if (idStr != null) {
+            final id = int.tryParse(idStr);
+            if (id != null) {
+              client.helpRequest.cancelHelpRequest(requestId: id).then((_) {
+                loadHelpRequests();
+                loadNotifications();
+              });
+            }
+          }
+        }).toJS,
+      );
+    }
+
     final boostBtns = web.document.querySelectorAll('.boost-btn');
     for (var i = 0; i < boostBtns.length; i++) {
       final btn = boostBtns.item(i) as web.HTMLElement?;

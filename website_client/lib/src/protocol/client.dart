@@ -283,12 +283,13 @@ class EndpointHelpRequest extends _isc.EndpointRef {
   @override
   String get name => 'helpRequest';
 
-  /// Fetches all help requests, optionally filtered by category, status, or emergency mode.
+  /// Fetches all help requests, optionally filtered by category, status, emergency mode, or search query, and sorted.
   _ida.Future<List<_ilm5roly.HelpRequest>> getHelpRequests({
     String? category,
     String? status,
     bool? isEmergency,
     String? searchQuery,
+    String? sortBy,
   }) => caller.callServerEndpoint<List<_ilm5roly.HelpRequest>>(
     'helpRequest',
     'getHelpRequests',
@@ -297,6 +298,7 @@ class EndpointHelpRequest extends _isc.EndpointRef {
       'status': status,
       'isEmergency': isEmergency,
       'searchQuery': searchQuery,
+      'sortBy': sortBy,
     },
   );
 
@@ -323,6 +325,15 @@ class EndpointHelpRequest extends _isc.EndpointRef {
       'isEmergency': isEmergency,
       'creatorEmail': creatorEmail,
     },
+  );
+
+  /// Cancels an open or in-progress help request.
+  _ida.Future<_ilm5roly.HelpRequest> cancelHelpRequest({
+    required int requestId,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'cancelHelpRequest',
+    {'requestId': requestId},
   );
 
   /// Boosts reward points for an open request.
@@ -380,6 +391,21 @@ class EndpointHelpRequest extends _isc.EndpointRef {
         'getUserProfile',
         {'email': email},
       );
+
+  /// Updates user profile display name and skills tags.
+  _ida.Future<_if5f0yyd.UserProfile> updateUserProfile({
+    required String email,
+    required String displayName,
+    required String skills,
+  }) => caller.callServerEndpoint<_if5f0yyd.UserProfile>(
+    'helpRequest',
+    'updateUserProfile',
+    {
+      'email': email,
+      'displayName': displayName,
+      'skills': skills,
+    },
+  );
 
   /// Adds a comment to a request.
   _ida.Future<_iq4ufam1.RequestComment> addComment({
