@@ -126,6 +126,12 @@ class Protocol extends _isc.SerializationManager {
     if (t == _isc.getType<_i2208dl4.UserProfile?>()) {
       return (data != null ? _i2208dl4.UserProfile.fromJson(data) : null) as T;
     }
+    if (t == Map<String, int>) {
+      return (data as Map).map(
+            (k, v) => MapEntry(deserialize<String>(k), deserialize<int>(v)),
+          )
+          as T;
+    }
     if (t == List<_ilm5roly.HelpRequest>) {
       return (data as List)
               .map((e) => deserialize<_ilm5roly.HelpRequest>(e))

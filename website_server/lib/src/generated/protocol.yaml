@@ -12,8 +12,11 @@ jwtRefresh:
 greeting:
   - hello:
 helpRequest:
+  - getCommunityStats:
+  - broadcastEmergencySOS:
   - getHelpRequests:
   - createHelpRequest:
+  - upvoteHelpRequest:
   - cancelHelpRequest:
   - boostRewardPoints:
   - claimHelpRequest:

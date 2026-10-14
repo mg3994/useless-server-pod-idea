@@ -14,12 +14,15 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
   List<UserProfile> _leaderboard = [];
   List<CommunityAnnouncement> _announcements = [];
   List<UserNotification> _notifications = [];
+  Map<String, int> _communityStats = {};
   UserProfile? _profile;
   bool _isLoading = true;
 
   String _selectedCategory = 'All';
   String _selectedStatus = 'All';
+  String _selectedZone = 'All';
   String _selectedSort = 'newest';
+  String _selectedActivityMode = 'all'; // 'all', 'posted', 'claimed'
   String _searchQuery = '';
   bool _emergencyOnly = false;
 
@@ -32,6 +35,14 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
     'Tutoring & Study',
     'Pet & Plant Care',
     'Tech & Rides',
+  ];
+
+  final List<String> _zones = [
+    'All',
+    'North Campus',
+    'South Quad',
+    'West Village',
+    'Downtown East',
   ];
 
   final List<String> _statuses = ['All', 'Open', 'In Progress', 'Completed'];
@@ -60,9 +71,14 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
       final requests = await client.helpRequest.getHelpRequests(
         category: _selectedCategory,
         status: _selectedStatus,
+        neighborhoodZone: _selectedZone,
         isEmergency: _emergencyOnly ? true : null,
         searchQuery: _searchQuery,
         sortBy: _selectedSort,
+        myEmailFilter: _selectedActivityMode != 'all' ? userEmail : null,
+        myActivityMode: _selectedActivityMode != 'all'
+            ? _selectedActivityMode
+            : null,
       );
 
       final profile = await client.helpRequest.getUserProfile(email: userEmail);
@@ -71,6 +87,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
       final notifications = await client.helpRequest.getUserNotifications(
         userEmail: userEmail,
       );
+      final stats = await client.helpRequest.getCommunityStats();
 
       setState(() {
         _requests = requests;
@@ -78,6 +95,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         _leaderboard = leaderboard;
         _announcements = announcements;
         _notifications = notifications;
+        _communityStats = stats;
         _isLoading = false;
       });
     } catch (e) {
@@ -85,6 +103,103 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         setState(() => _isLoading = false);
       }
     }
+  }
+
+  Future<void> _showSOSBroadcastDialog() async {
+    final titleController = TextEditingController();
+    final locationController = TextEditingController();
+    final descController = TextEditingController();
+
+    return showDialog(
+      context: context,
+      builder: (dialogCtx) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: const BorderSide(color: Colors.redAccent, width: 2),
+          ),
+          title: const Row(
+            children: [
+              Text('🚨 ', style: TextStyle(fontSize: 22)),
+              Text(
+                'Broadcast Emergency SOS',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Immediately notifies available top helpers nearby.',
+                style: TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: titleController,
+                decoration: const InputDecoration(
+                  labelText: 'Emergency Title',
+                  hintText: 'e.g. Dead car battery at Lot C',
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: locationController,
+                decoration: const InputDecoration(
+                  labelText: 'Location',
+                  hintText: 'e.g. Parking Lot C, Slot 12',
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: descController,
+                maxLines: 2,
+                decoration: const InputDecoration(labelText: 'Details'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogCtx),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () async {
+                if (titleController.text.trim().isEmpty ||
+                    locationController.text.trim().isEmpty)
+                  return;
+
+                await client.helpRequest.broadcastEmergencySOS(
+                  title: titleController.text.trim(),
+                  description: descController.text.trim(),
+                  location: locationController.text.trim(),
+                  creatorEmail: _getUserEmail(),
+                );
+
+                if (mounted && dialogCtx.mounted) {
+                  Navigator.pop(dialogCtx);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('⚡ Emergency SOS Broadcast Dispatched!'),
+                    ),
+                  );
+                }
+                _loadData();
+              },
+              child: const Text('DISPATCH SOS'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _showEditProfileDialog() async {
@@ -324,7 +439,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                       rating: rating,
                       feedback: feedbackController.text.trim(),
                     );
-                    if (dialogCtx.mounted) {
+                    if (mounted && dialogCtx.mounted) {
                       Navigator.pop(dialogCtx);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -492,6 +607,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
 
     String category = 'Borrow Item';
     String urgency = 'Normal';
+    String zone = 'North Campus';
+    String duration = '15-30 mins';
     bool isEmergency = false;
 
     return showDialog(
@@ -531,6 +648,70 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                       onChanged: (val) {
                         if (val != null) setDialogState(() => category = val);
                       },
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            initialValue: zone,
+                            decoration: const InputDecoration(
+                              labelText: 'Zone',
+                            ),
+                            items: _zones
+                                .where((z) => z != 'All')
+                                .map(
+                                  (z) => DropdownMenuItem(
+                                    value: z,
+                                    child: Text(
+                                      z,
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (val) {
+                              if (val != null) setDialogState(() => zone = val);
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            initialValue: duration,
+                            decoration: const InputDecoration(
+                              labelText: 'Est. Duration',
+                            ),
+                            items: const [
+                              DropdownMenuItem(
+                                value: '15-30 mins',
+                                child: Text(
+                                  '15-30 mins',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: '1 hour',
+                                child: Text(
+                                  '1 hour',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: '2+ hours',
+                                child: Text(
+                                  '2+ hours',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
+                            ],
+                            onChanged: (val) {
+                              if (val != null)
+                                setDialogState(() => duration = val);
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String>(
@@ -576,7 +757,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     TextField(
                       controller: locationController,
                       decoration: const InputDecoration(
-                        labelText: 'Location',
+                        labelText: 'Location Detail',
                         hintText: 'e.g. Dorm A, Room 101',
                       ),
                     ),
@@ -630,6 +811,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                       rewardPoints: points,
                       isEmergency: isEmergency,
                       creatorEmail: _getUserEmail(),
+                      neighborhoodZone: zone,
+                      estimatedDuration: duration,
                     );
 
                     if (dialogContext.mounted) {
@@ -671,6 +854,14 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
           ],
         ),
         actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.warning_amber_rounded,
+              color: Colors.redAccent,
+            ),
+            tooltip: 'Dispatch Emergency SOS',
+            onPressed: _showSOSBroadcastDialog,
+          ),
           Stack(
             children: [
               IconButton(
@@ -713,6 +904,49 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Community Stats Banner Card
+              if (_communityStats.isNotEmpty) ...[
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? Colors.indigo.shade900.withAlpha(100)
+                        : Colors.indigo.shade50,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.indigo.shade100),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildStatItem(
+                        'Open',
+                        '${_communityStats['openCount'] ?? 0}',
+                        Colors.teal,
+                      ),
+                      _buildStatItem(
+                        'In Progress',
+                        '${_communityStats['inProgressCount'] ?? 0}',
+                        Colors.amber.shade800,
+                      ),
+                      _buildStatItem(
+                        'Completed',
+                        '${_communityStats['completedCount'] ?? 0}',
+                        Colors.indigo,
+                      ),
+                      _buildStatItem(
+                        'Pts Exchanged',
+                        '${_communityStats['totalPointsAwarded'] ?? 0}',
+                        Colors.amber,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
+
               // Community Announcement Card
               if (_announcements.isNotEmpty) ...[
                 Container(
@@ -1037,6 +1271,69 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                 const SizedBox(height: 16),
               ],
 
+              // Activity Mode Chips (All, My Posted, My Claimed)
+              Row(
+                children: [
+                  ChoiceChip(
+                    label: const Text('🌐 All', style: TextStyle(fontSize: 11)),
+                    selected: _selectedActivityMode == 'all',
+                    selectedColor: Colors.indigo,
+                    labelStyle: TextStyle(
+                      color: _selectedActivityMode == 'all'
+                          ? Colors.white
+                          : Colors.black87,
+                    ),
+                    onSelected: (selected) {
+                      if (selected) {
+                        setState(() => _selectedActivityMode = 'all');
+                        _loadData();
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 6),
+                  ChoiceChip(
+                    label: const Text(
+                      '📝 My Posted',
+                      style: TextStyle(fontSize: 11),
+                    ),
+                    selected: _selectedActivityMode == 'posted',
+                    selectedColor: Colors.indigo,
+                    labelStyle: TextStyle(
+                      color: _selectedActivityMode == 'posted'
+                          ? Colors.white
+                          : Colors.black87,
+                    ),
+                    onSelected: (selected) {
+                      if (selected) {
+                        setState(() => _selectedActivityMode = 'posted');
+                        _loadData();
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 6),
+                  ChoiceChip(
+                    label: const Text(
+                      '🤝 My Claimed',
+                      style: TextStyle(fontSize: 11),
+                    ),
+                    selected: _selectedActivityMode == 'claimed',
+                    selectedColor: Colors.indigo,
+                    labelStyle: TextStyle(
+                      color: _selectedActivityMode == 'claimed'
+                          ? Colors.white
+                          : Colors.black87,
+                    ),
+                    onSelected: (selected) {
+                      if (selected) {
+                        setState(() => _selectedActivityMode = 'claimed');
+                        _loadData();
+                      }
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
               // Filter & Sort Bar
               Row(
                 children: [
@@ -1060,7 +1357,29 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                       },
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 6),
+                  DropdownButton<String>(
+                    value: _selectedZone,
+                    underline: const SizedBox(),
+                    items: _zones
+                        .map(
+                          (z) => DropdownMenuItem(
+                            value: z,
+                            child: Text(
+                              z,
+                              style: const TextStyle(fontSize: 11),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (val) {
+                      if (val != null) {
+                        setState(() => _selectedZone = val);
+                        _loadData();
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 6),
                   DropdownButton<String>(
                     value: _selectedSort,
                     underline: const SizedBox(),
@@ -1069,21 +1388,28 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                         value: 'newest',
                         child: Text(
                           '🕒 Newest',
-                          style: TextStyle(fontSize: 12),
+                          style: TextStyle(fontSize: 11),
                         ),
                       ),
                       DropdownMenuItem(
                         value: 'reward',
                         child: Text(
                           '🪙 Reward',
-                          style: TextStyle(fontSize: 12),
+                          style: TextStyle(fontSize: 11),
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: 'upvotes',
+                        child: Text(
+                          '👍 Upvotes',
+                          style: TextStyle(fontSize: 11),
                         ),
                       ),
                       DropdownMenuItem(
                         value: 'urgency',
                         child: Text(
                           '⚡ Urgency',
-                          style: TextStyle(fontSize: 12),
+                          style: TextStyle(fontSize: 11),
                         ),
                       ),
                     ],
@@ -1208,10 +1534,37 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
     );
   }
 
+  Widget _buildStatItem(String label, String value, Color color) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: 16,
+            color: color,
+          ),
+        ),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 10,
+            color: Colors.grey,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildRequestCard(HelpRequest req) {
     Color urgencyColor = Colors.orange;
     if (req.urgency == 'Urgent') urgencyColor = Colors.red;
     if (req.urgency == 'Low') urgencyColor = Colors.grey;
+
+    final zoneName = req.neighborhoodZone ?? 'North Campus';
+    final duration = req.estimatedDuration ?? '15-30 mins';
+    final upvotes = req.upvotes ?? 0;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -1314,8 +1667,15 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  req.location,
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  '${req.location} ($zoneName)',
+                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.timer_outlined, size: 14, color: Colors.grey),
+                const SizedBox(width: 2),
+                Text(
+                  duration,
+                  style: const TextStyle(fontSize: 11, color: Colors.grey),
                 ),
               ],
             ),
@@ -1349,6 +1709,27 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                 if (req.status == 'Open')
                   Row(
                     children: [
+                      OutlinedButton.icon(
+                        icon: const Icon(
+                          Icons.thumb_up_alt_outlined,
+                          size: 14,
+                          color: Colors.teal,
+                        ),
+                        label: Text(
+                          '$upvotes',
+                          style: const TextStyle(fontSize: 11),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        onPressed: () async {
+                          await client.helpRequest.upvoteHelpRequest(
+                            requestId: req.id!,
+                          );
+                          _loadData();
+                        },
+                      ),
+                      const SizedBox(width: 4),
                       IconButton(
                         icon: const Icon(
                           Icons.cancel_outlined,

@@ -2,14 +2,96 @@ import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 
 class HelpRequestEndpoint extends Endpoint {
-  /// Fetches all help requests, optionally filtered by category, status, emergency mode, or search query, and sorted.
+  /// Fetches community overall stats summary.
+  Future<Map<String, int>> getCommunityStats(Session session) async {
+    final allRequests = await HelpRequest.db.find(session);
+
+    int openCount = 0;
+    int inProgressCount = 0;
+    int completedCount = 0;
+    int totalPointsAwarded = 0;
+
+    for (final req in allRequests) {
+      if (req.status == 'Open') openCount++;
+      if (req.status == 'In Progress') inProgressCount++;
+      if (req.status == 'Completed') {
+        completedCount++;
+        totalPointsAwarded += req.rewardPoints;
+      }
+    }
+
+    return {
+      'totalRequests': allRequests.length,
+      'openCount': openCount,
+      'inProgressCount': inProgressCount,
+      'completedCount': completedCount,
+      'totalPointsAwarded': totalPointsAwarded,
+    };
+  }
+
+  /// Broadcasts an urgent high-priority emergency SOS request to the community.
+  Future<HelpRequest> broadcastEmergencySOS(
+    Session session, {
+    required String title,
+    required String description,
+    required String location,
+    required String creatorEmail,
+    String? neighborhoodZone,
+  }) async {
+    final authInfo = session.authenticated;
+    final userId = authInfo != null
+        ? (int.tryParse(authInfo.userIdentifier) ??
+              authInfo.userIdentifier.hashCode)
+        : (creatorEmail.isNotEmpty ? creatorEmail.hashCode : 1);
+
+    final request = HelpRequest(
+      title: '⚡ SOS: $title',
+      description: description,
+      category: 'Emergency',
+      location: location,
+      urgency: 'Urgent',
+      status: 'Open',
+      rewardPoints: 50,
+      isEmergency: true,
+      creatorUserId: userId,
+      creatorEmail: creatorEmail.isNotEmpty ? creatorEmail : 'sos@helphub.com',
+      neighborhoodZone: neighborhoodZone ?? 'North Campus',
+      estimatedDuration: 'Immediate',
+      upvotes: 5,
+      createdAt: DateTime.now().toUtc(),
+    );
+
+    final inserted = await HelpRequest.db.insertRow(session, request);
+    await _incrementRequestedCount(session, userId, creatorEmail);
+
+    // Notify top community profiles about emergency SOS
+    final profiles = await UserProfile.db.find(session);
+    for (final p in profiles.take(10)) {
+      if (p.email != creatorEmail) {
+        await _createNotification(
+          session,
+          recipientEmail: p.email,
+          title: '🚨 Emergency SOS Alert!',
+          message: 'Urgent request nearby: "$title" at $location.',
+          requestId: inserted.id,
+        );
+      }
+    }
+
+    return inserted;
+  }
+
+  /// Fetches all help requests, optionally filtered by category, status, zone, emergency mode, search query, or activity filter.
   Future<List<HelpRequest>> getHelpRequests(
     Session session, {
     String? category,
     String? status,
+    String? neighborhoodZone,
     bool? isEmergency,
     String? searchQuery,
     String? sortBy,
+    String? myEmailFilter,
+    String? myActivityMode, // 'posted', 'claimed'
   }) async {
     Expression where = Constant.bool(true);
 
@@ -21,8 +103,22 @@ class HelpRequestEndpoint extends Endpoint {
       where = where & HelpRequest.t.status.equals(status);
     }
 
+    if (neighborhoodZone != null &&
+        neighborhoodZone.isNotEmpty &&
+        neighborhoodZone != 'All') {
+      where = where & HelpRequest.t.neighborhoodZone.equals(neighborhoodZone);
+    }
+
     if (isEmergency == true) {
       where = where & HelpRequest.t.isEmergency.equals(true);
+    }
+
+    if (myEmailFilter != null && myEmailFilter.isNotEmpty) {
+      if (myActivityMode == 'posted') {
+        where = where & HelpRequest.t.creatorEmail.equals(myEmailFilter);
+      } else if (myActivityMode == 'claimed') {
+        where = where & HelpRequest.t.helperEmail.equals(myEmailFilter);
+      }
     }
 
     var requests = await HelpRequest.db.find(
@@ -54,6 +150,8 @@ class HelpRequestEndpoint extends Endpoint {
         (a, b) =>
             getUrgencyRank(b.urgency).compareTo(getUrgencyRank(a.urgency)),
       );
+    } else if (sortBy == 'upvotes') {
+      requests.sort((a, b) => (b.upvotes ?? 0).compareTo(a.upvotes ?? 0));
     } else {
       // Default: newest first
       requests.sort((a, b) => b.createdAt.compareTo(a.createdAt));
@@ -73,6 +171,8 @@ class HelpRequestEndpoint extends Endpoint {
     required int rewardPoints,
     bool? isEmergency,
     required String creatorEmail,
+    String? neighborhoodZone,
+    String? estimatedDuration,
   }) async {
     final authInfo = session.authenticated;
     final userId = authInfo != null
@@ -93,6 +193,9 @@ class HelpRequestEndpoint extends Endpoint {
       creatorEmail: creatorEmail.isNotEmpty
           ? creatorEmail
           : 'anonymous@helphub.com',
+      neighborhoodZone: neighborhoodZone ?? 'North Campus',
+      estimatedDuration: estimatedDuration ?? '15-30 mins',
+      upvotes: 0,
       createdAt: DateTime.now().toUtc(),
     );
 
@@ -100,6 +203,25 @@ class HelpRequestEndpoint extends Endpoint {
     await _incrementRequestedCount(session, userId, creatorEmail);
 
     return inserted;
+  }
+
+  /// Upvotes a help request.
+  Future<HelpRequest> upvoteHelpRequest(
+    Session session, {
+    required int requestId,
+  }) async {
+    final request = await HelpRequest.db.findById(session, requestId);
+    if (request == null) {
+      throw Exception('Help request not found');
+    }
+
+    final currentUpvotes = request.upvotes ?? 0;
+    final updated = request.copyWith(
+      upvotes: currentUpvotes + 1,
+      updatedAt: DateTime.now().toUtc(),
+    );
+
+    return await HelpRequest.db.updateRow(session, updated);
   }
 
   /// Cancels an open or in-progress help request.

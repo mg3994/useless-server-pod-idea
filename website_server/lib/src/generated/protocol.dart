@@ -192,6 +192,24 @@ class Protocol extends _is.DatabaseSerializationManager {
           dartType: 'String?',
         ),
         _isp.ColumnDefinition(
+          name: 'neighborhoodZone',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'estimatedDuration',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'upvotes',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _isp.ColumnDefinition(
           name: 'createdAt',
           columnType: _isp.ColumnType.timestampWithoutTimeZone,
           isNullable: false,
@@ -521,6 +539,12 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (t == _is.getType<_i2208dl4.UserProfile?>()) {
       return (data != null ? _i2208dl4.UserProfile.fromJson(data) : null) as T;
+    }
+    if (t == Map<String, int>) {
+      return (data as Map).map(
+            (k, v) => MapEntry(deserialize<String>(k), deserialize<int>(v)),
+          )
+          as T;
     }
     if (t == List<_i62gi6d1.HelpRequest>) {
       return (data as List)

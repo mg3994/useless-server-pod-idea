@@ -283,22 +283,55 @@ class EndpointHelpRequest extends _isc.EndpointRef {
   @override
   String get name => 'helpRequest';
 
-  /// Fetches all help requests, optionally filtered by category, status, emergency mode, or search query, and sorted.
+  /// Fetches community overall stats summary.
+  _ida.Future<Map<String, int>> getCommunityStats() =>
+      caller.callServerEndpoint<Map<String, int>>(
+        'helpRequest',
+        'getCommunityStats',
+        {},
+      );
+
+  /// Broadcasts an urgent high-priority emergency SOS request to the community.
+  _ida.Future<_ilm5roly.HelpRequest> broadcastEmergencySOS({
+    required String title,
+    required String description,
+    required String location,
+    required String creatorEmail,
+    String? neighborhoodZone,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'broadcastEmergencySOS',
+    {
+      'title': title,
+      'description': description,
+      'location': location,
+      'creatorEmail': creatorEmail,
+      'neighborhoodZone': neighborhoodZone,
+    },
+  );
+
+  /// Fetches all help requests, optionally filtered by category, status, zone, emergency mode, search query, or activity filter.
   _ida.Future<List<_ilm5roly.HelpRequest>> getHelpRequests({
     String? category,
     String? status,
+    String? neighborhoodZone,
     bool? isEmergency,
     String? searchQuery,
     String? sortBy,
+    String? myEmailFilter,
+    String? myActivityMode,
   }) => caller.callServerEndpoint<List<_ilm5roly.HelpRequest>>(
     'helpRequest',
     'getHelpRequests',
     {
       'category': category,
       'status': status,
+      'neighborhoodZone': neighborhoodZone,
       'isEmergency': isEmergency,
       'searchQuery': searchQuery,
       'sortBy': sortBy,
+      'myEmailFilter': myEmailFilter,
+      'myActivityMode': myActivityMode,
     },
   );
 
@@ -312,6 +345,8 @@ class EndpointHelpRequest extends _isc.EndpointRef {
     required int rewardPoints,
     bool? isEmergency,
     required String creatorEmail,
+    String? neighborhoodZone,
+    String? estimatedDuration,
   }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
     'helpRequest',
     'createHelpRequest',
@@ -324,7 +359,18 @@ class EndpointHelpRequest extends _isc.EndpointRef {
       'rewardPoints': rewardPoints,
       'isEmergency': isEmergency,
       'creatorEmail': creatorEmail,
+      'neighborhoodZone': neighborhoodZone,
+      'estimatedDuration': estimatedDuration,
     },
+  );
+
+  /// Upvotes a help request.
+  _ida.Future<_ilm5roly.HelpRequest> upvoteHelpRequest({
+    required int requestId,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'upvoteHelpRequest',
+    {'requestId': requestId},
   );
 
   /// Cancels an open or in-progress help request.

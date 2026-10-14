@@ -28,6 +28,9 @@ abstract class HelpRequest
     required this.creatorEmail,
     this.helperUserId,
     this.helperEmail,
+    this.neighborhoodZone,
+    this.estimatedDuration,
+    this.upvotes,
     required this.createdAt,
     this.updatedAt,
   });
@@ -46,6 +49,9 @@ abstract class HelpRequest
     required String creatorEmail,
     int? helperUserId,
     String? helperEmail,
+    String? neighborhoodZone,
+    String? estimatedDuration,
+    int? upvotes,
     required DateTime createdAt,
     DateTime? updatedAt,
   }) = _HelpRequestImpl;
@@ -67,6 +73,9 @@ abstract class HelpRequest
       creatorEmail: jsonSerialization['creatorEmail'] as String,
       helperUserId: jsonSerialization['helperUserId'] as int?,
       helperEmail: jsonSerialization['helperEmail'] as String?,
+      neighborhoodZone: jsonSerialization['neighborhoodZone'] as String?,
+      estimatedDuration: jsonSerialization['estimatedDuration'] as String?,
+      upvotes: jsonSerialization['upvotes'] as int?,
       createdAt: _is.DateTimeJsonExtension.fromJson(
         jsonSerialization['createdAt'],
       ),
@@ -107,6 +116,12 @@ abstract class HelpRequest
 
   String? helperEmail;
 
+  String? neighborhoodZone;
+
+  String? estimatedDuration;
+
+  int? upvotes;
+
   DateTime createdAt;
 
   DateTime? updatedAt;
@@ -131,6 +146,9 @@ abstract class HelpRequest
     String? creatorEmail,
     int? helperUserId,
     String? helperEmail,
+    String? neighborhoodZone,
+    String? estimatedDuration,
+    int? upvotes,
     DateTime? createdAt,
     DateTime? updatedAt,
   });
@@ -151,6 +169,9 @@ abstract class HelpRequest
       'creatorEmail': creatorEmail,
       if (helperUserId != null) 'helperUserId': helperUserId,
       if (helperEmail != null) 'helperEmail': helperEmail,
+      if (neighborhoodZone != null) 'neighborhoodZone': neighborhoodZone,
+      if (estimatedDuration != null) 'estimatedDuration': estimatedDuration,
+      if (upvotes != null) 'upvotes': upvotes,
       'createdAt': createdAt.toJson(),
       if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
     };
@@ -173,6 +194,9 @@ abstract class HelpRequest
       'creatorEmail': creatorEmail,
       if (helperUserId != null) 'helperUserId': helperUserId,
       if (helperEmail != null) 'helperEmail': helperEmail,
+      if (neighborhoodZone != null) 'neighborhoodZone': neighborhoodZone,
+      if (estimatedDuration != null) 'estimatedDuration': estimatedDuration,
+      if (upvotes != null) 'upvotes': upvotes,
       'createdAt': createdAt.toJson(),
       if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
     };
@@ -223,6 +247,9 @@ class _HelpRequestImpl extends HelpRequest {
     required String creatorEmail,
     int? helperUserId,
     String? helperEmail,
+    String? neighborhoodZone,
+    String? estimatedDuration,
+    int? upvotes,
     required DateTime createdAt,
     DateTime? updatedAt,
   }) : super._(
@@ -239,6 +266,9 @@ class _HelpRequestImpl extends HelpRequest {
          creatorEmail: creatorEmail,
          helperUserId: helperUserId,
          helperEmail: helperEmail,
+         neighborhoodZone: neighborhoodZone,
+         estimatedDuration: estimatedDuration,
+         upvotes: upvotes,
          createdAt: createdAt,
          updatedAt: updatedAt,
        );
@@ -261,6 +291,9 @@ class _HelpRequestImpl extends HelpRequest {
     String? creatorEmail,
     Object? helperUserId = _Undefined,
     Object? helperEmail = _Undefined,
+    Object? neighborhoodZone = _Undefined,
+    Object? estimatedDuration = _Undefined,
+    Object? upvotes = _Undefined,
     DateTime? createdAt,
     Object? updatedAt = _Undefined,
   }) {
@@ -278,6 +311,13 @@ class _HelpRequestImpl extends HelpRequest {
       creatorEmail: creatorEmail ?? this.creatorEmail,
       helperUserId: helperUserId is int? ? helperUserId : this.helperUserId,
       helperEmail: helperEmail is String? ? helperEmail : this.helperEmail,
+      neighborhoodZone: neighborhoodZone is String?
+          ? neighborhoodZone
+          : this.neighborhoodZone,
+      estimatedDuration: estimatedDuration is String?
+          ? estimatedDuration
+          : this.estimatedDuration,
+      upvotes: upvotes is int? ? upvotes : this.upvotes,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt is DateTime? ? updatedAt : this.updatedAt,
     );
@@ -347,6 +387,23 @@ class HelpRequestUpdateTable extends _is.UpdateTable<HelpRequestTable> {
     value,
   );
 
+  _is.ColumnValue<String, String> neighborhoodZone(String? value) =>
+      _is.ColumnValue(
+        table.neighborhoodZone,
+        value,
+      );
+
+  _is.ColumnValue<String, String> estimatedDuration(String? value) =>
+      _is.ColumnValue(
+        table.estimatedDuration,
+        value,
+      );
+
+  _is.ColumnValue<int, int> upvotes(int? value) => _is.ColumnValue(
+    table.upvotes,
+    value,
+  );
+
   _is.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
       _is.ColumnValue(
         table.createdAt,
@@ -411,6 +468,18 @@ class HelpRequestTable extends _is.Table<int?> {
       'helperEmail',
       this,
     );
+    neighborhoodZone = _is.ColumnString(
+      'neighborhoodZone',
+      this,
+    );
+    estimatedDuration = _is.ColumnString(
+      'estimatedDuration',
+      this,
+    );
+    upvotes = _is.ColumnInt(
+      'upvotes',
+      this,
+    );
     createdAt = _is.ColumnDateTime(
       'createdAt',
       this,
@@ -447,6 +516,12 @@ class HelpRequestTable extends _is.Table<int?> {
 
   late final _is.ColumnString helperEmail;
 
+  late final _is.ColumnString neighborhoodZone;
+
+  late final _is.ColumnString estimatedDuration;
+
+  late final _is.ColumnInt upvotes;
+
   late final _is.ColumnDateTime createdAt;
 
   late final _is.ColumnDateTime updatedAt;
@@ -466,6 +541,9 @@ class HelpRequestTable extends _is.Table<int?> {
     creatorEmail,
     helperUserId,
     helperEmail,
+    neighborhoodZone,
+    estimatedDuration,
+    upvotes,
     createdAt,
     updatedAt,
   ];

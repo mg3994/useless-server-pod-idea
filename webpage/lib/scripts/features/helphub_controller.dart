@@ -9,8 +9,10 @@ class HelpHubController {
 
   String currentCategory = 'All';
   String currentStatus = 'All';
+  String currentZone = 'All';
   String currentSearch = '';
   String currentSortBy = 'newest';
+  String currentActivityMode = 'all'; // 'all', 'posted', 'claimed'
   bool emergencyOnly = false;
 
   int? activeCommentsRequestId;
@@ -24,11 +26,46 @@ class HelpHubController {
     loadUserProfile();
     loadAnnouncements();
     loadLeaderboard();
+    loadCommunityStats();
     loadHelpRequests();
     loadNotifications();
   }
 
   void _bindEvents() {
+    // Activity Mode Tabs
+    _bindActivityTabs();
+
+    // Tag Chips
+    _bindTagChips();
+
+    // SOS Modal Events
+    final openSosBtn = web.document.querySelector('#open-sos-modal-btn');
+    openSosBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        _toggleModal('sos-modal', show: true);
+      }).toJS,
+    );
+
+    final closeSosBtn = web.document.querySelector('#close-sos-modal-btn');
+    closeSosBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        _toggleModal('sos-modal', show: false);
+      }).toJS,
+    );
+
+    final submitSosBtn = web.document.querySelector('#submit-sos-btn');
+    submitSosBtn?.addEventListener(
+      'click',
+      ((web.Event e) {
+        e.preventDefault();
+        _submitEmergencySos();
+      }).toJS,
+    );
+
     // Toggle emergency filter button
     final emergencyBtn = web.document.querySelector('#toggle-emergency-btn');
     emergencyBtn?.addEventListener(
@@ -208,6 +245,16 @@ class HelpHubController {
       }).toJS,
     );
 
+    final zoneSelect =
+        web.document.querySelector('#zone-filter') as web.HTMLSelectElement?;
+    zoneSelect?.addEventListener(
+      'change',
+      ((web.Event e) {
+        currentZone = zoneSelect.value;
+        loadHelpRequests();
+      }).toJS,
+    );
+
     final statusSelect =
         web.document.querySelector('#status-filter') as web.HTMLSelectElement?;
     statusSelect?.addEventListener(
@@ -239,6 +286,124 @@ class HelpHubController {
     );
   }
 
+  void _bindActivityTabs() {
+    final tabAll = web.document.querySelector('#tab-all');
+    final tabPosted = web.document.querySelector('#tab-posted');
+    final tabClaimed = web.document.querySelector('#tab-claimed');
+
+    void updateTabStyles(String mode) {
+      currentActivityMode = mode;
+      final tabs = [tabAll, tabPosted, tabClaimed];
+      for (final t in tabs) {
+        if (t == null) continue;
+        final modeAttr = t.getAttribute('data-mode');
+        if (modeAttr == mode) {
+          t.className = 'px-3 py-1.5 rounded-lg bg-indigo-600 text-white transition-all cursor-pointer';
+        } else {
+          t.className = 'px-3 py-1.5 rounded-lg text-surface-600 dark:text-surface-300 hover:text-indigo-600 transition-all cursor-pointer';
+        }
+      }
+      loadHelpRequests();
+    }
+
+    tabAll?.addEventListener(
+      'click',
+      ((web.Event e) => updateTabStyles('all')).toJS,
+    );
+    tabPosted?.addEventListener(
+      'click',
+      ((web.Event e) => updateTabStyles('posted')).toJS,
+    );
+    tabClaimed?.addEventListener(
+      'click',
+      ((web.Event e) => updateTabStyles('claimed')).toJS,
+    );
+  }
+
+  void _bindTagChips() {
+    final tagChips = web.document.querySelectorAll('.tag-chip');
+    for (var i = 0; i < tagChips.length; i++) {
+      final chip = tagChips.item(i) as web.HTMLElement?;
+      chip?.addEventListener(
+        'click',
+        ((web.Event e) {
+          final tag = chip.getAttribute('data-tag');
+          if (tag != null) {
+            final searchInput = web.document.querySelector(
+              '#search-input',
+            ) as web.HTMLInputElement?;
+            if (searchInput != null) {
+              searchInput.value = tag;
+              currentSearch = tag;
+              loadHelpRequests();
+            }
+          }
+        }).toJS,
+      );
+    }
+  }
+
+  Future<void> loadCommunityStats() async {
+    try {
+      final stats = await client.helpRequest.getCommunityStats();
+      web.document.querySelector('#stat-open-count')?.textContent =
+          (stats['openCount'] ?? 0).toString();
+      web.document.querySelector('#stat-progress-count')?.textContent =
+          (stats['inProgressCount'] ?? 0).toString();
+      web.document.querySelector('#stat-completed-count')?.textContent =
+          (stats['completedCount'] ?? 0).toString();
+      web.document.querySelector('#stat-points-count')?.textContent =
+          (stats['totalPointsAwarded'] ?? 0).toString();
+    } catch (e) {
+      // Ignore
+    }
+  }
+
+  Future<void> _submitEmergencySos() async {
+    final titleEl =
+        web.document.querySelector('#sos-title') as web.HTMLInputElement?;
+    final locEl =
+        web.document.querySelector('#sos-location') as web.HTMLInputElement?;
+    final descEl =
+        web.document.querySelector('#sos-desc') as web.HTMLTextAreaElement?;
+
+    final title = titleEl?.value.trim() ?? '';
+    final location = locEl?.value.trim() ?? '';
+    final desc = descEl?.value.trim() ?? '';
+
+    if (title.isEmpty || location.isEmpty) {
+      web.window.alert('Please fill in title and location for SOS dispatch.');
+      return;
+    }
+
+    final userEmailEl = web.document.querySelector('#user-email');
+    final creatorEmail = userEmailEl?.textContent ?? 'sos@helphub.com';
+
+    try {
+      await client.helpRequest.broadcastEmergencySOS(
+        title: title,
+        description: desc,
+        location: location,
+        creatorEmail: creatorEmail,
+      );
+
+      if (titleEl != null) titleEl.value = '';
+      if (locEl != null) locEl.value = '';
+      if (descEl != null) descEl.value = '';
+
+      _toggleModal('sos-modal', show: false);
+      web.window.alert(
+        '⚡ Emergency SOS Broadcast Sent! Helpers nearby have been notified.',
+      );
+
+      await loadHelpRequests();
+      await loadCommunityStats();
+      await loadNotifications();
+    } catch (e) {
+      web.window.alert('Failed to dispatch SOS alert.');
+    }
+  }
+
   Future<void> loadUserProfile() async {
     try {
       final userEmailEl = web.document.querySelector('#user-email');
@@ -264,7 +429,6 @@ class HelpHubController {
       web.document.querySelector('#profile-rating-badge')?.textContent =
           '⭐ ${ratingAvg.toStringAsFixed(1)}';
 
-      // Update skills tags
       final skillsContainer = web.document.querySelector(
         '#profile-skills-tags',
       );
@@ -274,11 +438,10 @@ class HelpHubController {
         for (final skill in skillsList) {
           final tagHtml =
               '<span class="text-[10px] px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 rounded-md font-semibold border border-indigo-200 dark:border-indigo-800">${_escapeHtml(skill.trim())}</span>';
-          (skillsContainer as dynamic).insertAdjacentHTML('beforeend', tagHtml);
+          skillsContainer.insertAdjacentHTML('beforeend', tagHtml.toJS);
         }
       }
 
-      // Update milestone progress bar
       final done = profile.completedCount;
       int target = 5;
       if (done >= 10) {
@@ -395,9 +558,10 @@ class HelpHubController {
       container.textContent = '';
 
       if (notifications.isEmpty) {
-        (container as dynamic).insertAdjacentHTML(
+        container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 text-center py-4">No notifications yet.</p>',
+          '<p class="text-xs text-surface-400 text-center py-4">No notifications yet.</p>'
+              .toJS,
         );
         return;
       }
@@ -413,7 +577,7 @@ class HelpHubController {
             <p class="text-xs text-surface-600 dark:text-surface-300">${_escapeHtml(notif.message)}</p>
           </div>
         ''';
-        (container as dynamic).insertAdjacentHTML('beforeend', notifHtml);
+        container.insertAdjacentHTML('beforeend', notifHtml.toJS);
 
         if (!notif.isRead && notif.id != null) {
           await client.helpRequest.markNotificationRead(
@@ -445,7 +609,7 @@ class HelpHubController {
             <p class="text-xs text-indigo-700 dark:text-indigo-300 mt-0.5">${_escapeHtml(ann.content)}</p>
           </div>
         ''';
-        (container as dynamic).insertAdjacentHTML('beforeend', annHtml);
+        container.insertAdjacentHTML('beforeend', annHtml.toJS);
       }
     } catch (e) {
       // Ignore
@@ -461,9 +625,10 @@ class HelpHubController {
       container.textContent = '';
 
       if (topUsers.isEmpty) {
-        (container as dynamic).insertAdjacentHTML(
+        container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 col-span-full">No leaderboard entries yet.</p>',
+          '<p class="text-xs text-surface-400 col-span-full">No leaderboard entries yet.</p>'
+              .toJS,
         );
         return;
       }
@@ -487,7 +652,7 @@ class HelpHubController {
             <span class="text-xs font-extrabold text-amber-500">${u.points} pts</span>
           </div>
         ''';
-        (container as dynamic).insertAdjacentHTML('beforeend', cardHtml);
+        container.insertAdjacentHTML('beforeend', cardHtml.toJS);
       }
     } catch (e) {
       // Ignore
@@ -499,30 +664,42 @@ class HelpHubController {
     if (container == null) return;
 
     try {
+      final userEmailEl = web.document.querySelector('#user-email');
+      final email = userEmailEl?.textContent ?? 'user@helphub.com';
+
       final requests = await client.helpRequest.getHelpRequests(
         category: currentCategory,
         status: currentStatus,
+        neighborhoodZone: currentZone,
         isEmergency: emergencyOnly ? true : null,
         searchQuery: currentSearch,
         sortBy: currentSortBy,
+        myEmailFilter: currentActivityMode != 'all' ? email : null,
+        myActivityMode: currentActivityMode != 'all'
+            ? currentActivityMode
+            : null,
       );
 
       container.textContent = '';
 
       if (requests.isEmpty) {
-        (container as dynamic).insertAdjacentHTML('beforeend', '''
+        container.insertAdjacentHTML(
+          'beforeend',
+          '''
             <div class="col-span-full py-12 text-center text-surface-500 dark:text-surface-400">
               <span class="text-4xl block mb-2">🔍</span>
               <p class="text-base font-semibold">No help requests found.</p>
               <p class="text-xs">Be the first to create one!</p>
             </div>
-          ''');
+          '''
+              .toJS,
+        );
         return;
       }
 
       for (final req in requests) {
         final cardHtml = _buildCardHtml(req);
-        (container as dynamic).insertAdjacentHTML('beforeend', cardHtml);
+        container.insertAdjacentHTML('beforeend', cardHtml.toJS);
       }
 
       _bindCardActionButtons();
@@ -558,18 +735,25 @@ class HelpHubController {
       statusBadge = '⚪ Cancelled';
     }
 
+    final zoneName = req.neighborhoodZone ?? 'North Campus';
+    final duration = req.estimatedDuration ?? '15-30 mins';
+    final upvotes = req.upvotes ?? 0;
+
     String actionButtonHtml = '';
     if (req.status == 'Open') {
       actionButtonHtml =
           '''
         <div class="flex items-center gap-1">
-          <button class="cancel-req-btn px-2.5 py-1 text-[11px] font-bold rounded-lg text-rose-600 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 hover:bg-rose-100 transition-colors" data-id="${req.id}">
+          <button class="upvote-btn px-2 py-1 text-[11px] font-bold rounded-lg text-emerald-700 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 transition-colors" data-id="${req.id}">
+            👍 $upvotes
+          </button>
+          <button class="cancel-req-btn px-2 py-1 text-[11px] font-bold rounded-lg text-rose-600 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 hover:bg-rose-100 transition-colors" data-id="${req.id}">
             Cancel
           </button>
-          <button class="boost-btn px-2.5 py-1 text-[11px] font-bold rounded-lg text-indigo-600 bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition-colors" data-id="${req.id}">
+          <button class="boost-btn px-2 py-1 text-[11px] font-bold rounded-lg text-indigo-600 bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition-colors" data-id="${req.id}">
             🪙 +10
           </button>
-          <button class="claim-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors" data-id="${req.id}">
+          <button class="claim-btn px-3 py-1.5 text-xs font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors" data-id="${req.id}">
             Claim
           </button>
         </div>
@@ -609,9 +793,11 @@ class HelpHubController {
             </div>
           </div>
           <h3 class="text-lg font-bold text-surface-900 dark:text-white mb-1 leading-snug">${_escapeHtml(req.title)}</h3>
-          <p class="text-xs text-surface-500 dark:text-surface-400 mb-2 flex items-center gap-1">
-            <span>📍</span> ${_escapeHtml(req.location)}
-          </p>
+          <div class="flex items-center gap-2 text-xs text-surface-500 dark:text-surface-400 mb-2">
+            <span>📍 ${_escapeHtml(req.location)} ($zoneName)</span>
+            <span>•</span>
+            <span>⏱️ $duration</span>
+          </div>
           <p class="text-xs text-surface-400 dark:text-surface-500 mb-3">By: ${_escapeHtml(req.creatorEmail)}</p>
           <p class="text-sm text-surface-600 dark:text-surface-300 line-clamp-3 mb-4">${_escapeHtml(req.description)}</p>
         </div>
@@ -632,6 +818,25 @@ class HelpHubController {
   }
 
   void _bindCardActionButtons() {
+    final upvoteBtns = web.document.querySelectorAll('.upvote-btn');
+    for (var i = 0; i < upvoteBtns.length; i++) {
+      final btn = upvoteBtns.item(i) as web.HTMLElement?;
+      btn?.addEventListener(
+        'click',
+        ((web.Event e) {
+          final idStr = btn.getAttribute('data-id');
+          if (idStr != null) {
+            final id = int.tryParse(idStr);
+            if (id != null) {
+              client.helpRequest.upvoteHelpRequest(requestId: id).then((_) {
+                loadHelpRequests();
+              });
+            }
+          }
+        }).toJS,
+      );
+    }
+
     final cancelReqBtns = web.document.querySelectorAll('.cancel-req-btn');
     for (var i = 0; i < cancelReqBtns.length; i++) {
       final btn = cancelReqBtns.item(i) as web.HTMLElement?;
@@ -644,6 +849,7 @@ class HelpHubController {
             if (id != null) {
               client.helpRequest.cancelHelpRequest(requestId: id).then((_) {
                 loadHelpRequests();
+                loadCommunityStats();
                 loadNotifications();
               });
             }
@@ -693,6 +899,7 @@ class HelpHubController {
                     loadHelpRequests();
                     loadUserProfile();
                     loadLeaderboard();
+                    loadCommunityStats();
                     loadNotifications();
                   });
             }
@@ -715,6 +922,7 @@ class HelpHubController {
                 loadHelpRequests();
                 loadUserProfile();
                 loadLeaderboard();
+                loadCommunityStats();
                 loadNotifications();
               });
             }
@@ -830,9 +1038,10 @@ class HelpHubController {
       listEl.textContent = '';
 
       if (comments.isEmpty) {
-        (listEl as dynamic).insertAdjacentHTML(
+        listEl.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 text-center py-4">No comments yet. Be the first to start the discussion!</p>',
+          '<p class="text-xs text-surface-400 text-center py-4">No comments yet. Be the first to start the discussion!</p>'
+              .toJS,
         );
         return;
       }
@@ -848,7 +1057,7 @@ class HelpHubController {
             <p class="text-xs text-surface-700 dark:text-surface-200">${_escapeHtml(c.content)}</p>
           </div>
         ''';
-        (listEl as dynamic).insertAdjacentHTML('beforeend', commentHtml);
+        listEl.insertAdjacentHTML('beforeend', commentHtml.toJS);
       }
     } catch (e) {
       // Ignore
@@ -888,6 +1097,10 @@ class HelpHubController {
         web.document.querySelector('#req-category') as web.HTMLSelectElement?;
     final urgEl =
         web.document.querySelector('#req-urgency') as web.HTMLSelectElement?;
+    final zoneEl =
+        web.document.querySelector('#req-zone') as web.HTMLSelectElement?;
+    final durEl =
+        web.document.querySelector('#req-duration') as web.HTMLSelectElement?;
     final locEl =
         web.document.querySelector('#req-location') as web.HTMLInputElement?;
     final ptsEl =
@@ -899,6 +1112,8 @@ class HelpHubController {
     final title = titleEl?.value.trim() ?? '';
     final category = catEl?.value ?? 'Borrow Item';
     final urgency = urgEl?.value ?? 'Normal';
+    final zone = zoneEl?.value ?? 'North Campus';
+    final duration = durEl?.value ?? '15-30 mins';
     final location = locEl?.value.trim() ?? '';
     final points = int.tryParse(ptsEl?.value ?? '25') ?? 25;
     final description = descEl?.value.trim() ?? '';
@@ -921,6 +1136,8 @@ class HelpHubController {
         rewardPoints: points,
         isEmergency: urgency == 'Urgent',
         creatorEmail: creatorEmail,
+        neighborhoodZone: zone,
+        estimatedDuration: duration,
       );
 
       // Clear fields
@@ -932,6 +1149,7 @@ class HelpHubController {
       await loadHelpRequests();
       await loadUserProfile();
       await loadLeaderboard();
+      await loadCommunityStats();
       await loadNotifications();
     } catch (e) {
       web.window.alert('Failed to publish request. Please try again.');

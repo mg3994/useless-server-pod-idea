@@ -284,6 +284,61 @@ class Endpoints extends _is.EndpointDispatch {
       name: 'helpRequest',
       endpoint: endpoints['helpRequest']!,
       methodConnectors: {
+        'getCommunityStats': _is.MethodConnector(
+          name: 'getCommunityStats',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getCommunityStats(session),
+        ),
+        'broadcastEmergencySOS': _is.MethodConnector(
+          name: 'broadcastEmergencySOS',
+          params: {
+            'title': _is.ParameterDescription(
+              name: 'title',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'description': _is.ParameterDescription(
+              name: 'description',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'location': _is.ParameterDescription(
+              name: 'location',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'creatorEmail': _is.ParameterDescription(
+              name: 'creatorEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'neighborhoodZone': _is.ParameterDescription(
+              name: 'neighborhoodZone',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .broadcastEmergencySOS(
+                        session,
+                        title: params['title'],
+                        description: params['description'],
+                        location: params['location'],
+                        creatorEmail: params['creatorEmail'],
+                        neighborhoodZone: params['neighborhoodZone'],
+                      ),
+        ),
         'getHelpRequests': _is.MethodConnector(
           name: 'getHelpRequests',
           params: {
@@ -294,6 +349,11 @@ class Endpoints extends _is.EndpointDispatch {
             ),
             'status': _is.ParameterDescription(
               name: 'status',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+            'neighborhoodZone': _is.ParameterDescription(
+              name: 'neighborhoodZone',
               type: _is.getType<String?>(),
               nullable: true,
             ),
@@ -312,6 +372,16 @@ class Endpoints extends _is.EndpointDispatch {
               type: _is.getType<String?>(),
               nullable: true,
             ),
+            'myEmailFilter': _is.ParameterDescription(
+              name: 'myEmailFilter',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+            'myActivityMode': _is.ParameterDescription(
+              name: 'myActivityMode',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -323,9 +393,12 @@ class Endpoints extends _is.EndpointDispatch {
                         session,
                         category: params['category'],
                         status: params['status'],
+                        neighborhoodZone: params['neighborhoodZone'],
                         isEmergency: params['isEmergency'],
                         searchQuery: params['searchQuery'],
                         sortBy: params['sortBy'],
+                        myEmailFilter: params['myEmailFilter'],
+                        myActivityMode: params['myActivityMode'],
                       ),
         ),
         'createHelpRequest': _is.MethodConnector(
@@ -371,6 +444,16 @@ class Endpoints extends _is.EndpointDispatch {
               type: _is.getType<String>(),
               nullable: false,
             ),
+            'neighborhoodZone': _is.ParameterDescription(
+              name: 'neighborhoodZone',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+            'estimatedDuration': _is.ParameterDescription(
+              name: 'estimatedDuration',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -388,6 +471,28 @@ class Endpoints extends _is.EndpointDispatch {
                         rewardPoints: params['rewardPoints'],
                         isEmergency: params['isEmergency'],
                         creatorEmail: params['creatorEmail'],
+                        neighborhoodZone: params['neighborhoodZone'],
+                        estimatedDuration: params['estimatedDuration'],
+                      ),
+        ),
+        'upvoteHelpRequest': _is.MethodConnector(
+          name: 'upvoteHelpRequest',
+          params: {
+            'requestId': _is.ParameterDescription(
+              name: 'requestId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .upvoteHelpRequest(
+                        session,
+                        requestId: params['requestId'],
                       ),
         ),
         'cancelHelpRequest': _is.MethodConnector(

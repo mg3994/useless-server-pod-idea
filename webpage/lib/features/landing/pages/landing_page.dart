@@ -194,15 +194,14 @@ Component landingHero() {
                   'max-w-5xl mx-auto text-center flex flex-col items-center',
             },
             [
-              div(
+              button(
                 {
-                  'class': 'inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 text-xs font-semibold mb-4 border border-rose-200 dark:border-rose-800',
+                  'id': 'open-sos-modal-btn',
+                  'class': 'inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-600 text-white text-xs font-extrabold mb-4 border border-rose-500 shadow-md shadow-rose-600/30 hover:bg-rose-700 transition-all cursor-pointer animate-pulse',
                 },
                 [
-                  span({
-                    'class': 'w-2 h-2 rounded-full bg-rose-500 animate-ping',
-                  }, []),
-                  Text('🚨 Emergency SOS Favor Dispatch Active'),
+                  span({'class': 'text-sm'}, [Text('⚡')]),
+                  Text('DISPATCH EMERGENCY SOS FAVOR'),
                 ],
               ),
               h1(
@@ -222,7 +221,7 @@ Component landingHero() {
               ),
               p(
                 {
-                  'class': 'text-base md:text-lg text-surface-600 dark:text-surface-300 max-w-2xl mb-8 leading-relaxed',
+                  'class': 'text-base md:text-lg text-surface-600 dark:text-surface-300 max-w-2xl mb-6 leading-relaxed',
                 },
                 [
                   Text(
@@ -231,7 +230,10 @@ Component landingHero() {
                 ],
               ),
               div(
-                {'class': 'flex flex-wrap items-center justify-center gap-3'},
+                {
+                  'class':
+                      'flex flex-wrap items-center justify-center gap-3 mb-8',
+                },
                 [
                   button(
                     {
@@ -250,6 +252,76 @@ Component landingHero() {
                     },
                     [Text('Browse Live Requests')],
                   ),
+                ],
+              ),
+
+              // Live Community Stats Banner
+              div(
+                {
+                  'id': 'community-stats-bar',
+                  'class': 'grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-white/80 dark:bg-surface-900/80 border border-surface-200 dark:border-surface-800 backdrop-blur w-full max-w-3xl shadow-sm',
+                },
+                [
+                  div([
+                    span(
+                      {
+                        'id': 'stat-open-count',
+                        'class': 'block text-lg font-black text-emerald-600 dark:text-emerald-400',
+                      },
+                      [Text('0')],
+                    ),
+                    span(
+                      {
+                        'class': 'text-[11px] text-surface-500 font-semibold uppercase',
+                      },
+                      [Text('Open Favors')],
+                    ),
+                  ]),
+                  div([
+                    span(
+                      {
+                        'id': 'stat-progress-count',
+                        'class': 'block text-lg font-black text-amber-500',
+                      },
+                      [Text('0')],
+                    ),
+                    span(
+                      {
+                        'class': 'text-[11px] text-surface-500 font-semibold uppercase',
+                      },
+                      [Text('In Progress')],
+                    ),
+                  ]),
+                  div([
+                    span(
+                      {
+                        'id': 'stat-completed-count',
+                        'class': 'block text-lg font-black text-indigo-600 dark:text-indigo-400',
+                      },
+                      [Text('0')],
+                    ),
+                    span(
+                      {
+                        'class': 'text-[11px] text-surface-500 font-semibold uppercase',
+                      },
+                      [Text('Completed')],
+                    ),
+                  ]),
+                  div([
+                    span(
+                      {
+                        'id': 'stat-points-count',
+                        'class': 'block text-lg font-black text-amber-500',
+                      },
+                      [Text('0')],
+                    ),
+                    span(
+                      {
+                        'class': 'text-[11px] text-surface-500 font-semibold uppercase',
+                      },
+                      [Text('Pts Exchanged')],
+                    ),
+                  ]),
                 ],
               ),
             ],
@@ -501,7 +573,7 @@ Component landingHero() {
           // Filter Controls
           div(
             {
-              'class': 'flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6',
+              'class': 'flex flex-col md:flex-row md:items-center justify-between gap-4 mb-3',
             },
             [
               h2(
@@ -516,93 +588,173 @@ Component landingHero() {
                 ],
               ),
 
+              // Activity Mode Tabs (All, My Posted, My Claimed)
               div(
-                {'class': 'flex flex-wrap items-center gap-3'},
+                {
+                  'id': 'activity-mode-tabs',
+                  'class': 'inline-flex p-1 bg-surface-200/60 dark:bg-surface-800/60 rounded-xl gap-1 text-xs font-semibold',
+                },
                 [
-                  // Emergency Mode Toggle Button
                   button(
                     {
-                      'id': 'toggle-emergency-btn',
-                      'type': 'button',
-                      'class': 'px-3 py-2 text-xs font-bold rounded-xl border border-rose-300 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 flex items-center gap-1.5 transition-all',
+                      'id': 'tab-all',
+                      'class': 'px-3 py-1.5 rounded-lg bg-indigo-600 text-white transition-all cursor-pointer',
+                      'data-mode': 'all',
                     },
-                    [
-                      span({'class': 'text-sm'}, [Text('🚨')]),
-                      span(
-                        {'id': 'emergency-toggle-text'},
-                        [Text('Emergency Only: OFF')],
-                      ),
-                    ],
+                    [Text('🌐 All Favors')],
                   ),
-
-                  // Search Bar
-                  input({
-                    'id': 'search-input',
-                    'type': 'text',
-                    'placeholder': 'Search requests...',
-                    'class': 'px-3.5 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 focus:outline-none focus:border-indigo-500 w-44 md:w-52',
-                  }),
-
-                  // Category Filter Dropdown
-                  select(
+                  button(
                     {
-                      'id': 'category-filter',
-                      'class': 'px-3 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-indigo-500',
+                      'id': 'tab-posted',
+                      'class': 'px-3 py-1.5 rounded-lg text-surface-600 dark:text-surface-300 hover:text-indigo-600 transition-all cursor-pointer',
+                      'data-mode': 'posted',
                     },
-                    [
-                      option({'value': 'All'}, [Text('All Categories')]),
-                      option(
-                        {'value': 'Borrow Item'},
-                        [Text('🛠️ Borrow Item')],
-                      ),
-                      option(
-                        {'value': 'Errand & Delivery'},
-                        [Text('🛵 Errand & Delivery')],
-                      ),
-                      option(
-                        {'value': 'Tutoring & Study'},
-                        [Text('📚 Tutoring & Study')],
-                      ),
-                      option(
-                        {'value': 'Pet & Plant Care'},
-                        [Text('🐱 Pet & Plant Care')],
-                      ),
-                      option(
-                        {'value': 'Tech & Rides'},
-                        [Text('💻 Tech & Rides')],
-                      ),
-                    ],
+                    [Text('📝 My Posted')],
                   ),
-
-                  // Status Filter Dropdown
-                  select(
+                  button(
                     {
-                      'id': 'status-filter',
-                      'class': 'px-3 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-indigo-500',
+                      'id': 'tab-claimed',
+                      'class': 'px-3 py-1.5 rounded-lg text-surface-600 dark:text-surface-300 hover:text-indigo-600 transition-all cursor-pointer',
+                      'data-mode': 'claimed',
                     },
-                    [
-                      option({'value': 'All'}, [Text('All Statuses')]),
-                      option({'value': 'Open'}, [Text('🟢 Open')]),
-                      option(
-                        {'value': 'In Progress'},
-                        [Text('🟡 In Progress')],
-                      ),
-                      option({'value': 'Completed'}, [Text('🔵 Completed')]),
-                    ],
+                    [Text('🤝 My Claimed')],
                   ),
+                ],
+              ),
+            ],
+          ),
 
-                  // Sort Selector Dropdown
-                  select(
-                    {
-                      'id': 'sort-filter',
-                      'class': 'px-3 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-indigo-500',
-                    },
-                    [
-                      option({'value': 'newest'}, [Text('🕒 Newest First')]),
-                      option({'value': 'reward'}, [Text('🪙 Highest Reward')]),
-                      option({'value': 'urgency'}, [Text('⚡ Most Urgent')]),
-                    ],
+          // Quick Popular Search Tags
+          div(
+            {'class': 'flex flex-wrap items-center gap-2 mb-4'},
+            [
+              span(
+                {'class': 'text-xs font-bold text-surface-500 mr-1'},
+                [Text('Popular:')],
+              ),
+              button(
+                {
+                  'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
+                  'data-tag': 'ladder',
+                },
+                [Text('🛠️ #Tools')],
+              ),
+              button(
+                {
+                  'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
+                  'data-tag': 'grocery',
+                },
+                [Text('🛵 #Grocery')],
+              ),
+              button(
+                {
+                  'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
+                  'data-tag': 'math',
+                },
+                [Text('📚 #Study')],
+              ),
+              button(
+                {
+                  'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
+                  'data-tag': 'cat',
+                },
+                [Text('🐱 #PetCare')],
+              ),
+            ],
+          ),
+
+          div(
+            {'class': 'flex flex-wrap items-center gap-3 mb-6'},
+            [
+              // Emergency Mode Toggle Button
+              button(
+                {
+                  'id': 'toggle-emergency-btn',
+                  'type': 'button',
+                  'class': 'px-3 py-2 text-xs font-bold rounded-xl border border-rose-300 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 flex items-center gap-1.5 transition-all cursor-pointer',
+                },
+                [
+                  span({'class': 'text-sm'}, [Text('🚨')]),
+                  span(
+                    {'id': 'emergency-toggle-text'},
+                    [Text('Emergency Only: OFF')],
                   ),
+                ],
+              ),
+
+              // Search Bar
+              input({
+                'id': 'search-input',
+                'type': 'text',
+                'placeholder': 'Search requests...',
+                'class': 'px-3.5 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 focus:outline-none focus:border-indigo-500 w-40 md:w-48',
+              }),
+
+              // Neighborhood Zone Dropdown
+              select(
+                {
+                  'id': 'zone-filter',
+                  'class': 'px-3 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-indigo-500',
+                },
+                [
+                  option({'value': 'All'}, [Text('📍 All Zones')]),
+                  option({'value': 'North Campus'}, [Text('North Campus')]),
+                  option({'value': 'South Quad'}, [Text('South Quad')]),
+                  option({'value': 'West Village'}, [Text('West Village')]),
+                  option({'value': 'Downtown East'}, [Text('Downtown East')]),
+                ],
+              ),
+
+              // Category Filter Dropdown
+              select(
+                {
+                  'id': 'category-filter',
+                  'class': 'px-3 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-indigo-500',
+                },
+                [
+                  option({'value': 'All'}, [Text('All Categories')]),
+                  option({'value': 'Borrow Item'}, [Text('🛠️ Borrow Item')]),
+                  option(
+                    {'value': 'Errand & Delivery'},
+                    [Text('🛵 Errand & Delivery')],
+                  ),
+                  option(
+                    {'value': 'Tutoring & Study'},
+                    [Text('📚 Tutoring & Study')],
+                  ),
+                  option(
+                    {'value': 'Pet & Plant Care'},
+                    [Text('🐱 Pet & Plant Care')],
+                  ),
+                  option({'value': 'Tech & Rides'}, [Text('💻 Tech & Rides')]),
+                ],
+              ),
+
+              // Status Filter Dropdown
+              select(
+                {
+                  'id': 'status-filter',
+                  'class': 'px-3 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-indigo-500',
+                },
+                [
+                  option({'value': 'All'}, [Text('All Statuses')]),
+                  option({'value': 'Open'}, [Text('🟢 Open')]),
+                  option({'value': 'In Progress'}, [Text('🟡 In Progress')]),
+                  option({'value': 'Completed'}, [Text('🔵 Completed')]),
+                ],
+              ),
+
+              // Sort Selector Dropdown
+              select(
+                {
+                  'id': 'sort-filter',
+                  'class': 'px-3 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-indigo-500',
+                },
+                [
+                  option({'value': 'newest'}, [Text('🕒 Newest First')]),
+                  option({'value': 'reward'}, [Text('🪙 Highest Reward')]),
+                  option({'value': 'upvotes'}, [Text('👍 Most Upvotes')]),
+                  option({'value': 'urgency'}, [Text('⚡ Most Urgent')]),
                 ],
               ),
             ],
@@ -630,6 +782,9 @@ Component landingHero() {
 
       // Modal Dialog for Profile Edit
       _editProfileModal(),
+
+      // Modal Dialog for Emergency SOS
+      _sosModal(),
     ],
   );
 }
@@ -757,7 +912,63 @@ Component _createRequestModal() {
                       {
                         'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1',
                       },
-                      [Text('Location')],
+                      [Text('Neighborhood Zone')],
+                    ),
+                    select(
+                      {
+                        'id': 'req-zone',
+                        'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                      },
+                      [
+                        option(
+                          {'value': 'North Campus'},
+                          [Text('North Campus')],
+                        ),
+                        option({'value': 'South Quad'}, [Text('South Quad')]),
+                        option(
+                          {'value': 'West Village'},
+                          [Text('West Village')],
+                        ),
+                        option(
+                          {'value': 'Downtown East'},
+                          [Text('Downtown East')],
+                        ),
+                      ],
+                    ),
+                  ]),
+
+                  div([
+                    label(
+                      {
+                        'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1',
+                      },
+                      [Text('Est. Duration')],
+                    ),
+                    select(
+                      {
+                        'id': 'req-duration',
+                        'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                      },
+                      [
+                        option({'value': '15-30 mins'}, [Text('15-30 mins')]),
+                        option({'value': '1 hour'}, [Text('1 hour')]),
+                        option({'value': '2+ hours'}, [Text('2+ hours')]),
+                        option({'value': 'Half day'}, [Text('Half day')]),
+                      ],
+                    ),
+                  ]),
+                ],
+              ),
+
+              div(
+                {'class': 'grid grid-cols-2 gap-3'},
+                [
+                  div([
+                    label(
+                      {
+                        'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1',
+                      },
+                      [Text('Location Detail')],
                     ),
                     input({
                       'id': 'req-location',
@@ -1076,6 +1287,110 @@ Component _editProfileModal() {
                   'class': 'w-full mt-2 py-2.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md',
                 },
                 [Text('Save Changes')],
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+Component _sosModal() {
+  return div(
+    {
+      'id': 'sos-modal',
+      'class': 'fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 hidden',
+    },
+    [
+      div(
+        {
+          'class': 'bg-white dark:bg-surface-900 border-2 border-rose-500 rounded-2xl max-w-md w-full p-6 shadow-2xl relative',
+        },
+        [
+          button(
+            {
+              'id': 'close-sos-modal-btn',
+              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold',
+            },
+            [Text('✕')],
+          ),
+          div(
+            {
+              'class': 'flex items-center gap-2 mb-2 text-rose-600 dark:text-rose-400 font-extrabold text-lg',
+            },
+            [
+              span({'class': 'text-2xl animate-ping'}, [Text('🚨')]),
+              Text('Broadcast Emergency SOS'),
+            ],
+          ),
+          p(
+            {'class': 'text-xs text-surface-500 dark:text-surface-400 mb-4'},
+            [
+              Text(
+                'Immediately notifies available top helpers nearby for urgent situations.',
+              ),
+            ],
+          ),
+
+          div(
+            {'class': 'flex flex-col gap-3'},
+            [
+              div([
+                label(
+                  {
+                    'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1',
+                  },
+                  [Text('Emergency Summary')],
+                ),
+                input({
+                  'id': 'sos-title',
+                  'type': 'text',
+                  'placeholder': 'e.g., Dead car battery at East Lot',
+                  'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-rose-300 dark:border-rose-800 focus:outline-none focus:border-rose-500',
+                }),
+              ]),
+
+              div([
+                label(
+                  {
+                    'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1',
+                  },
+                  [Text('Exact Location')],
+                ),
+                input({
+                  'id': 'sos-location',
+                  'type': 'text',
+                  'placeholder': 'e.g., Parking Lot C, Slot 42',
+                  'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-rose-500',
+                }),
+              ]),
+
+              div([
+                label(
+                  {
+                    'class': 'block text-xs font-semibold text-surface-700 dark:text-surface-300 mb-1',
+                  },
+                  [Text('Urgent Details')],
+                ),
+                textarea({
+                  'id': 'sos-desc',
+                  'rows': '2',
+                  'placeholder': 'Describe immediate help needed...',
+                  'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-rose-500',
+                }, []),
+              ]),
+
+              button(
+                {
+                  'id': 'submit-sos-btn',
+                  'type': 'button',
+                  'class': 'w-full mt-2 py-3 text-sm font-extrabold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition-all shadow-lg shadow-rose-600/30 flex items-center justify-center gap-2 cursor-pointer',
+                },
+                [
+                  span({'class': 'text-base'}, [Text('⚡')]),
+                  Text('BROADCAST EMERGENCY SOS NOW'),
+                ],
               ),
             ],
           ),

@@ -569,13 +569,87 @@ class _HelpRequestEndpoint {
 
   final _is.SerializationManager _serializationManager;
 
+  _ida.Future<Map<String, int>> getCommunityStats(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'getCommunityStats',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'getCommunityStats',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<Map<String, int>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_i62gi6d1.HelpRequest> broadcastEmergencySOS(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String title,
+    required String description,
+    required String location,
+    required String creatorEmail,
+    String? neighborhoodZone,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'broadcastEmergencySOS',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'broadcastEmergencySOS',
+          parameters: _ist.testObjectToJson({
+            'title': title,
+            'description': description,
+            'location': location,
+            'creatorEmail': creatorEmail,
+            'neighborhoodZone': neighborhoodZone,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i62gi6d1.HelpRequest>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
   _ida.Future<List<_i62gi6d1.HelpRequest>> getHelpRequests(
     _ist.TestSessionBuilder sessionBuilder, {
     String? category,
     String? status,
+    String? neighborhoodZone,
     bool? isEmergency,
     String? searchQuery,
     String? sortBy,
+    String? myEmailFilter,
+    String? myActivityMode,
   }) async {
     return _ist.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -591,9 +665,12 @@ class _HelpRequestEndpoint {
           parameters: _ist.testObjectToJson({
             'category': category,
             'status': status,
+            'neighborhoodZone': neighborhoodZone,
             'isEmergency': isEmergency,
             'searchQuery': searchQuery,
             'sortBy': sortBy,
+            'myEmailFilter': myEmailFilter,
+            'myActivityMode': myActivityMode,
           }),
           serializationManager: _serializationManager,
         );
@@ -620,6 +697,8 @@ class _HelpRequestEndpoint {
     required int rewardPoints,
     bool? isEmergency,
     required String creatorEmail,
+    String? neighborhoodZone,
+    String? estimatedDuration,
   }) async {
     return _ist.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -641,7 +720,40 @@ class _HelpRequestEndpoint {
             'rewardPoints': rewardPoints,
             'isEmergency': isEmergency,
             'creatorEmail': creatorEmail,
+            'neighborhoodZone': neighborhoodZone,
+            'estimatedDuration': estimatedDuration,
           }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i62gi6d1.HelpRequest>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_i62gi6d1.HelpRequest> upvoteHelpRequest(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int requestId,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'upvoteHelpRequest',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'upvoteHelpRequest',
+          parameters: _ist.testObjectToJson({'requestId': requestId}),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =

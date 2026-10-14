@@ -13,5 +13,8 @@ fields:
   creatorEmail: String
   helperUserId: int?
   helperEmail: String?
+  neighborhoodZone: String?
+  estimatedDuration: String?
+  upvotes: int?
   createdAt: DateTime
   updatedAt: DateTime?
