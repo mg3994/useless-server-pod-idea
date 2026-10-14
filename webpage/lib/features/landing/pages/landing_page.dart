@@ -106,6 +106,22 @@ Component navbar() {
                 },
                 [Text('🔎 Lost & Found')],
               ),
+              a(
+                {
+                  'href': '#study-sessions',
+                  'id': 'nav-study-link',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                },
+                [Text('📚 Study Groups')],
+              ),
+              a(
+                {
+                  'href': '#food-pantry',
+                  'id': 'nav-food-link',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                },
+                [Text('🍲 Food Share')],
+              ),
             ],
           ),
 
@@ -579,6 +595,56 @@ Component landingHero() {
           ),
           div({
             'id': 'borrow-items-container',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+          }, []),
+        ],
+      ),
+
+      // Peer Study Groups & Tutoring Section
+      div(
+        {'id': 'study-sessions', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        [
+          div(
+            {'class': 'flex items-center justify-between mb-4'},
+            [
+              h2(
+                {
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                },
+                [
+                  span({'class': 'text-2xl'}, [Text('📚')]),
+                  Text('Peer Study Groups & Tutoring Sprints'),
+                ],
+              ),
+            ],
+          ),
+          div({
+            'id': 'study-container',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+          }, []),
+        ],
+      ),
+
+      // Campus Pantry / Food Share Section
+      div(
+        {'id': 'food-pantry', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        [
+          div(
+            {'class': 'flex items-center justify-between mb-4'},
+            [
+              h2(
+                {
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                },
+                [
+                  span({'class': 'text-2xl'}, [Text('🍲')]),
+                  Text('Campus Pantry & Surplus Food Share'),
+                ],
+              ),
+            ],
+          ),
+          div({
+            'id': 'food-container',
             'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
           }, []),
         ],

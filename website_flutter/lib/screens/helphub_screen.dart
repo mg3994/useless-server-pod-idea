@@ -17,6 +17,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
   List<VolunteerEvent> _volunteerEvents = [];
   List<CarpoolRide> _carpoolRides = [];
   List<LostFoundItem> _lostFoundItems = [];
+  List<StudySession> _studySessions = [];
+  List<FoodShareItem> _foodShareItems = [];
   List<UserProfile> _leaderboard = [];
   List<CommunityAnnouncement> _announcements = [];
   List<UserNotification> _notifications = [];
@@ -108,6 +110,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
       final volunteerEvents = await client.helpRequest.getVolunteerEvents();
       final carpoolRides = await client.helpRequest.getCarpoolRides();
       final lostFoundItems = await client.helpRequest.getLostFoundItems();
+      final studySessions = await client.helpRequest.getStudySessions();
+      final foodShareItems = await client.helpRequest.getFoodShareItems();
       final profile = await client.helpRequest.getUserProfile(email: userEmail);
       final leaderboard = await client.helpRequest.getLeaderboard();
       final announcements = await client.helpRequest.getAnnouncements();
@@ -126,6 +130,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         _volunteerEvents = volunteerEvents;
         _carpoolRides = carpoolRides;
         _lostFoundItems = lostFoundItems;
+        _studySessions = studySessions;
+        _foodShareItems = foodShareItems;
         _profile = profile;
         _leaderboard = leaderboard;
         _announcements = announcements;
@@ -1394,6 +1400,200 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                                     item.isAvailable
                                         ? 'Request Borrow'
                                         : 'Borrowed',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+
+              // Peer Study Sessions Carousel
+              if (_studySessions.isNotEmpty) ...[
+                const Text(
+                  '📚 Peer Study Groups & Tutoring Sprints',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+                const SizedBox(height: 6),
+                SizedBox(
+                  height: 95,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _studySessions.length,
+                    itemBuilder: (context, index) {
+                      final study = _studySessions[index];
+                      return Container(
+                        width: 230,
+                        margin: const EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.purple.shade50,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: Colors.purple.shade200),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              study.title,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11,
+                                color: Colors.purple.shade900,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              '${study.sessionTime} • ${study.location}',
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Colors.black87,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: InkWell(
+                                onTap: () async {
+                                  final messenger = ScaffoldMessenger.of(
+                                    context,
+                                  );
+                                  await client.helpRequest.joinStudySession(
+                                    sessionId: study.id!,
+                                    attendeeEmail: _getUserEmail(),
+                                  );
+                                  if (!mounted) return;
+                                  messenger.showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Joined peer study group! 📚',
+                                      ),
+                                    ),
+                                  );
+                                  _loadData();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.purple.shade700,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: const Text(
+                                    'Join Group',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+
+              // Food Pantry / Food Share Carousel
+              if (_foodShareItems.isNotEmpty) ...[
+                const Text(
+                  '🍲 Campus Pantry & Food Share',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+                const SizedBox(height: 6),
+                SizedBox(
+                  height: 95,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _foodShareItems.length,
+                    itemBuilder: (context, index) {
+                      final food = _foodShareItems[index];
+                      return Container(
+                        width: 220,
+                        margin: const EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.shade50,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: Colors.orange.shade200),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              food.title,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11,
+                                color: Colors.orange.shade900,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              '${food.expirationInfo} • ${food.location}',
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Colors.black87,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: InkWell(
+                                onTap: () async {
+                                  final messenger = ScaffoldMessenger.of(
+                                    context,
+                                  );
+                                  await client.helpRequest.claimFoodShareItem(
+                                    itemId: food.id!,
+                                    claimerEmail: _getUserEmail(),
+                                  );
+                                  if (!mounted) return;
+                                  messenger.showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Food item claimed! 🍲',
+                                      ),
+                                    ),
+                                  );
+                                  _loadData();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: !food.isClaimed
+                                        ? Colors.orange.shade800
+                                        : Colors.grey,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    !food.isClaimed ? 'Claim Food' : 'Claimed',
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 9,
