@@ -284,6 +284,198 @@ class Endpoints extends _is.EndpointDispatch {
       name: 'helpRequest',
       endpoint: endpoints['helpRequest']!,
       methodConnectors: {
+        'createCarpoolRide': _is.MethodConnector(
+          name: 'createCarpoolRide',
+          params: {
+            'driverEmail': _is.ParameterDescription(
+              name: 'driverEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'origin': _is.ParameterDescription(
+              name: 'origin',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'destination': _is.ParameterDescription(
+              name: 'destination',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'departureTime': _is.ParameterDescription(
+              name: 'departureTime',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'availableSeats': _is.ParameterDescription(
+              name: 'availableSeats',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'contributionPoints': _is.ParameterDescription(
+              name: 'contributionPoints',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'neighborhoodZone': _is.ParameterDescription(
+              name: 'neighborhoodZone',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'notes': _is.ParameterDescription(
+              name: 'notes',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .createCarpoolRide(
+                        session,
+                        driverEmail: params['driverEmail'],
+                        origin: params['origin'],
+                        destination: params['destination'],
+                        departureTime: params['departureTime'],
+                        availableSeats: params['availableSeats'],
+                        contributionPoints: params['contributionPoints'],
+                        neighborhoodZone: params['neighborhoodZone'],
+                        notes: params['notes'],
+                      ),
+        ),
+        'getCarpoolRides': _is.MethodConnector(
+          name: 'getCarpoolRides',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getCarpoolRides(session),
+        ),
+        'bookCarpoolRide': _is.MethodConnector(
+          name: 'bookCarpoolRide',
+          params: {
+            'rideId': _is.ParameterDescription(
+              name: 'rideId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'passengerEmail': _is.ParameterDescription(
+              name: 'passengerEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .bookCarpoolRide(
+                        session,
+                        rideId: params['rideId'],
+                        passengerEmail: params['passengerEmail'],
+                      ),
+        ),
+        'createLostFoundItem': _is.MethodConnector(
+          name: 'createLostFoundItem',
+          params: {
+            'title': _is.ParameterDescription(
+              name: 'title',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'description': _is.ParameterDescription(
+              name: 'description',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'category': _is.ParameterDescription(
+              name: 'category',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'status': _is.ParameterDescription(
+              name: 'status',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'location': _is.ParameterDescription(
+              name: 'location',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'neighborhoodZone': _is.ParameterDescription(
+              name: 'neighborhoodZone',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'reporterEmail': _is.ParameterDescription(
+              name: 'reporterEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .createLostFoundItem(
+                        session,
+                        title: params['title'],
+                        description: params['description'],
+                        category: params['category'],
+                        status: params['status'],
+                        location: params['location'],
+                        neighborhoodZone: params['neighborhoodZone'],
+                        reporterEmail: params['reporterEmail'],
+                      ),
+        ),
+        'getLostFoundItems': _is.MethodConnector(
+          name: 'getLostFoundItems',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getLostFoundItems(session),
+        ),
+        'resolveLostFoundItem': _is.MethodConnector(
+          name: 'resolveLostFoundItem',
+          params: {
+            'itemId': _is.ParameterDescription(
+              name: 'itemId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'claimerEmail': _is.ParameterDescription(
+              name: 'claimerEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .resolveLostFoundItem(
+                        session,
+                        itemId: params['itemId'],
+                        claimerEmail: params['claimerEmail'],
+                      ),
+        ),
         'createHazardReport': _is.MethodConnector(
           name: 'createHazardReport',
           params: {

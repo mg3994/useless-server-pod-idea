@@ -21,6 +21,8 @@ import 'package:website_server/src/generated/greetings/greeting.dart'
     as _iv7sgnpu;
 import 'package:website_server/src/generated/helphub/borrowable_item.dart'
     as _irz6m6c4;
+import 'package:website_server/src/generated/helphub/carpool_ride.dart'
+    as _iiz6foes;
 import 'package:website_server/src/generated/helphub/community_announcement.dart'
     as _io88z89c;
 import 'package:website_server/src/generated/helphub/community_group.dart'
@@ -31,6 +33,8 @@ import 'package:website_server/src/generated/helphub/hazard_report.dart'
     as _itsw36ae;
 import 'package:website_server/src/generated/helphub/help_request.dart'
     as _i62gi6d1;
+import 'package:website_server/src/generated/helphub/lost_found_item.dart'
+    as _ie0lbrjc;
 import 'package:website_server/src/generated/helphub/request_comment.dart'
     as _itygqzxa;
 import 'package:website_server/src/generated/helphub/request_rating.dart'
@@ -582,6 +586,228 @@ class _HelpRequestEndpoint {
   final _is.EndpointDispatch _endpointDispatch;
 
   final _is.SerializationManager _serializationManager;
+
+  _ida.Future<_iiz6foes.CarpoolRide> createCarpoolRide(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String driverEmail,
+    required String origin,
+    required String destination,
+    required String departureTime,
+    required int availableSeats,
+    required int contributionPoints,
+    required String neighborhoodZone,
+    String? notes,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'createCarpoolRide',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'createCarpoolRide',
+          parameters: _ist.testObjectToJson({
+            'driverEmail': driverEmail,
+            'origin': origin,
+            'destination': destination,
+            'departureTime': departureTime,
+            'availableSeats': availableSeats,
+            'contributionPoints': contributionPoints,
+            'neighborhoodZone': neighborhoodZone,
+            'notes': notes,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_iiz6foes.CarpoolRide>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<List<_iiz6foes.CarpoolRide>> getCarpoolRides(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'getCarpoolRides',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'getCarpoolRides',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_iiz6foes.CarpoolRide>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_iiz6foes.CarpoolRide> bookCarpoolRide(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int rideId,
+    required String passengerEmail,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'bookCarpoolRide',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'bookCarpoolRide',
+          parameters: _ist.testObjectToJson({
+            'rideId': rideId,
+            'passengerEmail': passengerEmail,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_iiz6foes.CarpoolRide>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_ie0lbrjc.LostFoundItem> createLostFoundItem(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String title,
+    required String description,
+    required String category,
+    required String status,
+    required String location,
+    required String neighborhoodZone,
+    required String reporterEmail,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'createLostFoundItem',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'createLostFoundItem',
+          parameters: _ist.testObjectToJson({
+            'title': title,
+            'description': description,
+            'category': category,
+            'status': status,
+            'location': location,
+            'neighborhoodZone': neighborhoodZone,
+            'reporterEmail': reporterEmail,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ie0lbrjc.LostFoundItem>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<List<_ie0lbrjc.LostFoundItem>> getLostFoundItems(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'getLostFoundItems',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'getLostFoundItems',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_ie0lbrjc.LostFoundItem>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_ie0lbrjc.LostFoundItem> resolveLostFoundItem(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int itemId,
+    required String claimerEmail,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'resolveLostFoundItem',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'resolveLostFoundItem',
+          parameters: _ist.testObjectToJson({
+            'itemId': itemId,
+            'claimerEmail': claimerEmail,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ie0lbrjc.LostFoundItem>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 
   _ida.Future<_itsw36ae.HazardReport> createHazardReport(
     _ist.TestSessionBuilder sessionBuilder, {

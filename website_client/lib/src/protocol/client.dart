@@ -21,6 +21,8 @@ import 'package:website_client/src/protocol/greetings/greeting.dart'
     as _ik0mmf5h;
 import 'package:website_client/src/protocol/helphub/borrowable_item.dart'
     as _if3ypwc4;
+import 'package:website_client/src/protocol/helphub/carpool_ride.dart'
+    as _ih37wqku;
 import 'package:website_client/src/protocol/helphub/community_announcement.dart'
     as _if9166ew;
 import 'package:website_client/src/protocol/helphub/community_group.dart'
@@ -31,6 +33,8 @@ import 'package:website_client/src/protocol/helphub/hazard_report.dart'
     as _i47xxilf;
 import 'package:website_client/src/protocol/helphub/help_request.dart'
     as _ilm5roly;
+import 'package:website_client/src/protocol/helphub/lost_found_item.dart'
+    as _ijgap0jh;
 import 'package:website_client/src/protocol/helphub/request_comment.dart'
     as _iq4ufam1;
 import 'package:website_client/src/protocol/helphub/request_rating.dart'
@@ -296,6 +300,96 @@ class EndpointHelpRequest extends _isc.EndpointRef {
 
   @override
   String get name => 'helpRequest';
+
+  /// Posts a new carpool rideshare offer or request.
+  _ida.Future<_ih37wqku.CarpoolRide> createCarpoolRide({
+    required String driverEmail,
+    required String origin,
+    required String destination,
+    required String departureTime,
+    required int availableSeats,
+    required int contributionPoints,
+    required String neighborhoodZone,
+    String? notes,
+  }) => caller.callServerEndpoint<_ih37wqku.CarpoolRide>(
+    'helpRequest',
+    'createCarpoolRide',
+    {
+      'driverEmail': driverEmail,
+      'origin': origin,
+      'destination': destination,
+      'departureTime': departureTime,
+      'availableSeats': availableSeats,
+      'contributionPoints': contributionPoints,
+      'neighborhoodZone': neighborhoodZone,
+      'notes': notes,
+    },
+  );
+
+  /// Gets available carpool rides.
+  _ida.Future<List<_ih37wqku.CarpoolRide>> getCarpoolRides() =>
+      caller.callServerEndpoint<List<_ih37wqku.CarpoolRide>>(
+        'helpRequest',
+        'getCarpoolRides',
+        {},
+      );
+
+  /// Books a seat on a carpool ride.
+  _ida.Future<_ih37wqku.CarpoolRide> bookCarpoolRide({
+    required int rideId,
+    required String passengerEmail,
+  }) => caller.callServerEndpoint<_ih37wqku.CarpoolRide>(
+    'helpRequest',
+    'bookCarpoolRide',
+    {
+      'rideId': rideId,
+      'passengerEmail': passengerEmail,
+    },
+  );
+
+  /// Posts a lost or found item alert.
+  _ida.Future<_ijgap0jh.LostFoundItem> createLostFoundItem({
+    required String title,
+    required String description,
+    required String category,
+    required String status,
+    required String location,
+    required String neighborhoodZone,
+    required String reporterEmail,
+  }) => caller.callServerEndpoint<_ijgap0jh.LostFoundItem>(
+    'helpRequest',
+    'createLostFoundItem',
+    {
+      'title': title,
+      'description': description,
+      'category': category,
+      'status': status,
+      'location': location,
+      'neighborhoodZone': neighborhoodZone,
+      'reporterEmail': reporterEmail,
+    },
+  );
+
+  /// Gets lost & found items.
+  _ida.Future<List<_ijgap0jh.LostFoundItem>> getLostFoundItems() =>
+      caller.callServerEndpoint<List<_ijgap0jh.LostFoundItem>>(
+        'helpRequest',
+        'getLostFoundItems',
+        {},
+      );
+
+  /// Resolves or claims a lost/found item.
+  _ida.Future<_ijgap0jh.LostFoundItem> resolveLostFoundItem({
+    required int itemId,
+    required String claimerEmail,
+  }) => caller.callServerEndpoint<_ijgap0jh.LostFoundItem>(
+    'helpRequest',
+    'resolveLostFoundItem',
+    {
+      'itemId': itemId,
+      'claimerEmail': claimerEmail,
+    },
+  );
 
   /// Reports a neighborhood safety hazard or alert.
   _ida.Future<_i47xxilf.HazardReport> createHazardReport({

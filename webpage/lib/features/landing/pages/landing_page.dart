@@ -90,6 +90,22 @@ Component navbar() {
                 },
                 [Text('🚲 Circles')],
               ),
+              a(
+                {
+                  'href': '#carpool-rideshare',
+                  'id': 'nav-carpool-link',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                },
+                [Text('🚗 Carpool')],
+              ),
+              a(
+                {
+                  'href': '#lost-found-board',
+                  'id': 'nav-lostfound-link',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                },
+                [Text('🔎 Lost & Found')],
+              ),
             ],
           ),
 
@@ -563,6 +579,56 @@ Component landingHero() {
           ),
           div({
             'id': 'borrow-items-container',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+          }, []),
+        ],
+      ),
+
+      // Carpool & Rideshare Section
+      div(
+        {'id': 'carpool-rideshare', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        [
+          div(
+            {'class': 'flex items-center justify-between mb-4'},
+            [
+              h2(
+                {
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                },
+                [
+                  span({'class': 'text-2xl'}, [Text('🚗')]),
+                  Text('Campus & Local Carpool Rideshare'),
+                ],
+              ),
+            ],
+          ),
+          div({
+            'id': 'carpool-container',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+          }, []),
+        ],
+      ),
+
+      // Lost & Found Board Section
+      div(
+        {'id': 'lost-found-board', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        [
+          div(
+            {'class': 'flex items-center justify-between mb-4'},
+            [
+              h2(
+                {
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                },
+                [
+                  span({'class': 'text-2xl'}, [Text('🔎')]),
+                  Text('Campus Lost & Found Board'),
+                ],
+              ),
+            ],
+          ),
+          div({
+            'id': 'lost-found-container',
             'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
           }, []),
         ],

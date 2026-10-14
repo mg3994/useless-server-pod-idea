@@ -2,6 +2,204 @@ import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 
 class HelpRequestEndpoint extends Endpoint {
+  /// Posts a new carpool rideshare offer or request.
+  Future<CarpoolRide> createCarpoolRide(
+    Session session, {
+    required String driverEmail,
+    required String origin,
+    required String destination,
+    required String departureTime,
+    required int availableSeats,
+    required int contributionPoints,
+    required String neighborhoodZone,
+    String? notes,
+  }) async {
+    final ride = CarpoolRide(
+      driverEmail: driverEmail.isNotEmpty ? driverEmail : 'driver@helphub.com',
+      origin: origin,
+      destination: destination,
+      departureTime: departureTime,
+      availableSeats: availableSeats,
+      contributionPoints: contributionPoints,
+      neighborhoodZone: neighborhoodZone.isNotEmpty
+          ? neighborhoodZone
+          : 'North Campus',
+      notes: notes,
+      isCompleted: false,
+      createdAt: DateTime.now().toUtc(),
+    );
+
+    return await CarpoolRide.db.insertRow(session, ride);
+  }
+
+  /// Gets available carpool rides.
+  Future<List<CarpoolRide>> getCarpoolRides(Session session) async {
+    var rides = await CarpoolRide.db.find(
+      session,
+      orderBy: (t) => t.createdAt,
+    );
+
+    if (rides.isEmpty) {
+      final sampleRide = CarpoolRide(
+        driverEmail: 'commuter@helphub.com',
+        origin: 'Downtown Metro Station',
+        destination: 'North Campus Science Building',
+        departureTime: '8:30 AM Tomorrow',
+        availableSeats: 3,
+        contributionPoints: 15,
+        neighborhoodZone: 'North Campus',
+        notes: 'Room for 3 people with backpacks!',
+        isCompleted: false,
+        createdAt: DateTime.now().toUtc(),
+      );
+      final inserted = await CarpoolRide.db.insertRow(session, sampleRide);
+      return [inserted];
+    }
+
+    rides.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return rides;
+  }
+
+  /// Books a seat on a carpool ride.
+  Future<CarpoolRide> bookCarpoolRide(
+    Session session, {
+    required int rideId,
+    required String passengerEmail,
+  }) async {
+    final ride = await CarpoolRide.db.findById(session, rideId);
+    if (ride == null) {
+      throw Exception('Carpool ride not found');
+    }
+
+    if (ride.availableSeats <= 0) {
+      throw Exception('No available seats remaining on this carpool');
+    }
+
+    final currentPassengers = ride.passengerEmails ?? '';
+    if (currentPassengers.contains(passengerEmail)) {
+      return ride;
+    }
+
+    final updated = ride.copyWith(
+      availableSeats: ride.availableSeats - 1,
+      passengerEmails: currentPassengers.isEmpty
+          ? passengerEmail
+          : '$currentPassengers, $passengerEmail',
+    );
+
+    final saved = await CarpoolRide.db.updateRow(session, updated);
+
+    await _createNotification(
+      session,
+      recipientEmail: saved.driverEmail,
+      title: '🚗 Carpool Seat Booked!',
+      message:
+          '$passengerEmail booked a seat on your ride from ${saved.origin} to ${saved.destination}.',
+    );
+
+    return saved;
+  }
+
+  /// Posts a lost or found item alert.
+  Future<LostFoundItem> createLostFoundItem(
+    Session session, {
+    required String title,
+    required String description,
+    required String category,
+    required String status, // 'Lost' or 'Found'
+    required String location,
+    required String neighborhoodZone,
+    required String reporterEmail,
+  }) async {
+    final item = LostFoundItem(
+      title: title,
+      description: description,
+      category: category,
+      status: status,
+      location: location,
+      neighborhoodZone: neighborhoodZone.isNotEmpty
+          ? neighborhoodZone
+          : 'North Campus',
+      reporterEmail: reporterEmail.isNotEmpty
+          ? reporterEmail
+          : 'finder@helphub.com',
+      isResolved: false,
+      createdAt: DateTime.now().toUtc(),
+    );
+
+    final inserted = await LostFoundItem.db.insertRow(session, item);
+
+    final profiles = await UserProfile.db.find(session);
+    for (final p in profiles.take(10)) {
+      if (p.email != reporterEmail) {
+        await _createNotification(
+          session,
+          recipientEmail: p.email,
+          title: '🔎 Lost & Found Alert',
+          message: '$status item ($category): "$title" at $location.',
+        );
+      }
+    }
+
+    return inserted;
+  }
+
+  /// Gets lost & found items.
+  Future<List<LostFoundItem>> getLostFoundItems(Session session) async {
+    var items = await LostFoundItem.db.find(
+      session,
+      orderBy: (t) => t.createdAt,
+    );
+
+    if (items.isEmpty) {
+      final sampleItem = LostFoundItem(
+        title: '🔑 Blue Lanyard with Dorm Keys & USB Drive',
+        description: 'Found near Student Union bench facing the fountain.',
+        category: 'Keys & ID',
+        status: 'Found',
+        location: 'Student Union Plaza',
+        neighborhoodZone: 'North Campus',
+        reporterEmail: 'campus-security@helphub.com',
+        isResolved: false,
+        createdAt: DateTime.now().toUtc(),
+      );
+      final inserted = await LostFoundItem.db.insertRow(session, sampleItem);
+      return [inserted];
+    }
+
+    items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return items;
+  }
+
+  /// Resolves or claims a lost/found item.
+  Future<LostFoundItem> resolveLostFoundItem(
+    Session session, {
+    required int itemId,
+    required String claimerEmail,
+  }) async {
+    final item = await LostFoundItem.db.findById(session, itemId);
+    if (item == null) {
+      throw Exception('Lost & Found item not found');
+    }
+
+    final updated = item.copyWith(
+      isResolved: true,
+      claimedByEmail: claimerEmail,
+    );
+
+    final saved = await LostFoundItem.db.updateRow(session, updated);
+
+    await _createNotification(
+      session,
+      recipientEmail: saved.reporterEmail,
+      title: '🎉 Lost & Found Item Claimed/Resolved!',
+      message:
+          'Item "${saved.title}" was marked claimed/resolved by $claimerEmail.',
+    );
+
+    return saved;
+  }
+
   /// Reports a neighborhood safety hazard or alert.
   Future<HazardReport> createHazardReport(
     Session session, {

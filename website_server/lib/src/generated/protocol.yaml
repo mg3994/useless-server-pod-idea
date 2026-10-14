@@ -12,6 +12,12 @@ jwtRefresh:
 greeting:
   - hello:
 helpRequest:
+  - createCarpoolRide:
+  - getCarpoolRides:
+  - bookCarpoolRide:
+  - createLostFoundItem:
+  - getLostFoundItems:
+  - resolveLostFoundItem:
   - createHazardReport:
   - getHazardReports:
   - resolveHazardReport:

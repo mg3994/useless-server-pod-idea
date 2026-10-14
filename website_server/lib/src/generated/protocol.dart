@@ -19,6 +19,8 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
 import 'package:website_server/src/generated/helphub/borrowable_item.dart'
     as _irz6m6c4;
+import 'package:website_server/src/generated/helphub/carpool_ride.dart'
+    as _iiz6foes;
 import 'package:website_server/src/generated/helphub/community_announcement.dart'
     as _io88z89c;
 import 'package:website_server/src/generated/helphub/community_group.dart'
@@ -29,6 +31,8 @@ import 'package:website_server/src/generated/helphub/hazard_report.dart'
     as _itsw36ae;
 import 'package:website_server/src/generated/helphub/help_request.dart'
     as _i62gi6d1;
+import 'package:website_server/src/generated/helphub/lost_found_item.dart'
+    as _ie0lbrjc;
 import 'package:website_server/src/generated/helphub/request_comment.dart'
     as _itygqzxa;
 import 'package:website_server/src/generated/helphub/request_rating.dart'
@@ -43,12 +47,14 @@ import 'package:website_server/src/generated/helphub/volunteer_event.dart'
     as _iag6romm;
 import 'greetings/greeting.dart' as _izw8z7ou;
 import 'helphub/borrowable_item.dart' as _i391fcoh;
+import 'helphub/carpool_ride.dart' as _iilj6fti;
 import 'helphub/community_announcement.dart' as _iw40l365;
 import 'helphub/community_group.dart' as _izwlcf28;
 import 'helphub/favor_bookmark.dart' as _ia1oh19d;
 import 'helphub/favor_chat_message.dart' as _i2q04olh;
 import 'helphub/hazard_report.dart' as _iy374jzj;
 import 'helphub/help_request.dart' as _i2hcnfb8;
+import 'helphub/lost_found_item.dart' as _ie948yrj;
 import 'helphub/request_comment.dart' as _il3090nm;
 import 'helphub/request_rating.dart' as _ivm2zgp6;
 import 'helphub/reward_redemption.dart' as _ib8vacwb;
@@ -58,12 +64,14 @@ import 'helphub/user_profile.dart' as _i2208dl4;
 import 'helphub/volunteer_event.dart' as _i5ar5pru;
 export 'greetings/greeting.dart';
 export 'helphub/borrowable_item.dart';
+export 'helphub/carpool_ride.dart';
 export 'helphub/community_announcement.dart';
 export 'helphub/community_group.dart';
 export 'helphub/favor_bookmark.dart';
 export 'helphub/favor_chat_message.dart';
 export 'helphub/hazard_report.dart';
 export 'helphub/help_request.dart';
+export 'helphub/lost_found_item.dart';
 export 'helphub/request_comment.dart';
 export 'helphub/request_rating.dart';
 export 'helphub/reward_redemption.dart';
@@ -80,6 +88,90 @@ class Protocol extends _is.DatabaseSerializationManager {
   static final Protocol _instance = Protocol._().._registerHostProtocols();
 
   static List<_isp.TableDefinition> get targetTableDefinitions => [
+    _isp.TableDefinition(
+      name: 'carpool_ride',
+      dartName: 'CarpoolRide',
+      schema: 'public',
+      module: 'website',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'driverEmail',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'origin',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'destination',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'departureTime',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'availableSeats',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'contributionPoints',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'neighborhoodZone',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'notes',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'passengerEmails',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'isCompleted',
+          columnType: _isp.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
     _isp.TableDefinition(
       name: 'community_announcement',
       dartName: 'CommunityAnnouncement',
@@ -783,6 +875,84 @@ class Protocol extends _is.DatabaseSerializationManager {
       managed: true,
     ),
     _isp.TableDefinition(
+      name: 'lost_found_item',
+      dartName: 'LostFoundItem',
+      schema: 'public',
+      module: 'website',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'title',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'description',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'category',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'status',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'location',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'neighborhoodZone',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'reporterEmail',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'claimedByEmail',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'isResolved',
+          columnType: _isp.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
+    _isp.TableDefinition(
       name: 'request_comment',
       dartName: 'RequestComment',
       schema: 'public',
@@ -1060,6 +1230,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _i391fcoh.BorrowableItem) {
       return _i391fcoh.BorrowableItem.fromJson(data) as T;
     }
+    if (t == _iilj6fti.CarpoolRide) {
+      return _iilj6fti.CarpoolRide.fromJson(data) as T;
+    }
     if (t == _iw40l365.CommunityAnnouncement) {
       return _iw40l365.CommunityAnnouncement.fromJson(data) as T;
     }
@@ -1077,6 +1250,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (t == _i2hcnfb8.HelpRequest) {
       return _i2hcnfb8.HelpRequest.fromJson(data) as T;
+    }
+    if (t == _ie948yrj.LostFoundItem) {
+      return _ie948yrj.LostFoundItem.fromJson(data) as T;
     }
     if (t == _il3090nm.RequestComment) {
       return _il3090nm.RequestComment.fromJson(data) as T;
@@ -1106,6 +1282,9 @@ class Protocol extends _is.DatabaseSerializationManager {
       return (data != null ? _i391fcoh.BorrowableItem.fromJson(data) : null)
           as T;
     }
+    if (t == _is.getType<_iilj6fti.CarpoolRide?>()) {
+      return (data != null ? _iilj6fti.CarpoolRide.fromJson(data) : null) as T;
+    }
     if (t == _is.getType<_iw40l365.CommunityAnnouncement?>()) {
       return (data != null
               ? _iw40l365.CommunityAnnouncement.fromJson(data)
@@ -1129,6 +1308,10 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (t == _is.getType<_i2hcnfb8.HelpRequest?>()) {
       return (data != null ? _i2hcnfb8.HelpRequest.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_ie948yrj.LostFoundItem?>()) {
+      return (data != null ? _ie948yrj.LostFoundItem.fromJson(data) : null)
+          as T;
     }
     if (t == _is.getType<_il3090nm.RequestComment?>()) {
       return (data != null ? _il3090nm.RequestComment.fromJson(data) : null)
@@ -1154,6 +1337,18 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (t == _is.getType<_i5ar5pru.VolunteerEvent?>()) {
       return (data != null ? _i5ar5pru.VolunteerEvent.fromJson(data) : null)
+          as T;
+    }
+    if (t == List<_iiz6foes.CarpoolRide>) {
+      return (data as List)
+              .map((e) => deserialize<_iiz6foes.CarpoolRide>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_ie0lbrjc.LostFoundItem>) {
+      return (data as List)
+              .map((e) => deserialize<_ie0lbrjc.LostFoundItem>(e))
+              .toList()
           as T;
     }
     if (t == List<_itsw36ae.HazardReport>) {
@@ -1250,12 +1445,14 @@ class Protocol extends _is.DatabaseSerializationManager {
     return switch (type) {
       _izw8z7ou.Greeting => 'Greeting',
       _i391fcoh.BorrowableItem => 'BorrowableItem',
+      _iilj6fti.CarpoolRide => 'CarpoolRide',
       _iw40l365.CommunityAnnouncement => 'CommunityAnnouncement',
       _izwlcf28.CommunityGroup => 'CommunityGroup',
       _ia1oh19d.FavorBookmark => 'FavorBookmark',
       _i2q04olh.FavorChatMessage => 'FavorChatMessage',
       _iy374jzj.HazardReport => 'HazardReport',
       _i2hcnfb8.HelpRequest => 'HelpRequest',
+      _ie948yrj.LostFoundItem => 'LostFoundItem',
       _il3090nm.RequestComment => 'RequestComment',
       _ivm2zgp6.RequestRating => 'RequestRating',
       _ib8vacwb.RewardRedemption => 'RewardRedemption',
@@ -1281,6 +1478,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'Greeting';
       case _i391fcoh.BorrowableItem():
         return 'BorrowableItem';
+      case _iilj6fti.CarpoolRide():
+        return 'CarpoolRide';
       case _iw40l365.CommunityAnnouncement():
         return 'CommunityAnnouncement';
       case _izwlcf28.CommunityGroup():
@@ -1293,6 +1492,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'HazardReport';
       case _i2hcnfb8.HelpRequest():
         return 'HelpRequest';
+      case _ie948yrj.LostFoundItem():
+        return 'LostFoundItem';
       case _il3090nm.RequestComment():
         return 'RequestComment';
       case _ivm2zgp6.RequestRating():
@@ -1339,6 +1540,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (dataClassName == 'BorrowableItem') {
       return deserialize<_i391fcoh.BorrowableItem>(data['data']);
     }
+    if (dataClassName == 'CarpoolRide') {
+      return deserialize<_iilj6fti.CarpoolRide>(data['data']);
+    }
     if (dataClassName == 'CommunityAnnouncement') {
       return deserialize<_iw40l365.CommunityAnnouncement>(data['data']);
     }
@@ -1356,6 +1560,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'HelpRequest') {
       return deserialize<_i2hcnfb8.HelpRequest>(data['data']);
+    }
+    if (dataClassName == 'LostFoundItem') {
+      return deserialize<_ie948yrj.LostFoundItem>(data['data']);
     }
     if (dataClassName == 'RequestComment') {
       return deserialize<_il3090nm.RequestComment>(data['data']);
@@ -1421,6 +1628,8 @@ class Protocol extends _is.DatabaseSerializationManager {
     switch (t) {
       case _i391fcoh.BorrowableItem:
         return _i391fcoh.BorrowableItem.t;
+      case _iilj6fti.CarpoolRide:
+        return _iilj6fti.CarpoolRide.t;
       case _iw40l365.CommunityAnnouncement:
         return _iw40l365.CommunityAnnouncement.t;
       case _izwlcf28.CommunityGroup:
@@ -1433,6 +1642,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return _iy374jzj.HazardReport.t;
       case _i2hcnfb8.HelpRequest:
         return _i2hcnfb8.HelpRequest.t;
+      case _ie948yrj.LostFoundItem:
+        return _ie948yrj.LostFoundItem.t;
       case _il3090nm.RequestComment:
         return _il3090nm.RequestComment.t;
       case _ivm2zgp6.RequestRating:

@@ -15,6 +15,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
   List<CommunityGroup> _communityGroups = [];
   List<BorrowableItem> _borrowableItems = [];
   List<VolunteerEvent> _volunteerEvents = [];
+  List<CarpoolRide> _carpoolRides = [];
+  List<LostFoundItem> _lostFoundItems = [];
   List<UserProfile> _leaderboard = [];
   List<CommunityAnnouncement> _announcements = [];
   List<UserNotification> _notifications = [];
@@ -104,6 +106,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
       final communityGroups = await client.helpRequest.getCommunityGroups();
       final borrowableItems = await client.helpRequest.getBorrowableItems();
       final volunteerEvents = await client.helpRequest.getVolunteerEvents();
+      final carpoolRides = await client.helpRequest.getCarpoolRides();
+      final lostFoundItems = await client.helpRequest.getLostFoundItems();
       final profile = await client.helpRequest.getUserProfile(email: userEmail);
       final leaderboard = await client.helpRequest.getLeaderboard();
       final announcements = await client.helpRequest.getAnnouncements();
@@ -120,6 +124,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         _communityGroups = communityGroups;
         _borrowableItems = borrowableItems;
         _volunteerEvents = volunteerEvents;
+        _carpoolRides = carpoolRides;
+        _lostFoundItems = lostFoundItems;
         _profile = profile;
         _leaderboard = leaderboard;
         _announcements = announcements;
@@ -1388,6 +1394,204 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                                     item.isAvailable
                                         ? 'Request Borrow'
                                         : 'Borrowed',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+
+              // Carpool Rideshare Carousel
+              if (_carpoolRides.isNotEmpty) ...[
+                const Text(
+                  '🚗 Campus & Local Carpool Rideshare',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+                const SizedBox(height: 6),
+                SizedBox(
+                  height: 95,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _carpoolRides.length,
+                    itemBuilder: (context, index) {
+                      final ride = _carpoolRides[index];
+                      return Container(
+                        width: 230,
+                        margin: const EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.indigo.shade50,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: Colors.indigo.shade200),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${ride.origin} ➔ ${ride.destination}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11,
+                                color: Colors.indigo,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              '${ride.departureTime} • ${ride.availableSeats} seats left',
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: InkWell(
+                                onTap: () async {
+                                  final messenger = ScaffoldMessenger.of(
+                                    context,
+                                  );
+                                  await client.helpRequest.bookCarpoolRide(
+                                    rideId: ride.id!,
+                                    passengerEmail: _getUserEmail(),
+                                  );
+                                  if (!mounted) return;
+                                  messenger.showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Carpool seat reserved! 🚗',
+                                      ),
+                                    ),
+                                  );
+                                  _loadData();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: ride.availableSeats > 0
+                                        ? Colors.indigo
+                                        : Colors.grey,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    ride.availableSeats > 0
+                                        ? 'Book Seat'
+                                        : 'Full',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+
+              // Lost & Found Board Carousel
+              if (_lostFoundItems.isNotEmpty) ...[
+                const Text(
+                  '🔎 Campus Lost & Found Board',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+                const SizedBox(height: 6),
+                SizedBox(
+                  height: 95,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _lostFoundItems.length,
+                    itemBuilder: (context, index) {
+                      final item = _lostFoundItems[index];
+                      return Container(
+                        width: 220,
+                        margin: const EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.amber.shade50,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: Colors.amber.shade200),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '[${item.status}] ${item.title}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11,
+                                color: Colors.amber.shade900,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              item.location,
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Colors.black87,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: InkWell(
+                                onTap: () async {
+                                  final messenger = ScaffoldMessenger.of(
+                                    context,
+                                  );
+                                  await client.helpRequest.resolveLostFoundItem(
+                                    itemId: item.id!,
+                                    claimerEmail: _getUserEmail(),
+                                  );
+                                  if (!mounted) return;
+                                  messenger.showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Item claimed/resolved! 🔎',
+                                      ),
+                                    ),
+                                  );
+                                  _loadData();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: !item.isResolved
+                                        ? Colors.amber.shade800
+                                        : Colors.grey,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    !item.isResolved
+                                        ? 'Claim Item'
+                                        : 'Resolved',
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 9,

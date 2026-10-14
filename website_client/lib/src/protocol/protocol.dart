@@ -18,6 +18,8 @@ import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
 import 'package:website_client/src/protocol/helphub/borrowable_item.dart'
     as _if3ypwc4;
+import 'package:website_client/src/protocol/helphub/carpool_ride.dart'
+    as _ih37wqku;
 import 'package:website_client/src/protocol/helphub/community_announcement.dart'
     as _if9166ew;
 import 'package:website_client/src/protocol/helphub/community_group.dart'
@@ -28,6 +30,8 @@ import 'package:website_client/src/protocol/helphub/hazard_report.dart'
     as _i47xxilf;
 import 'package:website_client/src/protocol/helphub/help_request.dart'
     as _ilm5roly;
+import 'package:website_client/src/protocol/helphub/lost_found_item.dart'
+    as _ijgap0jh;
 import 'package:website_client/src/protocol/helphub/request_comment.dart'
     as _iq4ufam1;
 import 'package:website_client/src/protocol/helphub/request_rating.dart'
@@ -42,12 +46,14 @@ import 'package:website_client/src/protocol/helphub/volunteer_event.dart'
     as _ijz6y5wx;
 import 'greetings/greeting.dart' as _izw8z7ou;
 import 'helphub/borrowable_item.dart' as _i391fcoh;
+import 'helphub/carpool_ride.dart' as _iilj6fti;
 import 'helphub/community_announcement.dart' as _iw40l365;
 import 'helphub/community_group.dart' as _izwlcf28;
 import 'helphub/favor_bookmark.dart' as _ia1oh19d;
 import 'helphub/favor_chat_message.dart' as _i2q04olh;
 import 'helphub/hazard_report.dart' as _iy374jzj;
 import 'helphub/help_request.dart' as _i2hcnfb8;
+import 'helphub/lost_found_item.dart' as _ie948yrj;
 import 'helphub/request_comment.dart' as _il3090nm;
 import 'helphub/request_rating.dart' as _ivm2zgp6;
 import 'helphub/reward_redemption.dart' as _ib8vacwb;
@@ -57,12 +63,14 @@ import 'helphub/user_profile.dart' as _i2208dl4;
 import 'helphub/volunteer_event.dart' as _i5ar5pru;
 export 'greetings/greeting.dart';
 export 'helphub/borrowable_item.dart';
+export 'helphub/carpool_ride.dart';
 export 'helphub/community_announcement.dart';
 export 'helphub/community_group.dart';
 export 'helphub/favor_bookmark.dart';
 export 'helphub/favor_chat_message.dart';
 export 'helphub/hazard_report.dart';
 export 'helphub/help_request.dart';
+export 'helphub/lost_found_item.dart';
 export 'helphub/request_comment.dart';
 export 'helphub/request_rating.dart';
 export 'helphub/reward_redemption.dart';
@@ -112,6 +120,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _i391fcoh.BorrowableItem) {
       return _i391fcoh.BorrowableItem.fromJson(data) as T;
     }
+    if (t == _iilj6fti.CarpoolRide) {
+      return _iilj6fti.CarpoolRide.fromJson(data) as T;
+    }
     if (t == _iw40l365.CommunityAnnouncement) {
       return _iw40l365.CommunityAnnouncement.fromJson(data) as T;
     }
@@ -129,6 +140,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _i2hcnfb8.HelpRequest) {
       return _i2hcnfb8.HelpRequest.fromJson(data) as T;
+    }
+    if (t == _ie948yrj.LostFoundItem) {
+      return _ie948yrj.LostFoundItem.fromJson(data) as T;
     }
     if (t == _il3090nm.RequestComment) {
       return _il3090nm.RequestComment.fromJson(data) as T;
@@ -158,6 +172,9 @@ class Protocol extends _isc.SerializationManager {
       return (data != null ? _i391fcoh.BorrowableItem.fromJson(data) : null)
           as T;
     }
+    if (t == _isc.getType<_iilj6fti.CarpoolRide?>()) {
+      return (data != null ? _iilj6fti.CarpoolRide.fromJson(data) : null) as T;
+    }
     if (t == _isc.getType<_iw40l365.CommunityAnnouncement?>()) {
       return (data != null
               ? _iw40l365.CommunityAnnouncement.fromJson(data)
@@ -181,6 +198,10 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _isc.getType<_i2hcnfb8.HelpRequest?>()) {
       return (data != null ? _i2hcnfb8.HelpRequest.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_ie948yrj.LostFoundItem?>()) {
+      return (data != null ? _ie948yrj.LostFoundItem.fromJson(data) : null)
+          as T;
     }
     if (t == _isc.getType<_il3090nm.RequestComment?>()) {
       return (data != null ? _il3090nm.RequestComment.fromJson(data) : null)
@@ -206,6 +227,18 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _isc.getType<_i5ar5pru.VolunteerEvent?>()) {
       return (data != null ? _i5ar5pru.VolunteerEvent.fromJson(data) : null)
+          as T;
+    }
+    if (t == List<_ih37wqku.CarpoolRide>) {
+      return (data as List)
+              .map((e) => deserialize<_ih37wqku.CarpoolRide>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_ijgap0jh.LostFoundItem>) {
+      return (data as List)
+              .map((e) => deserialize<_ijgap0jh.LostFoundItem>(e))
+              .toList()
           as T;
     }
     if (t == List<_i47xxilf.HazardReport>) {
@@ -299,12 +332,14 @@ class Protocol extends _isc.SerializationManager {
     return switch (type) {
       _izw8z7ou.Greeting => 'Greeting',
       _i391fcoh.BorrowableItem => 'BorrowableItem',
+      _iilj6fti.CarpoolRide => 'CarpoolRide',
       _iw40l365.CommunityAnnouncement => 'CommunityAnnouncement',
       _izwlcf28.CommunityGroup => 'CommunityGroup',
       _ia1oh19d.FavorBookmark => 'FavorBookmark',
       _i2q04olh.FavorChatMessage => 'FavorChatMessage',
       _iy374jzj.HazardReport => 'HazardReport',
       _i2hcnfb8.HelpRequest => 'HelpRequest',
+      _ie948yrj.LostFoundItem => 'LostFoundItem',
       _il3090nm.RequestComment => 'RequestComment',
       _ivm2zgp6.RequestRating => 'RequestRating',
       _ib8vacwb.RewardRedemption => 'RewardRedemption',
@@ -330,6 +365,8 @@ class Protocol extends _isc.SerializationManager {
         return 'Greeting';
       case _i391fcoh.BorrowableItem():
         return 'BorrowableItem';
+      case _iilj6fti.CarpoolRide():
+        return 'CarpoolRide';
       case _iw40l365.CommunityAnnouncement():
         return 'CommunityAnnouncement';
       case _izwlcf28.CommunityGroup():
@@ -342,6 +379,8 @@ class Protocol extends _isc.SerializationManager {
         return 'HazardReport';
       case _i2hcnfb8.HelpRequest():
         return 'HelpRequest';
+      case _ie948yrj.LostFoundItem():
+        return 'LostFoundItem';
       case _il3090nm.RequestComment():
         return 'RequestComment';
       case _ivm2zgp6.RequestRating():
@@ -384,6 +423,9 @@ class Protocol extends _isc.SerializationManager {
     if (dataClassName == 'BorrowableItem') {
       return deserialize<_i391fcoh.BorrowableItem>(data['data']);
     }
+    if (dataClassName == 'CarpoolRide') {
+      return deserialize<_iilj6fti.CarpoolRide>(data['data']);
+    }
     if (dataClassName == 'CommunityAnnouncement') {
       return deserialize<_iw40l365.CommunityAnnouncement>(data['data']);
     }
@@ -401,6 +443,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'HelpRequest') {
       return deserialize<_i2hcnfb8.HelpRequest>(data['data']);
+    }
+    if (dataClassName == 'LostFoundItem') {
+      return deserialize<_ie948yrj.LostFoundItem>(data['data']);
     }
     if (dataClassName == 'RequestComment') {
       return deserialize<_il3090nm.RequestComment>(data['data']);
