@@ -16,7 +16,8 @@ class HelpRequestEndpoint extends Endpoint {
 
     final existing = await FavorBookmark.db.findFirstRow(
       session,
-      where: (t) => t.requestId.equals(requestId) & t.userEmail.equals(userEmail),
+      where: (t) =>
+          t.requestId.equals(requestId) & t.userEmail.equals(userEmail),
     );
 
     if (existing != null) {
@@ -35,7 +36,9 @@ class HelpRequestEndpoint extends Endpoint {
   }
 
   /// Gets recent community activity stream log.
-  Future<List<UserNotification>> getCommunityActivityStream(Session session) async {
+  Future<List<UserNotification>> getCommunityActivityStream(
+    Session session,
+  ) async {
     var notifs = await UserNotification.db.find(
       session,
       orderBy: (t) => t.createdAt,
@@ -61,7 +64,9 @@ class HelpRequestEndpoint extends Endpoint {
     final chat = FavorChatMessage(
       requestId: requestId,
       senderUserId: userId,
-      senderEmail: senderEmail.isNotEmpty ? senderEmail : 'neighbor@helphub.com',
+      senderEmail: senderEmail.isNotEmpty
+          ? senderEmail
+          : 'neighbor@helphub.com',
       message: message,
       createdAt: DateTime.now().toUtc(),
     );
@@ -135,7 +140,8 @@ class HelpRequestEndpoint extends Endpoint {
         session,
         recipientEmail: helperEmail,
         title: '🎉 Favor Completed & Rewarded!',
-        message: 'You earned +${saved.rewardPoints} pts for completing "${saved.title}"!',
+        message:
+            'You earned +${saved.rewardPoints} pts for completing "${saved.title}"!',
         requestId: saved.id,
       );
     }
@@ -195,13 +201,12 @@ class HelpRequestEndpoint extends Endpoint {
       rewardPoints: 50,
       isEmergency: true,
       creatorUserId: userId,
-      creatorEmail: creatorEmail.isNotEmpty
-          ? creatorEmail
-          : 'sos@helphub.com',
+      creatorEmail: creatorEmail.isNotEmpty ? creatorEmail : 'sos@helphub.com',
       neighborhoodZone: neighborhoodZone ?? 'North Campus',
       estimatedDuration: 'Immediate',
       upvotes: 5,
-      shareableCode: 'SOS-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
+      shareableCode:
+          'SOS-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
       expiresAt: DateTime.now().toUtc().add(const Duration(hours: 24)),
       createdAt: DateTime.now().toUtc(),
     );
@@ -237,7 +242,9 @@ class HelpRequestEndpoint extends Endpoint {
     String? myEmailFilter,
     String? myActivityMode, // 'posted', 'claimed', 'saved'
   }) async {
-    if (myActivityMode == 'saved' && myEmailFilter != null && myEmailFilter.isNotEmpty) {
+    if (myActivityMode == 'saved' &&
+        myEmailFilter != null &&
+        myEmailFilter.isNotEmpty) {
       final bookmarks = await FavorBookmark.db.find(
         session,
         where: (t) => t.userEmail.equals(myEmailFilter),
@@ -263,7 +270,9 @@ class HelpRequestEndpoint extends Endpoint {
       where = where & HelpRequest.t.status.equals(status);
     }
 
-    if (neighborhoodZone != null && neighborhoodZone.isNotEmpty && neighborhoodZone != 'All') {
+    if (neighborhoodZone != null &&
+        neighborhoodZone.isNotEmpty &&
+        neighborhoodZone != 'All') {
       where = where & HelpRequest.t.neighborhoodZone.equals(neighborhoodZone);
     }
 
@@ -291,7 +300,8 @@ class HelpRequestEndpoint extends Endpoint {
         return r.title.toLowerCase().contains(q) ||
             r.description.toLowerCase().contains(q) ||
             r.location.toLowerCase().contains(q) ||
-            (r.shareableCode != null && r.shareableCode!.toLowerCase().contains(q));
+            (r.shareableCode != null &&
+                r.shareableCode!.toLowerCase().contains(q));
       }).toList();
     }
 
@@ -304,7 +314,11 @@ class HelpRequestEndpoint extends Endpoint {
         if (urgency == 'Normal') return 2;
         return 1;
       }
-      requests.sort((a, b) => getUrgencyRank(b.urgency).compareTo(getUrgencyRank(a.urgency)));
+
+      requests.sort(
+        (a, b) =>
+            getUrgencyRank(b.urgency).compareTo(getUrgencyRank(a.urgency)),
+      );
     } else if (sortBy == 'upvotes') {
       requests.sort((a, b) => (b.upvotes ?? 0).compareTo(a.upvotes ?? 0));
     } else {
@@ -335,7 +349,8 @@ class HelpRequestEndpoint extends Endpoint {
               authInfo.userIdentifier.hashCode)
         : (creatorEmail.isNotEmpty ? creatorEmail.hashCode : 1);
 
-    final code = 'HH-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
+    final code =
+        'HH-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
 
     final request = HelpRequest(
       title: title,
@@ -433,7 +448,8 @@ class HelpRequestEndpoint extends Endpoint {
       session,
       recipientEmail: saved.creatorEmail,
       title: '🪙 Favor Reward Boosted!',
-      message: 'Your request "${saved.title}" reward was boosted by +$boostAmount pts!',
+      message:
+          'Your request "${saved.title}" reward was boosted by +$boostAmount pts!',
       requestId: saved.id,
     );
 
@@ -474,7 +490,8 @@ class HelpRequestEndpoint extends Endpoint {
       session,
       recipientEmail: saved.creatorEmail,
       title: '🤝 Favor Claimed!',
-      message: '${saved.helperEmail} has claimed your request "${saved.title}".',
+      message:
+          '${saved.helperEmail} has claimed your request "${saved.title}".',
       requestId: saved.id,
     );
 
@@ -486,7 +503,11 @@ class HelpRequestEndpoint extends Endpoint {
     Session session, {
     required int requestId,
   }) async {
-    return completeHelpRequestWithProof(session, requestId: requestId, proofNote: 'Favor completed successfully.');
+    return completeHelpRequestWithProof(
+      session,
+      requestId: requestId,
+      proofNote: 'Favor completed successfully.',
+    );
   }
 
   /// Tips additional bonus points to a helper for exceptional help.
@@ -711,11 +732,15 @@ class HelpRequestEndpoint extends Endpoint {
       final welcomeNotif = UserNotification(
         recipientEmail: userEmail,
         title: '👋 Welcome to HelpHub!',
-        message: 'Start by browsing neighbor requests or posting your first favor.',
+        message:
+            'Start by browsing neighbor requests or posting your first favor.',
         isRead: false,
         createdAt: DateTime.now().toUtc(),
       );
-      final inserted = await UserNotification.db.insertRow(session, welcomeNotif);
+      final inserted = await UserNotification.db.insertRow(
+        session,
+        welcomeNotif,
+      );
       return [inserted];
     }
 
@@ -868,13 +893,15 @@ class HelpRequestEndpoint extends Endpoint {
 
     if (newCompleted >= 10) {
       badge = '⚡ Community Hero';
-      if (!badges.contains('⚡ Community Pillar')) badges += ', ⚡ Community Pillar';
+      if (!badges.contains('⚡ Community Pillar'))
+        badges += ', ⚡ Community Pillar';
     } else if (newCompleted >= 5) {
       badge = '🌟 Super Helper';
       if (!badges.contains('🌟 Speedy Helper')) badges += ', 🌟 Speedy Helper';
     } else if (newCompleted >= 1) {
       badge = '🤝 Active Neighbor';
-      if (!badges.contains('🏅 First Favor Done')) badges += ', 🏅 First Favor Done';
+      if (!badges.contains('🏅 First Favor Done'))
+        badges += ', 🏅 First Favor Done';
     }
 
     if (profile == null) {
