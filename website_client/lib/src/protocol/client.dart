@@ -21,6 +21,8 @@ import 'package:website_client/src/protocol/greetings/greeting.dart'
     as _ik0mmf5h;
 import 'package:website_client/src/protocol/helphub/community_announcement.dart'
     as _if9166ew;
+import 'package:website_client/src/protocol/helphub/community_group.dart'
+    as _iux57j0g;
 import 'package:website_client/src/protocol/helphub/favor_chat_message.dart'
     as _irf5posj;
 import 'package:website_client/src/protocol/helphub/help_request.dart'
@@ -29,6 +31,8 @@ import 'package:website_client/src/protocol/helphub/request_comment.dart'
     as _iq4ufam1;
 import 'package:website_client/src/protocol/helphub/request_rating.dart'
     as _ib2k1m8u;
+import 'package:website_client/src/protocol/helphub/skill_offer.dart'
+    as _ipzxy2lt;
 import 'package:website_client/src/protocol/helphub/user_notification.dart'
     as _ihs35lap;
 import 'package:website_client/src/protocol/helphub/user_profile.dart'
@@ -284,6 +288,93 @@ class EndpointHelpRequest extends _isc.EndpointRef {
 
   @override
   String get name => 'helpRequest';
+
+  /// Creates a new Skill/Item Offer.
+  _ida.Future<_ipzxy2lt.SkillOffer> createSkillOffer({
+    required String title,
+    required String description,
+    required String category,
+    required String offererEmail,
+    required String availability,
+    String? neighborhoodZone,
+  }) => caller.callServerEndpoint<_ipzxy2lt.SkillOffer>(
+    'helpRequest',
+    'createSkillOffer',
+    {
+      'title': title,
+      'description': description,
+      'category': category,
+      'offererEmail': offererEmail,
+      'availability': availability,
+      'neighborhoodZone': neighborhoodZone,
+    },
+  );
+
+  /// Gets all available skill/item offers.
+  _ida.Future<List<_ipzxy2lt.SkillOffer>> getSkillOffers({
+    String? category,
+    String? neighborhoodZone,
+  }) => caller.callServerEndpoint<List<_ipzxy2lt.SkillOffer>>(
+    'helpRequest',
+    'getSkillOffers',
+    {
+      'category': category,
+      'neighborhoodZone': neighborhoodZone,
+    },
+  );
+
+  /// Claims or requests an offered skill or item.
+  _ida.Future<_ipzxy2lt.SkillOffer> claimSkillOffer({
+    required int offerId,
+    required String claimerEmail,
+  }) => caller.callServerEndpoint<_ipzxy2lt.SkillOffer>(
+    'helpRequest',
+    'claimSkillOffer',
+    {
+      'offerId': offerId,
+      'claimerEmail': claimerEmail,
+    },
+  );
+
+  /// Creates a new local community group / circle.
+  _ida.Future<_iux57j0g.CommunityGroup> createCommunityGroup({
+    required String name,
+    required String description,
+    required String category,
+    required String neighborhoodZone,
+    required String leaderEmail,
+  }) => caller.callServerEndpoint<_iux57j0g.CommunityGroup>(
+    'helpRequest',
+    'createCommunityGroup',
+    {
+      'name': name,
+      'description': description,
+      'category': category,
+      'neighborhoodZone': neighborhoodZone,
+      'leaderEmail': leaderEmail,
+    },
+  );
+
+  /// Gets list of local community groups.
+  _ida.Future<List<_iux57j0g.CommunityGroup>> getCommunityGroups() =>
+      caller.callServerEndpoint<List<_iux57j0g.CommunityGroup>>(
+        'helpRequest',
+        'getCommunityGroups',
+        {},
+      );
+
+  /// Joins a community group.
+  _ida.Future<_iux57j0g.CommunityGroup> joinCommunityGroup({
+    required int groupId,
+    required String memberEmail,
+  }) => caller.callServerEndpoint<_iux57j0g.CommunityGroup>(
+    'helpRequest',
+    'joinCommunityGroup',
+    {
+      'groupId': groupId,
+      'memberEmail': memberEmail,
+    },
+  );
 
   /// Bookmarks or un-bookmarks a help request for a user.
   _ida.Future<bool> bookmarkHelpRequest({

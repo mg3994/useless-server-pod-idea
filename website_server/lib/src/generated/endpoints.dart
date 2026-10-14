@@ -284,6 +284,189 @@ class Endpoints extends _is.EndpointDispatch {
       name: 'helpRequest',
       endpoint: endpoints['helpRequest']!,
       methodConnectors: {
+        'createSkillOffer': _is.MethodConnector(
+          name: 'createSkillOffer',
+          params: {
+            'title': _is.ParameterDescription(
+              name: 'title',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'description': _is.ParameterDescription(
+              name: 'description',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'category': _is.ParameterDescription(
+              name: 'category',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'offererEmail': _is.ParameterDescription(
+              name: 'offererEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'availability': _is.ParameterDescription(
+              name: 'availability',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'neighborhoodZone': _is.ParameterDescription(
+              name: 'neighborhoodZone',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .createSkillOffer(
+                        session,
+                        title: params['title'],
+                        description: params['description'],
+                        category: params['category'],
+                        offererEmail: params['offererEmail'],
+                        availability: params['availability'],
+                        neighborhoodZone: params['neighborhoodZone'],
+                      ),
+        ),
+        'getSkillOffers': _is.MethodConnector(
+          name: 'getSkillOffers',
+          params: {
+            'category': _is.ParameterDescription(
+              name: 'category',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+            'neighborhoodZone': _is.ParameterDescription(
+              name: 'neighborhoodZone',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getSkillOffers(
+                        session,
+                        category: params['category'],
+                        neighborhoodZone: params['neighborhoodZone'],
+                      ),
+        ),
+        'claimSkillOffer': _is.MethodConnector(
+          name: 'claimSkillOffer',
+          params: {
+            'offerId': _is.ParameterDescription(
+              name: 'offerId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'claimerEmail': _is.ParameterDescription(
+              name: 'claimerEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .claimSkillOffer(
+                        session,
+                        offerId: params['offerId'],
+                        claimerEmail: params['claimerEmail'],
+                      ),
+        ),
+        'createCommunityGroup': _is.MethodConnector(
+          name: 'createCommunityGroup',
+          params: {
+            'name': _is.ParameterDescription(
+              name: 'name',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'description': _is.ParameterDescription(
+              name: 'description',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'category': _is.ParameterDescription(
+              name: 'category',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'neighborhoodZone': _is.ParameterDescription(
+              name: 'neighborhoodZone',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'leaderEmail': _is.ParameterDescription(
+              name: 'leaderEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .createCommunityGroup(
+                        session,
+                        name: params['name'],
+                        description: params['description'],
+                        category: params['category'],
+                        neighborhoodZone: params['neighborhoodZone'],
+                        leaderEmail: params['leaderEmail'],
+                      ),
+        ),
+        'getCommunityGroups': _is.MethodConnector(
+          name: 'getCommunityGroups',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .getCommunityGroups(session),
+        ),
+        'joinCommunityGroup': _is.MethodConnector(
+          name: 'joinCommunityGroup',
+          params: {
+            'groupId': _is.ParameterDescription(
+              name: 'groupId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'memberEmail': _is.ParameterDescription(
+              name: 'memberEmail',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['helpRequest'] as _i8zczuz7.HelpRequestEndpoint)
+                      .joinCommunityGroup(
+                        session,
+                        groupId: params['groupId'],
+                        memberEmail: params['memberEmail'],
+                      ),
+        ),
         'bookmarkHelpRequest': _is.MethodConnector(
           name: 'bookmarkHelpRequest',
           params: {

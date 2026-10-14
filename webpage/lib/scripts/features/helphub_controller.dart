@@ -31,6 +31,8 @@ class HelpHubController {
     loadCommunityStats();
     loadActivityStream();
     loadHelpRequests();
+    loadSkillOffers();
+    loadCommunityGroups();
     loadNotifications();
   }
 
@@ -428,6 +430,150 @@ class HelpHubController {
           }
         }).toJS,
       );
+    }
+  }
+
+  Future<void> loadSkillOffers() async {
+    final container = web.document.querySelector('#offers-container');
+    if (container == null) return;
+
+    try {
+      final offers = await client.helpRequest.getSkillOffers();
+      container.textContent = '';
+
+      if (offers.isEmpty) {
+        container.insertAdjacentHTML(
+          'beforeend',
+          '<p class="text-xs text-surface-400 py-4 col-span-full">No skill/item offers available right now.</p>'
+              .toJS,
+        );
+        return;
+      }
+
+      for (final offer in offers) {
+        final offerHtml =
+            '''
+          <div class="p-4 rounded-2xl bg-white dark:bg-surface-900 border border-teal-100 dark:border-teal-900/50 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-800">${_escapeHtml(offer.category)}</span>
+                <span class="text-[10px] text-surface-400">${_escapeHtml(offer.neighborhoodZone ?? 'North Campus')}</span>
+              </div>
+              <h4 class="text-sm font-bold text-surface-900 dark:text-white mb-1">${_escapeHtml(offer.title)}</h4>
+              <p class="text-xs text-surface-600 dark:text-surface-300 mb-2">${_escapeHtml(offer.description)}</p>
+              <div class="text-[11px] text-teal-700 dark:text-teal-300 font-medium">Availability: ${_escapeHtml(offer.availability)}</div>
+            </div>
+            <div class="mt-3 pt-2 border-t border-surface-100 dark:border-surface-800 flex items-center justify-between">
+              <span class="text-[11px] text-surface-400">By: ${_escapeHtml(offer.offererEmail)}</span>
+              <button class="claim-offer-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-teal-600 text-white hover:bg-teal-700 transition-colors" data-id="${offer.id}">
+                ${offer.isAvailable ? 'Request Offer' : 'Claimed'}
+              </button>
+            </div>
+          </div>
+        ''';
+        container.insertAdjacentHTML('beforeend', offerHtml.toJS);
+      }
+
+      // Bind claim offer buttons
+      final claimBtns = web.document.querySelectorAll('.claim-offer-btn');
+      for (var i = 0; i < claimBtns.length; i++) {
+        final btn = claimBtns.item(i) as web.HTMLElement?;
+        btn?.addEventListener(
+          'click',
+          ((web.Event e) {
+            final idStr = btn.getAttribute('data-id');
+            if (idStr != null) {
+              final id = int.tryParse(idStr);
+              if (id != null) {
+                final userEmailEl = web.document.querySelector('#user-email');
+                final email = userEmailEl?.textContent ?? 'guest@helphub.com';
+
+                client.helpRequest
+                    .claimSkillOffer(offerId: id, claimerEmail: email)
+                    .then((_) {
+                      web.window.alert(
+                        'Offer requested! The offerer has been notified. 🎁',
+                      );
+                      loadSkillOffers();
+                      loadNotifications();
+                    });
+              }
+            }
+          }).toJS,
+        );
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+
+  Future<void> loadCommunityGroups() async {
+    final container = web.document.querySelector('#groups-container');
+    if (container == null) return;
+
+    try {
+      final groups = await client.helpRequest.getCommunityGroups();
+      container.textContent = '';
+
+      if (groups.isEmpty) {
+        container.insertAdjacentHTML(
+          'beforeend',
+          '<p class="text-xs text-surface-400 py-4 col-span-full">No community circles available right now.</p>'
+              .toJS,
+        );
+        return;
+      }
+
+      for (final g in groups) {
+        final groupHtml =
+            '''
+          <div class="p-4 rounded-2xl bg-white dark:bg-surface-900 border border-indigo-100 dark:border-indigo-900/50 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">${_escapeHtml(g.category)}</span>
+                <span class="text-[10px] font-extrabold text-indigo-600 dark:text-indigo-400">👥 ${g.memberCount} members</span>
+              </div>
+              <h4 class="text-sm font-bold text-surface-900 dark:text-white mb-1">${_escapeHtml(g.name)}</h4>
+              <p class="text-xs text-surface-600 dark:text-surface-300 mb-2">${_escapeHtml(g.description)}</p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-surface-100 dark:border-surface-800 flex items-center justify-between">
+              <span class="text-[11px] text-surface-400">📍 ${_escapeHtml(g.neighborhoodZone)}</span>
+              <button class="join-group-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors" data-id="${g.id}">
+                Join Circle
+              </button>
+            </div>
+          </div>
+        ''';
+        container.insertAdjacentHTML('beforeend', groupHtml.toJS);
+      }
+
+      // Bind join group buttons
+      final joinBtns = web.document.querySelectorAll('.join-group-btn');
+      for (var i = 0; i < joinBtns.length; i++) {
+        final btn = joinBtns.item(i) as web.HTMLElement?;
+        btn?.addEventListener(
+          'click',
+          ((web.Event e) {
+            final idStr = btn.getAttribute('data-id');
+            if (idStr != null) {
+              final id = int.tryParse(idStr);
+              if (id != null) {
+                final userEmailEl = web.document.querySelector('#user-email');
+                final email = userEmailEl?.textContent ?? 'guest@helphub.com';
+
+                client.helpRequest
+                    .joinCommunityGroup(groupId: id, memberEmail: email)
+                    .then((_) {
+                      web.window.alert('Joined neighborhood circle! 🚲');
+                      loadCommunityGroups();
+                    });
+              }
+            }
+          }).toJS,
+        );
+      }
+    } catch (e) {
+      // Ignore
     }
   }
 

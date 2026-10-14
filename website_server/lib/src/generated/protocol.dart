@@ -19,6 +19,8 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
 import 'package:website_server/src/generated/helphub/community_announcement.dart'
     as _io88z89c;
+import 'package:website_server/src/generated/helphub/community_group.dart'
+    as _ivzqtrjb;
 import 'package:website_server/src/generated/helphub/favor_chat_message.dart'
     as _ifpz7dq1;
 import 'package:website_server/src/generated/helphub/help_request.dart'
@@ -27,26 +29,32 @@ import 'package:website_server/src/generated/helphub/request_comment.dart'
     as _itygqzxa;
 import 'package:website_server/src/generated/helphub/request_rating.dart'
     as _iopw990x;
+import 'package:website_server/src/generated/helphub/skill_offer.dart'
+    as _ixk7xcy3;
 import 'package:website_server/src/generated/helphub/user_notification.dart'
     as _irisjcz6;
 import 'package:website_server/src/generated/helphub/user_profile.dart'
     as _ivj3h5rp;
 import 'greetings/greeting.dart' as _izw8z7ou;
 import 'helphub/community_announcement.dart' as _iw40l365;
+import 'helphub/community_group.dart' as _izwlcf28;
 import 'helphub/favor_bookmark.dart' as _ia1oh19d;
 import 'helphub/favor_chat_message.dart' as _i2q04olh;
 import 'helphub/help_request.dart' as _i2hcnfb8;
 import 'helphub/request_comment.dart' as _il3090nm;
 import 'helphub/request_rating.dart' as _ivm2zgp6;
+import 'helphub/skill_offer.dart' as _i7dv48qr;
 import 'helphub/user_notification.dart' as _inwdejad;
 import 'helphub/user_profile.dart' as _i2208dl4;
 export 'greetings/greeting.dart';
 export 'helphub/community_announcement.dart';
+export 'helphub/community_group.dart';
 export 'helphub/favor_bookmark.dart';
 export 'helphub/favor_chat_message.dart';
 export 'helphub/help_request.dart';
 export 'helphub/request_comment.dart';
 export 'helphub/request_rating.dart';
+export 'helphub/skill_offer.dart';
 export 'helphub/user_notification.dart';
 export 'helphub/user_profile.dart';
 
@@ -341,6 +349,150 @@ class Protocol extends _is.DatabaseSerializationManager {
       managed: true,
     ),
     _isp.TableDefinition(
+      name: 'helphub_community_group',
+      dartName: 'CommunityGroup',
+      schema: 'public',
+      module: 'website',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'name',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'description',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'category',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'neighborhoodZone',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'memberCount',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'leaderEmail',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'membersList',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
+    _isp.TableDefinition(
+      name: 'helphub_skill_offer',
+      dartName: 'SkillOffer',
+      schema: 'public',
+      module: 'website',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'title',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'description',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'category',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'offererUserId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'offererEmail',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'availability',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'neighborhoodZone',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'isAvailable',
+          columnType: _isp.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _isp.ColumnDefinition(
+          name: 'claimedByEmail',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
+    _isp.TableDefinition(
       name: 'request_comment',
       dartName: 'RequestComment',
       schema: 'public',
@@ -618,6 +770,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _iw40l365.CommunityAnnouncement) {
       return _iw40l365.CommunityAnnouncement.fromJson(data) as T;
     }
+    if (t == _izwlcf28.CommunityGroup) {
+      return _izwlcf28.CommunityGroup.fromJson(data) as T;
+    }
     if (t == _ia1oh19d.FavorBookmark) {
       return _ia1oh19d.FavorBookmark.fromJson(data) as T;
     }
@@ -633,6 +788,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _ivm2zgp6.RequestRating) {
       return _ivm2zgp6.RequestRating.fromJson(data) as T;
     }
+    if (t == _i7dv48qr.SkillOffer) {
+      return _i7dv48qr.SkillOffer.fromJson(data) as T;
+    }
     if (t == _inwdejad.UserNotification) {
       return _inwdejad.UserNotification.fromJson(data) as T;
     }
@@ -646,6 +804,10 @@ class Protocol extends _is.DatabaseSerializationManager {
       return (data != null
               ? _iw40l365.CommunityAnnouncement.fromJson(data)
               : null)
+          as T;
+    }
+    if (t == _is.getType<_izwlcf28.CommunityGroup?>()) {
+      return (data != null ? _izwlcf28.CommunityGroup.fromJson(data) : null)
           as T;
     }
     if (t == _is.getType<_ia1oh19d.FavorBookmark?>()) {
@@ -667,12 +829,27 @@ class Protocol extends _is.DatabaseSerializationManager {
       return (data != null ? _ivm2zgp6.RequestRating.fromJson(data) : null)
           as T;
     }
+    if (t == _is.getType<_i7dv48qr.SkillOffer?>()) {
+      return (data != null ? _i7dv48qr.SkillOffer.fromJson(data) : null) as T;
+    }
     if (t == _is.getType<_inwdejad.UserNotification?>()) {
       return (data != null ? _inwdejad.UserNotification.fromJson(data) : null)
           as T;
     }
     if (t == _is.getType<_i2208dl4.UserProfile?>()) {
       return (data != null ? _i2208dl4.UserProfile.fromJson(data) : null) as T;
+    }
+    if (t == List<_ixk7xcy3.SkillOffer>) {
+      return (data as List)
+              .map((e) => deserialize<_ixk7xcy3.SkillOffer>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_ivzqtrjb.CommunityGroup>) {
+      return (data as List)
+              .map((e) => deserialize<_ivzqtrjb.CommunityGroup>(e))
+              .toList()
+          as T;
     }
     if (t == List<_irisjcz6.UserNotification>) {
       return (data as List)
@@ -738,11 +915,13 @@ class Protocol extends _is.DatabaseSerializationManager {
     return switch (type) {
       _izw8z7ou.Greeting => 'Greeting',
       _iw40l365.CommunityAnnouncement => 'CommunityAnnouncement',
+      _izwlcf28.CommunityGroup => 'CommunityGroup',
       _ia1oh19d.FavorBookmark => 'FavorBookmark',
       _i2q04olh.FavorChatMessage => 'FavorChatMessage',
       _i2hcnfb8.HelpRequest => 'HelpRequest',
       _il3090nm.RequestComment => 'RequestComment',
       _ivm2zgp6.RequestRating => 'RequestRating',
+      _i7dv48qr.SkillOffer => 'SkillOffer',
       _inwdejad.UserNotification => 'UserNotification',
       _i2208dl4.UserProfile => 'UserProfile',
       _ => null,
@@ -763,6 +942,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'Greeting';
       case _iw40l365.CommunityAnnouncement():
         return 'CommunityAnnouncement';
+      case _izwlcf28.CommunityGroup():
+        return 'CommunityGroup';
       case _ia1oh19d.FavorBookmark():
         return 'FavorBookmark';
       case _i2q04olh.FavorChatMessage():
@@ -773,6 +954,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'RequestComment';
       case _ivm2zgp6.RequestRating():
         return 'RequestRating';
+      case _i7dv48qr.SkillOffer():
+        return 'SkillOffer';
       case _inwdejad.UserNotification():
         return 'UserNotification';
       case _i2208dl4.UserProfile():
@@ -809,6 +992,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (dataClassName == 'CommunityAnnouncement') {
       return deserialize<_iw40l365.CommunityAnnouncement>(data['data']);
     }
+    if (dataClassName == 'CommunityGroup') {
+      return deserialize<_izwlcf28.CommunityGroup>(data['data']);
+    }
     if (dataClassName == 'FavorBookmark') {
       return deserialize<_ia1oh19d.FavorBookmark>(data['data']);
     }
@@ -823,6 +1009,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'RequestRating') {
       return deserialize<_ivm2zgp6.RequestRating>(data['data']);
+    }
+    if (dataClassName == 'SkillOffer') {
+      return deserialize<_i7dv48qr.SkillOffer>(data['data']);
     }
     if (dataClassName == 'UserNotification') {
       return deserialize<_inwdejad.UserNotification>(data['data']);
@@ -873,6 +1062,8 @@ class Protocol extends _is.DatabaseSerializationManager {
     switch (t) {
       case _iw40l365.CommunityAnnouncement:
         return _iw40l365.CommunityAnnouncement.t;
+      case _izwlcf28.CommunityGroup:
+        return _izwlcf28.CommunityGroup.t;
       case _ia1oh19d.FavorBookmark:
         return _ia1oh19d.FavorBookmark.t;
       case _i2q04olh.FavorChatMessage:
@@ -883,6 +1074,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return _il3090nm.RequestComment.t;
       case _ivm2zgp6.RequestRating:
         return _ivm2zgp6.RequestRating.t;
+      case _i7dv48qr.SkillOffer:
+        return _i7dv48qr.SkillOffer.t;
       case _inwdejad.UserNotification:
         return _inwdejad.UserNotification.t;
       case _i2208dl4.UserProfile:

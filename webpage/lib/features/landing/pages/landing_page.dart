@@ -60,19 +60,27 @@ Component navbar() {
               ),
               a(
                 {
+                  'href': '#skill-marketplace',
+                  'id': 'nav-skills-link',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                },
+                [Text('🌱 Skill Marketplace')],
+              ),
+              a(
+                {
+                  'href': '#community-circles',
+                  'id': 'nav-groups-link',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                },
+                [Text('🚲 Neighborhood Circles')],
+              ),
+              a(
+                {
                   'href': '#leaderboard',
                   'id': 'nav-leaderboard-link',
                   'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
                 },
                 [Text('🏆 Leaderboard')],
-              ),
-              a(
-                {
-                  'href': '#activity-stream',
-                  'id': 'nav-activity-link',
-                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
-                },
-                [Text('⚡ Live Timeline')],
               ),
               a(
                 {
@@ -89,7 +97,6 @@ Component navbar() {
           div(
             {'class': 'flex items-center gap-3'},
             [
-              // Notifications Bell Button
               button(
                 {
                   'id': 'notifications-bell-btn',
@@ -533,6 +540,63 @@ Component landingHero() {
               ),
             ],
           ),
+        ],
+      ),
+
+      // Skill Offers & Item Sharing Marketplace Section
+      div(
+        {'id': 'skill-marketplace', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        [
+          div(
+            {'class': 'flex items-center justify-between mb-4'},
+            [
+              h2(
+                {
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                },
+                [
+                  span({'class': 'text-2xl'}, [Text('🌱')]),
+                  Text('Skill Offers & Free Item Sharing'),
+                ],
+              ),
+              button(
+                {
+                  'id': 'open-offer-modal-btn',
+                  'class': 'px-3 py-1.5 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-lg shadow-sm transition-all cursor-pointer',
+                },
+                [Text('➕ Offer Skill or Item')],
+              ),
+            ],
+          ),
+          div({
+            'id': 'offers-container',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+          }, []),
+        ],
+      ),
+
+      // Community Circles / Local Groups Section
+      div(
+        {'id': 'community-circles', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        [
+          div(
+            {'class': 'flex items-center justify-between mb-4'},
+            [
+              h2(
+                {
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                },
+                [
+                  span({'class': 'text-2xl'}, [Text('🚲')]),
+                  Text('Neighborhood Circles & Special Interest Groups'),
+                ],
+              ),
+            ],
+          ),
+          div({
+            'id': 'groups-container',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+          }, []),
         ],
       ),
 

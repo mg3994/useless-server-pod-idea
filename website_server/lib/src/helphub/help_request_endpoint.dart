@@ -2,6 +2,187 @@ import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 
 class HelpRequestEndpoint extends Endpoint {
+  /// Creates a new Skill/Item Offer.
+  Future<SkillOffer> createSkillOffer(
+    Session session, {
+    required String title,
+    required String description,
+    required String category,
+    required String offererEmail,
+    required String availability,
+    String? neighborhoodZone,
+  }) async {
+    final authInfo = session.authenticated;
+    final userId = authInfo != null
+        ? (int.tryParse(authInfo.userIdentifier) ??
+              authInfo.userIdentifier.hashCode)
+        : (offererEmail.isNotEmpty ? offererEmail.hashCode : 1);
+
+    final offer = SkillOffer(
+      title: title,
+      description: description,
+      category: category,
+      offererUserId: userId,
+      offererEmail: offererEmail.isNotEmpty
+          ? offererEmail
+          : 'neighbor@helphub.com',
+      availability: availability,
+      neighborhoodZone: neighborhoodZone ?? 'North Campus',
+      isAvailable: true,
+      createdAt: DateTime.now().toUtc(),
+    );
+
+    return await SkillOffer.db.insertRow(session, offer);
+  }
+
+  /// Gets all available skill/item offers.
+  Future<List<SkillOffer>> getSkillOffers(
+    Session session, {
+    String? category,
+    String? neighborhoodZone,
+  }) async {
+    var offers = await SkillOffer.db.find(
+      session,
+      orderBy: (t) => t.createdAt,
+    );
+
+    if (category != null && category.isNotEmpty && category != 'All') {
+      offers = offers.where((o) => o.category == category).toList();
+    }
+
+    if (neighborhoodZone != null &&
+        neighborhoodZone.isNotEmpty &&
+        neighborhoodZone != 'All') {
+      offers = offers
+          .where((o) => o.neighborhoodZone == neighborhoodZone)
+          .toList();
+    }
+
+    if (offers.isEmpty) {
+      final sampleOffer = SkillOffer(
+        title: '🌱 Free Organic Houseplant Cuttings & Soil',
+        description:
+            'Happy to share pothos and monstera cuttings plus potting mix with neighbors!',
+        category: 'Plant Care',
+        offererUserId: 1,
+        offererEmail: 'botanist@helphub.com',
+        availability: 'Weekends & Evenings',
+        neighborhoodZone: 'North Campus',
+        isAvailable: true,
+        createdAt: DateTime.now().toUtc(),
+      );
+      final inserted = await SkillOffer.db.insertRow(session, sampleOffer);
+      return [inserted];
+    }
+
+    offers.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return offers;
+  }
+
+  /// Claims or requests an offered skill or item.
+  Future<SkillOffer> claimSkillOffer(
+    Session session, {
+    required int offerId,
+    required String claimerEmail,
+  }) async {
+    final offer = await SkillOffer.db.findById(session, offerId);
+    if (offer == null) {
+      throw Exception('Skill offer not found');
+    }
+
+    final updated = offer.copyWith(
+      isAvailable: false,
+      claimedByEmail: claimerEmail,
+    );
+
+    final saved = await SkillOffer.db.updateRow(session, updated);
+
+    await _createNotification(
+      session,
+      recipientEmail: saved.offererEmail,
+      title: '🎁 Skill/Item Claimed!',
+      message: '$claimerEmail requested your offer "${saved.title}".',
+    );
+
+    return saved;
+  }
+
+  /// Creates a new local community group / circle.
+  Future<CommunityGroup> createCommunityGroup(
+    Session session, {
+    required String name,
+    required String description,
+    required String category,
+    required String neighborhoodZone,
+    required String leaderEmail,
+  }) async {
+    final group = CommunityGroup(
+      name: name,
+      description: description,
+      category: category,
+      neighborhoodZone: neighborhoodZone,
+      memberCount: 1,
+      leaderEmail: leaderEmail.isNotEmpty ? leaderEmail : 'leader@helphub.com',
+      membersList: leaderEmail,
+      createdAt: DateTime.now().toUtc(),
+    );
+
+    return await CommunityGroup.db.insertRow(session, group);
+  }
+
+  /// Gets list of local community groups.
+  Future<List<CommunityGroup>> getCommunityGroups(Session session) async {
+    var groups = await CommunityGroup.db.find(
+      session,
+      orderBy: (t) => t.createdAt,
+    );
+
+    if (groups.isEmpty) {
+      final sampleGroup = CommunityGroup(
+        name: '🚲 Campus Bike Riders Circle',
+        description:
+            'Neighborhood cyclists for quick repairs, group rides, and emergency roadside help.',
+        category: 'Rides & Gear',
+        neighborhoodZone: 'North Campus',
+        memberCount: 14,
+        leaderEmail: 'cyclist@helphub.com',
+        membersList: 'cyclist@helphub.com, rider@helphub.com',
+        createdAt: DateTime.now().toUtc(),
+      );
+      final inserted = await CommunityGroup.db.insertRow(session, sampleGroup);
+      return [inserted];
+    }
+
+    groups.sort((a, b) => b.memberCount.compareTo(a.memberCount));
+    return groups;
+  }
+
+  /// Joins a community group.
+  Future<CommunityGroup> joinCommunityGroup(
+    Session session, {
+    required int groupId,
+    required String memberEmail,
+  }) async {
+    final group = await CommunityGroup.db.findById(session, groupId);
+    if (group == null) {
+      throw Exception('Community group not found');
+    }
+
+    final currentMembers = group.membersList ?? '';
+    if (currentMembers.contains(memberEmail)) {
+      return group;
+    }
+
+    final updated = group.copyWith(
+      memberCount: group.memberCount + 1,
+      membersList: currentMembers.isEmpty
+          ? memberEmail
+          : '$currentMembers, $memberEmail',
+    );
+
+    return await CommunityGroup.db.updateRow(session, updated);
+  }
+
   /// Bookmarks or un-bookmarks a help request for a user.
   Future<bool> bookmarkHelpRequest(
     Session session, {

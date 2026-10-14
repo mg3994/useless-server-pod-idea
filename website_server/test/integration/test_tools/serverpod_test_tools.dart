@@ -21,6 +21,8 @@ import 'package:website_server/src/generated/greetings/greeting.dart'
     as _iv7sgnpu;
 import 'package:website_server/src/generated/helphub/community_announcement.dart'
     as _io88z89c;
+import 'package:website_server/src/generated/helphub/community_group.dart'
+    as _ivzqtrjb;
 import 'package:website_server/src/generated/helphub/favor_chat_message.dart'
     as _ifpz7dq1;
 import 'package:website_server/src/generated/helphub/help_request.dart'
@@ -29,6 +31,8 @@ import 'package:website_server/src/generated/helphub/request_comment.dart'
     as _itygqzxa;
 import 'package:website_server/src/generated/helphub/request_rating.dart'
     as _iopw990x;
+import 'package:website_server/src/generated/helphub/skill_offer.dart'
+    as _ixk7xcy3;
 import 'package:website_server/src/generated/helphub/user_notification.dart'
     as _irisjcz6;
 import 'package:website_server/src/generated/helphub/user_profile.dart'
@@ -570,6 +574,225 @@ class _HelpRequestEndpoint {
   final _is.EndpointDispatch _endpointDispatch;
 
   final _is.SerializationManager _serializationManager;
+
+  _ida.Future<_ixk7xcy3.SkillOffer> createSkillOffer(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String title,
+    required String description,
+    required String category,
+    required String offererEmail,
+    required String availability,
+    String? neighborhoodZone,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'createSkillOffer',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'createSkillOffer',
+          parameters: _ist.testObjectToJson({
+            'title': title,
+            'description': description,
+            'category': category,
+            'offererEmail': offererEmail,
+            'availability': availability,
+            'neighborhoodZone': neighborhoodZone,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ixk7xcy3.SkillOffer>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<List<_ixk7xcy3.SkillOffer>> getSkillOffers(
+    _ist.TestSessionBuilder sessionBuilder, {
+    String? category,
+    String? neighborhoodZone,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'getSkillOffers',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'getSkillOffers',
+          parameters: _ist.testObjectToJson({
+            'category': category,
+            'neighborhoodZone': neighborhoodZone,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_ixk7xcy3.SkillOffer>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_ixk7xcy3.SkillOffer> claimSkillOffer(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int offerId,
+    required String claimerEmail,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'claimSkillOffer',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'claimSkillOffer',
+          parameters: _ist.testObjectToJson({
+            'offerId': offerId,
+            'claimerEmail': claimerEmail,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ixk7xcy3.SkillOffer>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_ivzqtrjb.CommunityGroup> createCommunityGroup(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String name,
+    required String description,
+    required String category,
+    required String neighborhoodZone,
+    required String leaderEmail,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'createCommunityGroup',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'createCommunityGroup',
+          parameters: _ist.testObjectToJson({
+            'name': name,
+            'description': description,
+            'category': category,
+            'neighborhoodZone': neighborhoodZone,
+            'leaderEmail': leaderEmail,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ivzqtrjb.CommunityGroup>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<List<_ivzqtrjb.CommunityGroup>> getCommunityGroups(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'getCommunityGroups',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'getCommunityGroups',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_ivzqtrjb.CommunityGroup>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_ivzqtrjb.CommunityGroup> joinCommunityGroup(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int groupId,
+    required String memberEmail,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'helpRequest',
+            method: 'joinCommunityGroup',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'helpRequest',
+          methodName: 'joinCommunityGroup',
+          parameters: _ist.testObjectToJson({
+            'groupId': groupId,
+            'memberEmail': memberEmail,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ivzqtrjb.CommunityGroup>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 
   _ida.Future<bool> bookmarkHelpRequest(
     _ist.TestSessionBuilder sessionBuilder, {

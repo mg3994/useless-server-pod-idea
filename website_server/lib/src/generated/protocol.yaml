@@ -12,6 +12,12 @@ jwtRefresh:
 greeting:
   - hello:
 helpRequest:
+  - createSkillOffer:
+  - getSkillOffers:
+  - claimSkillOffer:
+  - createCommunityGroup:
+  - getCommunityGroups:
+  - joinCommunityGroup:
   - bookmarkHelpRequest:
   - getCommunityActivityStream:
   - sendChatMessage:

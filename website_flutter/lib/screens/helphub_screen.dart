@@ -11,6 +11,8 @@ class HelpHubScreen extends StatefulWidget {
 
 class _HelpHubScreenState extends State<HelpHubScreen> {
   List<HelpRequest> _requests = [];
+  List<SkillOffer> _skillOffers = [];
+  List<CommunityGroup> _communityGroups = [];
   List<UserProfile> _leaderboard = [];
   List<CommunityAnnouncement> _announcements = [];
   List<UserNotification> _notifications = [];
@@ -96,6 +98,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
             : null,
       );
 
+      final skillOffers = await client.helpRequest.getSkillOffers();
+      final communityGroups = await client.helpRequest.getCommunityGroups();
       final profile = await client.helpRequest.getUserProfile(email: userEmail);
       final leaderboard = await client.helpRequest.getLeaderboard();
       final announcements = await client.helpRequest.getAnnouncements();
@@ -108,6 +112,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
 
       setState(() {
         _requests = requests;
+        _skillOffers = skillOffers;
+        _communityGroups = communityGroups;
         _profile = profile;
         _leaderboard = leaderboard;
         _announcements = announcements;
@@ -121,6 +127,92 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         setState(() => _isLoading = false);
       }
     }
+  }
+
+  Future<void> _showCreateSkillOfferDialog() async {
+    final titleController = TextEditingController();
+    final descController = TextEditingController();
+    final availController = TextEditingController(text: 'Weekends & Evenings');
+    String category = 'Plant Care';
+    String zone = 'North Campus';
+
+    return showDialog(
+      context: context,
+      builder: (dialogCtx) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              title: const Text(
+                'Offer Skill or Free Item',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: titleController,
+                      decoration: const InputDecoration(
+                        labelText: 'Title',
+                        hintText: 'e.g. Free Houseplant Cuttings',
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: descController,
+                      maxLines: 2,
+                      decoration: const InputDecoration(
+                        labelText: 'Description',
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: availController,
+                      decoration: const InputDecoration(
+                        labelText: 'Availability / Timing',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogCtx),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () async {
+                    if (titleController.text.trim().isEmpty) return;
+
+                    await client.helpRequest.createSkillOffer(
+                      title: titleController.text.trim(),
+                      description: descController.text.trim(),
+                      category: category,
+                      offererEmail: _getUserEmail(),
+                      availability: availController.text.trim(),
+                      neighborhoodZone: zone,
+                    );
+
+                    if (mounted && dialogCtx.mounted) {
+                      Navigator.pop(dialogCtx);
+                    }
+                    _loadData();
+                  },
+                  child: const Text('Post Offer'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   Future<void> _showChatBottomSheet(HelpRequest req) async {
@@ -1422,6 +1514,222 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                         ),
                       ],
                     ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+
+              // Skill Offers / Free Item Sharing Carousel
+              if (_skillOffers.isNotEmpty) ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      '🌱 Skill & Item Offers',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    TextButton.icon(
+                      icon: const Icon(Icons.add, size: 14, color: Colors.teal),
+                      label: const Text(
+                        'Offer',
+                        style: TextStyle(fontSize: 11, color: Colors.teal),
+                      ),
+                      onPressed: _showCreateSkillOfferDialog,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                SizedBox(
+                  height: 110,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _skillOffers.length,
+                    itemBuilder: (context, index) {
+                      final offer = _skillOffers[index];
+                      return Container(
+                        width: 220,
+                        margin: const EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.teal.shade50,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: Colors.teal.shade200),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              offer.title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                color: Colors.teal,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              offer.description,
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Colors.black87,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  offer.availability,
+                                  style: const TextStyle(
+                                    fontSize: 9,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () async {
+                                    final messenger = ScaffoldMessenger.of(
+                                      context,
+                                    );
+                                    await client.helpRequest.claimSkillOffer(
+                                      offerId: offer.id!,
+                                      claimerEmail: _getUserEmail(),
+                                    );
+                                    if (!mounted) return;
+                                    messenger.showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Offer requested! 🎁'),
+                                      ),
+                                    );
+                                    _loadData();
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: offer.isAvailable
+                                          ? Colors.teal
+                                          : Colors.grey,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      offer.isAvailable ? 'Claim' : 'Claimed',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+
+              // Community Groups / Circles Carousel
+              if (_communityGroups.isNotEmpty) ...[
+                const Text(
+                  '🚲 Neighborhood Circles',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+                const SizedBox(height: 6),
+                SizedBox(
+                  height: 90,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _communityGroups.length,
+                    itemBuilder: (context, index) {
+                      final group = _communityGroups[index];
+                      return Container(
+                        width: 200,
+                        margin: const EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.indigo.shade50,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: Colors.indigo.shade200),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              group.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11,
+                                color: Colors.indigo,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              '${group.memberCount} members • ${group.neighborhoodZone}',
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: InkWell(
+                                onTap: () async {
+                                  final messenger = ScaffoldMessenger.of(
+                                    context,
+                                  );
+                                  await client.helpRequest.joinCommunityGroup(
+                                    groupId: group.id!,
+                                    memberEmail: _getUserEmail(),
+                                  );
+                                  if (!mounted) return;
+                                  messenger.showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Joined neighborhood circle! 🚲',
+                                      ),
+                                    ),
+                                  );
+                                  _loadData();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.indigo,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: const Text(
+                                    'Join Circle',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(height: 16),
