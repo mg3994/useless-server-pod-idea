@@ -446,7 +446,8 @@ class HelpHubController {
       if (items.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 py-4 col-span-full">No tools available to borrow right now.</p>',
+          '<p class="text-xs text-surface-400 py-4 col-span-full">No tools available to borrow right now.</p>'
+              .toJS,
         );
         return;
       }
@@ -472,7 +473,7 @@ class HelpHubController {
             </div>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', itemHtml);
+        container.insertAdjacentHTML('beforeend', itemHtml.toJS);
       }
 
       final borrowBtns = web.document.querySelectorAll('.borrow-item-btn');
@@ -516,7 +517,8 @@ class HelpHubController {
       if (events.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 py-4 col-span-full">No volunteer drives right now.</p>',
+          '<p class="text-xs text-surface-400 py-4 col-span-full">No volunteer drives right now.</p>'
+              .toJS,
         );
         return;
       }
@@ -542,7 +544,7 @@ class HelpHubController {
             </div>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', evtHtml);
+        container.insertAdjacentHTML('beforeend', evtHtml.toJS);
       }
 
       final signupBtns = web.document.querySelectorAll('.signup-event-btn');
@@ -588,7 +590,8 @@ class HelpHubController {
       if (offers.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 py-4 col-span-full">No skill/item offers available right now.</p>',
+          '<p class="text-xs text-surface-400 py-4 col-span-full">No skill/item offers available right now.</p>'
+              .toJS,
         );
         return;
       }
@@ -614,7 +617,7 @@ class HelpHubController {
             </div>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', offerHtml);
+        container.insertAdjacentHTML('beforeend', offerHtml.toJS);
       }
 
       // Bind claim offer buttons
@@ -661,7 +664,8 @@ class HelpHubController {
       if (groups.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 py-4 col-span-full">No community circles available right now.</p>',
+          '<p class="text-xs text-surface-400 py-4 col-span-full">No community circles available right now.</p>'
+              .toJS,
         );
         return;
       }
@@ -686,7 +690,7 @@ class HelpHubController {
             </div>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', groupHtml);
+        container.insertAdjacentHTML('beforeend', groupHtml.toJS);
       }
 
       // Bind join group buttons
@@ -746,7 +750,8 @@ class HelpHubController {
       if (activities.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 py-2">No recent timeline activity.</p>',
+          '<p class="text-xs text-surface-400 py-2">No recent timeline activity.</p>'
+              .toJS,
         );
         return;
       }
@@ -759,7 +764,7 @@ class HelpHubController {
             <div class="text-[11px] text-surface-600 dark:text-surface-300 mt-0.5">${_escapeHtml(a.message)}</div>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', actHtml);
+        container.insertAdjacentHTML('beforeend', actHtml.toJS);
       }
     } catch (e) {
       // Ignore
@@ -785,7 +790,8 @@ class HelpHubController {
       if (messages.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 text-center py-4">No direct messages yet. Coordinate details here!</p>',
+          '<p class="text-xs text-surface-400 text-center py-4">No direct messages yet. Coordinate details here!</p>'
+              .toJS,
         );
         return;
       }
@@ -801,7 +807,7 @@ class HelpHubController {
             <p class="text-xs text-surface-800 dark:text-surface-100">${_escapeHtml(m.message)}</p>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', msgHtml);
+        container.insertAdjacentHTML('beforeend', msgHtml.toJS);
       }
     } catch (e) {
       // Ignore
@@ -943,7 +949,7 @@ class HelpHubController {
         for (final skill in skillsList) {
           final tagHtml =
               '<span class="text-[10px] px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 rounded-md font-semibold border border-indigo-200 dark:border-indigo-800">${_escapeHtml(skill.trim())}</span>';
-          skillsContainer.insertAdjacentHTML('beforeend', tagHtml);
+          skillsContainer.insertAdjacentHTML('beforeend', tagHtml.toJS);
         }
       }
 
@@ -1065,7 +1071,8 @@ class HelpHubController {
       if (notifications.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 text-center py-4">No notifications yet.</p>',
+          '<p class="text-xs text-surface-400 text-center py-4">No notifications yet.</p>'
+              .toJS,
         );
         return;
       }
@@ -1081,7 +1088,7 @@ class HelpHubController {
             <p class="text-xs text-surface-600 dark:text-surface-300">${_escapeHtml(notif.message)}</p>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', notifHtml);
+        container.insertAdjacentHTML('beforeend', notifHtml.toJS);
 
         if (!notif.isRead && notif.id != null) {
           await client.helpRequest.markNotificationRead(
@@ -1113,7 +1120,7 @@ class HelpHubController {
             <p class="text-xs text-indigo-700 dark:text-indigo-300 mt-0.5">${_escapeHtml(ann.content)}</p>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', annHtml);
+        container.insertAdjacentHTML('beforeend', annHtml.toJS);
       }
     } catch (e) {
       // Ignore
@@ -1131,7 +1138,8 @@ class HelpHubController {
       if (topUsers.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 col-span-full">No leaderboard entries yet.</p>',
+          '<p class="text-xs text-surface-400 col-span-full">No leaderboard entries yet.</p>'
+              .toJS,
         );
         return;
       }
@@ -1155,7 +1163,7 @@ class HelpHubController {
             <span class="text-xs font-extrabold text-amber-500">${u.points} pts</span>
           </div>
         ''';
-        container.insertAdjacentHTML('beforeend', cardHtml);
+        container.insertAdjacentHTML('beforeend', cardHtml.toJS);
       }
     } catch (e) {
       // Ignore
@@ -1186,19 +1194,23 @@ class HelpHubController {
       container.textContent = '';
 
       if (requests.isEmpty) {
-        container.insertAdjacentHTML('beforeend', '''
+        container.insertAdjacentHTML(
+          'beforeend',
+          '''
             <div class="col-span-full py-12 text-center text-surface-500 dark:text-surface-400">
               <span class="text-4xl block mb-2">🔍</span>
               <p class="text-base font-semibold">No help requests found.</p>
               <p class="text-xs">Be the first to create one!</p>
             </div>
-          ''');
+          '''
+              .toJS,
+        );
         return;
       }
 
       for (final req in requests) {
         final cardHtml = _buildCardHtml(req);
-        container.insertAdjacentHTML('beforeend', cardHtml);
+        container.insertAdjacentHTML('beforeend', cardHtml.toJS);
       }
 
       _bindCardActionButtons();
@@ -1617,7 +1629,8 @@ class HelpHubController {
       if (comments.isEmpty) {
         listEl.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 text-center py-4">No comments yet. Be the first to start the discussion!</p>',
+          '<p class="text-xs text-surface-400 text-center py-4">No comments yet. Be the first to start the discussion!</p>'
+              .toJS,
         );
         return;
       }
@@ -1633,7 +1646,7 @@ class HelpHubController {
             <p class="text-xs text-surface-700 dark:text-surface-200">${_escapeHtml(c.content)}</p>
           </div>
         ''';
-        listEl.insertAdjacentHTML('beforeend', commentHtml);
+        listEl.insertAdjacentHTML('beforeend', commentHtml.toJS);
       }
     } catch (e) {
       // Ignore
