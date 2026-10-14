@@ -11,3 +11,4 @@ fields:
   ratingAverage: double?
   ratingCount: int?
   skills: String?
+  unlockedBadges: String?

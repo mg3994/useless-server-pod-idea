@@ -312,6 +312,12 @@ class Protocol extends _is.DatabaseSerializationManager {
           dartType: 'String?',
         ),
         _isp.ColumnDefinition(
+          name: 'shareableCode',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
           name: 'expiresAt',
           columnType: _isp.ColumnType.timestampWithoutTimeZone,
           isNullable: true,
@@ -559,6 +565,12 @@ class Protocol extends _is.DatabaseSerializationManager {
         ),
         _isp.ColumnDefinition(
           name: 'skills',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'unlockedBadges',
           columnType: _isp.ColumnType.text,
           isNullable: true,
           dartType: 'String?',

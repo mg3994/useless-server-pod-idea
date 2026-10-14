@@ -17,6 +17,7 @@ fields:
   estimatedDuration: String?
   upvotes: int?
   completionProofNote: String?
+  shareableCode: String?
   expiresAt: DateTime?
   createdAt: DateTime
   updatedAt: DateTime?

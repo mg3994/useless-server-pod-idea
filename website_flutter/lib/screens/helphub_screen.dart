@@ -91,20 +91,15 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         searchQuery: _searchQuery,
         sortBy: _selectedSort,
         myEmailFilter: _selectedActivityMode != 'all' ? userEmail : null,
-        myActivityMode: _selectedActivityMode != 'all'
-            ? _selectedActivityMode
-            : null,
+        myActivityMode: _selectedActivityMode != 'all' ? _selectedActivityMode : null,
       );
 
       final profile = await client.helpRequest.getUserProfile(email: userEmail);
       final leaderboard = await client.helpRequest.getLeaderboard();
       final announcements = await client.helpRequest.getAnnouncements();
-      final notifications = await client.helpRequest.getUserNotifications(
-        userEmail: userEmail,
-      );
+      final notifications = await client.helpRequest.getUserNotifications(userEmail: userEmail);
       final stats = await client.helpRequest.getCommunityStats();
-      final activityStream = await client.helpRequest
-          .getCommunityActivityStream();
+      final activityStream = await client.helpRequest.getCommunityActivityStream();
 
       setState(() {
         _requests = requests;
@@ -131,9 +126,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
     Future<void> fetchMessages(StateSetter setModalState) async {
       setModalState(() => isLoadingChat = true);
       try {
-        final result = await client.helpRequest.getChatMessages(
-          requestId: req.id!,
-        );
+        final result = await client.helpRequest.getChatMessages(requestId: req.id!);
         setModalState(() {
           messages = result;
           isLoadingChat = false;
@@ -172,10 +165,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     children: [
                       Text(
                         '💬 Direct Chat: ${req.title}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                       ),
                       IconButton(
                         icon: const Icon(Icons.close),
@@ -189,63 +179,33 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     child: isLoadingChat
                         ? const Center(child: CircularProgressIndicator())
                         : messages.isEmpty
-                        ? const Center(
-                            child: Text(
-                              'No messages yet. Coordinate details here!',
-                            ),
-                          )
-                        : ListView.builder(
-                            itemCount: messages.length,
-                            itemBuilder: (context, index) {
-                              final m = messages[index];
-                              final isMe = m.senderEmail == _getUserEmail();
-                              return Align(
-                                alignment: isMe
-                                    ? Alignment.centerRight
-                                    : Alignment.centerLeft,
-                                child: Container(
-                                  margin: const EdgeInsets.only(bottom: 8),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 8,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: isMe
-                                        ? Colors.indigo.shade600
-                                        : Colors.grey.shade200,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: isMe
-                                        ? CrossAxisAlignment.end
-                                        : CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        m.senderEmail,
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          color: isMe
-                                              ? Colors.white70
-                                              : Colors.black54,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                            ? const Center(child: Text('No messages yet. Coordinate details here!'))
+                            : ListView.builder(
+                                itemCount: messages.length,
+                                itemBuilder: (context, index) {
+                                  final m = messages[index];
+                                  final isMe = m.senderEmail == _getUserEmail();
+                                  return Align(
+                                    alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                                    child: Container(
+                                      margin: const EdgeInsets.only(bottom: 8),
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                      decoration: BoxDecoration(
+                                        color: isMe ? Colors.indigo.shade600 : Colors.grey.shade200,
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        m.message,
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: isMe
-                                              ? Colors.white
-                                              : Colors.black87,
-                                        ),
+                                      child: Column(
+                                        crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                                        children: [
+                                          Text(m.senderEmail, style: TextStyle(fontSize: 10, color: isMe ? Colors.white70 : Colors.black54, fontWeight: FontWeight.bold)),
+                                          const SizedBox(height: 2),
+                                          Text(m.message, style: TextStyle(fontSize: 13, color: isMe ? Colors.white : Colors.black87)),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                                    ),
+                                  );
+                                },
+                              ),
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -255,15 +215,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                           controller: chatMsgController,
                           decoration: const InputDecoration(
                             hintText: 'Type a message...',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(12),
-                              ),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           ),
                         ),
                       ),
@@ -303,16 +256,11 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
       context: context,
       builder: (dialogCtx) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: const Row(
             children: [
               Text('🎉 ', style: TextStyle(fontSize: 22)),
-              Text(
-                'Complete Favor',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+              Text('Complete Favor', style: TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
           content: Column(
@@ -326,9 +274,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                 decoration: const InputDecoration(
                   labelText: 'Proof Note / Comments',
                   hintText: 'e.g. Left items at reception desk!',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                  ),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
                 ),
               ),
             ],
@@ -339,17 +285,12 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
-                foregroundColor: Colors.white,
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.teal, foregroundColor: Colors.white),
               onPressed: () async {
                 final note = noteController.text.trim();
                 await client.helpRequest.completeHelpRequestWithProof(
                   requestId: req.id!,
-                  proofNote: note.isNotEmpty
-                      ? note
-                      : 'Favor completed successfully.',
+                  proofNote: note.isNotEmpty ? note : 'Favor completed successfully.',
                 );
                 if (mounted && dialogCtx.mounted) {
                   Navigator.pop(dialogCtx);
@@ -373,45 +314,26 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
       context: context,
       builder: (dialogCtx) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-            side: const BorderSide(color: Colors.redAccent, width: 2),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: const BorderSide(color: Colors.redAccent, width: 2)),
           title: const Row(
             children: [
               Text('🚨 ', style: TextStyle(fontSize: 22)),
-              Text(
-                'Broadcast Emergency SOS',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.redAccent,
-                  fontSize: 16,
-                ),
-              ),
+              Text('Broadcast Emergency SOS', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.redAccent, fontSize: 16)),
             ],
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Immediately notifies available top helpers nearby.',
-                style: TextStyle(fontSize: 12),
-              ),
+              const Text('Immediately notifies available top helpers nearby.', style: TextStyle(fontSize: 12)),
               const SizedBox(height: 12),
               TextField(
                 controller: titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Emergency Title',
-                  hintText: 'e.g. Dead car battery at Lot C',
-                ),
+                decoration: const InputDecoration(labelText: 'Emergency Title', hintText: 'e.g. Dead car battery at Lot C'),
               ),
               const SizedBox(height: 8),
               TextField(
                 controller: locationController,
-                decoration: const InputDecoration(
-                  labelText: 'Location',
-                  hintText: 'e.g. Parking Lot C, Slot 12',
-                ),
+                decoration: const InputDecoration(labelText: 'Location', hintText: 'e.g. Parking Lot C, Slot 12'),
               ),
               const SizedBox(height: 8),
               TextField(
@@ -427,14 +349,9 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
-                foregroundColor: Colors.white,
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent, foregroundColor: Colors.white),
               onPressed: () async {
-                if (titleController.text.trim().isEmpty ||
-                    locationController.text.trim().isEmpty)
-                  return;
+                if (titleController.text.trim().isEmpty || locationController.text.trim().isEmpty) return;
 
                 await client.helpRequest.broadcastEmergencySOS(
                   title: titleController.text.trim(),
@@ -446,9 +363,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                 if (mounted && dialogCtx.mounted) {
                   Navigator.pop(dialogCtx);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('⚡ Emergency SOS Broadcast Dispatched!'),
-                    ),
+                    const SnackBar(content: Text('⚡ Emergency SOS Broadcast Dispatched!')),
                   );
                 }
                 _loadData();
@@ -465,21 +380,14 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
     if (_profile == null) return;
 
     final nameController = TextEditingController(text: _profile!.displayName);
-    final skillsController = TextEditingController(
-      text: _profile!.skills ?? 'General',
-    );
+    final skillsController = TextEditingController(text: _profile!.skills ?? 'General');
 
     return showDialog(
       context: context,
       builder: (dialogCtx) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: const Text(
-            'Edit Profile & Skills',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text('Edit Profile & Skills', style: TextStyle(fontWeight: FontWeight.bold)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -505,10 +413,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.indigo,
-                foregroundColor: Colors.white,
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.indigo, foregroundColor: Colors.white),
               onPressed: () async {
                 await client.helpRequest.updateUserProfile(
                   email: _getUserEmail(),
@@ -558,10 +463,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                       SizedBox(width: 8),
                       Text(
                         'Notifications Feed',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                     ],
                   ),
@@ -582,25 +484,18 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                           final n = _notifications[index];
                           return Card(
                             elevation: n.isRead ? 0 : 1,
-                            color: n.isRead
-                                ? Colors.grey.shade50
-                                : Colors.indigo.shade50,
+                            color: n.isRead ? Colors.grey.shade50 : Colors.indigo.shade50,
                             margin: const EdgeInsets.only(bottom: 8),
                             child: ListTile(
                               dense: true,
                               title: Text(
                                 n.title,
                                 style: TextStyle(
-                                  fontWeight: n.isRead
-                                      ? FontWeight.normal
-                                      : FontWeight.bold,
+                                  fontWeight: n.isRead ? FontWeight.normal : FontWeight.bold,
                                   color: Colors.indigo.shade900,
                                 ),
                               ),
-                              subtitle: Text(
-                                n.message,
-                                style: const TextStyle(fontSize: 12),
-                              ),
+                              subtitle: Text(n.message, style: const TextStyle(fontSize: 12)),
                             ),
                           );
                         },
@@ -615,9 +510,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
 
     for (final notif in unreadList) {
       if (notif.id != null) {
-        await client.helpRequest.markNotificationRead(
-          notificationId: notif.id!,
-        );
+        await client.helpRequest.markNotificationRead(notificationId: notif.id!);
       }
     }
     _loadData();
@@ -633,26 +526,18 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               title: const Row(
                 children: [
                   Icon(Icons.star, color: Colors.amber),
                   SizedBox(width: 8),
-                  Text(
-                    'Rate Helper',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  Text('Rate Helper', style: TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    'How was your helper\'s performance?',
-                    style: TextStyle(fontSize: 12),
-                  ),
+                  const Text('How was your helper\'s performance?', style: TextStyle(fontSize: 12)),
                   const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -674,9 +559,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     decoration: const InputDecoration(
                       labelText: 'Feedback / Comment',
                       hintText: 'e.g. Prompt, friendly and very helpful!',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                      ),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
                     ),
                   ),
                 ],
@@ -687,10 +570,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                   child: const Text('Skip'),
                 ),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.indigo,
-                    foregroundColor: Colors.white,
-                  ),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.indigo, foregroundColor: Colors.white),
                   onPressed: () async {
                     await client.helpRequest.submitRating(
                       requestId: requestId,
@@ -701,9 +581,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     if (mounted && dialogCtx.mounted) {
                       Navigator.pop(dialogCtx);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Rating submitted! Thank you ⭐'),
-                        ),
+                        const SnackBar(content: Text('Rating submitted! Thank you ⭐')),
                       );
                     }
                     _loadData();
@@ -765,10 +643,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     children: [
                       Text(
                         '💬 Q&A: ${req.title}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       IconButton(
                         icon: const Icon(Icons.close),
@@ -782,32 +657,18 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     child: isLoadingComments
                         ? const Center(child: CircularProgressIndicator())
                         : comments.isEmpty
-                        ? const Center(
-                            child: Text(
-                              'No comments yet. Be the first to ask!',
-                            ),
-                          )
-                        : ListView.builder(
-                            itemCount: comments.length,
-                            itemBuilder: (context, index) {
-                              final c = comments[index];
-                              return ListTile(
-                                dense: true,
-                                title: Text(
-                                  c.authorEmail,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                    color: Colors.indigo,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  c.content,
-                                  style: const TextStyle(fontSize: 13),
-                                ),
-                              );
-                            },
-                          ),
+                            ? const Center(child: Text('No comments yet. Be the first to ask!'))
+                            : ListView.builder(
+                                itemCount: comments.length,
+                                itemBuilder: (context, index) {
+                                  final c = comments[index];
+                                  return ListTile(
+                                    dense: true,
+                                    title: Text(c.authorEmail, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.indigo)),
+                                    subtitle: Text(c.content, style: const TextStyle(fontSize: 13)),
+                                  );
+                                },
+                              ),
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -817,15 +678,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                           controller: commentController,
                           decoration: const InputDecoration(
                             hintText: 'Type a question or comment...',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(12),
-                              ),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           ),
                         ),
                       ),
@@ -876,9 +730,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               title: const Text(
                 'Post a Help Request',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -900,9 +752,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                       decoration: const InputDecoration(labelText: 'Category'),
                       items: _categories
                           .where((c) => c != 'All')
-                          .map(
-                            (c) => DropdownMenuItem(value: c, child: Text(c)),
-                          )
+                          .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                           .toList(),
                       onChanged: (val) {
                         if (val != null) setDialogState(() => category = val);
@@ -914,20 +764,10 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                         Expanded(
                           child: DropdownButtonFormField<String>(
                             initialValue: zone,
-                            decoration: const InputDecoration(
-                              labelText: 'Zone',
-                            ),
+                            decoration: const InputDecoration(labelText: 'Zone'),
                             items: _zones
                                 .where((z) => z != 'All')
-                                .map(
-                                  (z) => DropdownMenuItem(
-                                    value: z,
-                                    child: Text(
-                                      z,
-                                      style: const TextStyle(fontSize: 12),
-                                    ),
-                                  ),
-                                )
+                                .map((z) => DropdownMenuItem(value: z, child: Text(z, style: const TextStyle(fontSize: 12))))
                                 .toList(),
                             onChanged: (val) {
                               if (val != null) setDialogState(() => zone = val);
@@ -938,35 +778,14 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                         Expanded(
                           child: DropdownButtonFormField<String>(
                             initialValue: duration,
-                            decoration: const InputDecoration(
-                              labelText: 'Est. Duration',
-                            ),
+                            decoration: const InputDecoration(labelText: 'Est. Duration'),
                             items: const [
-                              DropdownMenuItem(
-                                value: '15-30 mins',
-                                child: Text(
-                                  '15-30 mins',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ),
-                              DropdownMenuItem(
-                                value: '1 hour',
-                                child: Text(
-                                  '1 hour',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ),
-                              DropdownMenuItem(
-                                value: '2+ hours',
-                                child: Text(
-                                  '2+ hours',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ),
+                              DropdownMenuItem(value: '15-30 mins', child: Text('15-30 mins', style: TextStyle(fontSize: 12))),
+                              DropdownMenuItem(value: '1 hour', child: Text('1 hour', style: TextStyle(fontSize: 12))),
+                              DropdownMenuItem(value: '2+ hours', child: Text('2+ hours', style: TextStyle(fontSize: 12))),
                             ],
                             onChanged: (val) {
-                              if (val != null)
-                                setDialogState(() => duration = val);
+                              if (val != null) setDialogState(() => duration = val);
                             },
                           ),
                         ),
@@ -977,14 +796,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                       initialValue: urgency,
                       decoration: const InputDecoration(labelText: 'Urgency'),
                       items: const [
-                        DropdownMenuItem(
-                          value: 'Normal',
-                          child: Text('Normal'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Urgent',
-                          child: Text('⚡ Urgent'),
-                        ),
+                        DropdownMenuItem(value: 'Normal', child: Text('Normal')),
+                        DropdownMenuItem(value: 'Urgent', child: Text('⚡ Urgent')),
                         DropdownMenuItem(value: 'Low', child: Text('Low')),
                       ],
                       onChanged: (val) {
@@ -1000,17 +813,9 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     SwitchListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
-                      title: const Text(
-                        '⚡ SOS Emergency Mode',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                          color: Colors.redAccent,
-                        ),
-                      ),
+                      title: const Text('⚡ SOS Emergency Mode', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.redAccent)),
                       value: isEmergency,
-                      onChanged: (val) =>
-                          setDialogState(() => isEmergency = val),
+                      onChanged: (val) => setDialogState(() => isEmergency = val),
                     ),
                     const SizedBox(height: 8),
                     TextField(
@@ -1048,9 +853,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.indigo,
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),
                   onPressed: () async {
                     if (titleController.text.trim().isEmpty ||
@@ -1058,8 +861,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                       return;
                     }
 
-                    final points =
-                        int.tryParse(pointsController.text.trim()) ?? 25;
+                    final points = int.tryParse(pointsController.text.trim()) ?? 25;
 
                     await client.helpRequest.createHelpRequest(
                       title: titleController.text.trim(),
@@ -1100,8 +902,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
     } else if ((_profile?.completedCount ?? 0) >= 5) {
       targetMilestone = 10;
     }
-    final milestonePct = (((_profile?.completedCount ?? 0) / targetMilestone))
-        .clamp(0.05, 1.0);
+    final milestonePct = (((_profile?.completedCount ?? 0) / targetMilestone)).clamp(0.05, 1.0);
 
     return Scaffold(
       appBar: AppBar(
@@ -1114,10 +915,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(
-              Icons.warning_amber_rounded,
-              color: Colors.redAccent,
-            ),
+            icon: const Icon(Icons.warning_amber_rounded, color: Colors.redAccent),
             tooltip: 'Dispatch Emergency SOS',
             onPressed: _showSOSBroadcastDialog,
           ),
@@ -1139,11 +937,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     ),
                     child: Text(
                       '$unreadNotifsCount',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -1166,40 +960,19 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
               // Community Stats Banner Card
               if (_communityStats.isNotEmpty) ...[
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? Colors.indigo.shade900.withAlpha(100)
-                        : Colors.indigo.shade50,
+                    color: isDark ? Colors.indigo.shade900.withAlpha(100) : Colors.indigo.shade50,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: Colors.indigo.shade100),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildStatItem(
-                        'Open',
-                        '${_communityStats['openCount'] ?? 0}',
-                        Colors.teal,
-                      ),
-                      _buildStatItem(
-                        'In Progress',
-                        '${_communityStats['inProgressCount'] ?? 0}',
-                        Colors.amber.shade800,
-                      ),
-                      _buildStatItem(
-                        'Completed',
-                        '${_communityStats['completedCount'] ?? 0}',
-                        Colors.indigo,
-                      ),
-                      _buildStatItem(
-                        'Pts Exchanged',
-                        '${_communityStats['totalPointsAwarded'] ?? 0}',
-                        Colors.amber,
-                      ),
+                      _buildStatItem('Open', '${_communityStats['openCount'] ?? 0}', Colors.teal),
+                      _buildStatItem('In Progress', '${_communityStats['inProgressCount'] ?? 0}', Colors.amber.shade800),
+                      _buildStatItem('Completed', '${_communityStats['completedCount'] ?? 0}', Colors.indigo),
+                      _buildStatItem('Pts Exchanged', '${_communityStats['totalPointsAwarded'] ?? 0}', Colors.amber),
                     ],
                   ),
                 ),
@@ -1222,23 +995,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              _announcements.first.title,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: Colors.indigo,
-                              ),
-                            ),
-                            Text(
-                              _announcements.first.content,
-                              style: const TextStyle(
-                                fontSize: 11,
-                                color: Colors.black87,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            Text(_announcements.first.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.indigo)),
+                            Text(_announcements.first.content, style: const TextStyle(fontSize: 11, color: Colors.black87), maxLines: 2, overflow: TextOverflow.ellipsis),
                           ],
                         ),
                       ),
@@ -1252,9 +1010,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
               if (_profile != null) ...[
                 Card(
                   elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -1268,11 +1024,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                                 _profile!.displayName.isNotEmpty
                                     ? _profile!.displayName[0].toUpperCase()
                                     : '👤',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colors.indigo,
-                                ),
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.indigo),
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -1284,78 +1036,44 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                                     children: [
                                       Text(
                                         _profile!.displayName,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
+                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                                       ),
                                       const SizedBox(width: 6),
                                       Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 6,
-                                          vertical: 2,
-                                        ),
+                                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                         decoration: BoxDecoration(
                                           color: Colors.amber.shade50,
-                                          borderRadius: BorderRadius.circular(
-                                            6,
-                                          ),
-                                          border: Border.all(
-                                            color: Colors.amber.shade300,
-                                          ),
+                                          borderRadius: BorderRadius.circular(6),
+                                          border: Border.all(color: Colors.amber.shade300),
                                         ),
                                         child: Text(
                                           '⭐ ${(_profile!.ratingAverage ?? 5.0).toStringAsFixed(1)}',
-                                          style: const TextStyle(
-                                            color: Colors.amber,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 10,
-                                          ),
+                                          style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 10),
                                         ),
                                       ),
                                       const SizedBox(width: 4),
                                       InkWell(
                                         onTap: _showEditProfileDialog,
-                                        child: const Icon(
-                                          Icons.edit_outlined,
-                                          size: 16,
-                                          color: Colors.indigo,
-                                        ),
+                                        child: const Icon(Icons.edit_outlined, size: 16, color: Colors.indigo),
                                       ),
                                     ],
                                   ),
                                   Text(
                                     _profile!.avatarBadge,
-                                    style: const TextStyle(
-                                      color: Colors.indigo,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    style: const TextStyle(color: Colors.indigo, fontSize: 12, fontWeight: FontWeight.w600),
                                   ),
-                                  if (_profile!.skills != null) ...[
+                                  if (_profile!.unlockedBadges != null) ...[
                                     const SizedBox(height: 4),
                                     Wrap(
                                       spacing: 4,
-                                      children: _profile!.skills!
-                                          .split(',')
-                                          .map((s) {
-                                            return Chip(
-                                              label: Text(
-                                                s.trim(),
-                                                style: const TextStyle(
-                                                  fontSize: 9,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.indigo,
-                                                ),
-                                              ),
-                                              backgroundColor:
-                                                  Colors.indigo.shade50,
-                                              visualDensity:
-                                                  VisualDensity.compact,
-                                              padding: EdgeInsets.zero,
-                                            );
-                                          })
-                                          .toList(),
+                                      children: _profile!.unlockedBadges!.split(',').map((b) {
+                                        return Chip(
+                                          label: Text(b.trim(), style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.amber)),
+                                          backgroundColor: Colors.amber.shade50,
+                                          visualDensity: VisualDensity.compact,
+                                          padding: EdgeInsets.zero,
+                                        );
+                                      }).toList(),
                                     ),
                                   ],
                                 ],
@@ -1366,18 +1084,11 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                               children: [
                                 Text(
                                   '🪙 ${_profile!.points} pts',
-                                  style: const TextStyle(
-                                    color: Colors.amber,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
+                                  style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 16),
                                 ),
                                 Text(
                                   '${_profile!.completedCount} done • ${_profile!.requestedCount} requested',
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.grey,
-                                  ),
+                                  style: const TextStyle(fontSize: 11, color: Colors.grey),
                                 ),
                               ],
                             ),
@@ -1390,22 +1101,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'Milestone Progress',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                Text(
-                                  '${_profile!.completedCount} / $targetMilestone Favors',
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.indigo,
-                                  ),
-                                ),
+                                const Text('Milestone Progress', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey)),
+                                Text('${_profile!.completedCount} / $targetMilestone Favors', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.indigo)),
                               ],
                             ),
                             const SizedBox(height: 4),
@@ -1436,10 +1133,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [
-                                Colors.indigo.shade900.withAlpha(20),
-                                Colors.purple.shade900.withAlpha(20),
-                              ],
+                              colors: [Colors.indigo.shade900.withAlpha(20), Colors.purple.shade900.withAlpha(20)],
                             ),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(color: Colors.indigo.shade100),
@@ -1447,13 +1141,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '🏆 Top Helpers',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                ),
-                              ),
+                              const Text('🏆 Top Helpers', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                               const SizedBox(height: 6),
                               SizedBox(
                                 height: 60,
@@ -1464,39 +1152,18 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                                     final user = _leaderboard[index];
                                     return Container(
                                       margin: const EdgeInsets.only(right: 6),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 6,
-                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                       decoration: BoxDecoration(
-                                        color: isDark
-                                            ? Colors.grey.shade900
-                                            : Colors.white,
+                                        color: isDark ? Colors.grey.shade900 : Colors.white,
                                         borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                          color: Colors.grey.shade300,
-                                        ),
+                                        border: Border.all(color: Colors.grey.shade300),
                                       ),
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Text(
-                                            user.displayName,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 11,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${user.points} pts',
-                                            style: const TextStyle(
-                                              fontSize: 9,
-                                              color: Colors.indigo,
-                                            ),
-                                          ),
+                                          Text(user.displayName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
+                                          Text('${user.points} pts', style: const TextStyle(fontSize: 9, color: Colors.indigo)),
                                         ],
                                       ),
                                     );
@@ -1519,11 +1186,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     label: const Text('🌐 All', style: TextStyle(fontSize: 11)),
                     selected: _selectedActivityMode == 'all',
                     selectedColor: Colors.indigo,
-                    labelStyle: TextStyle(
-                      color: _selectedActivityMode == 'all'
-                          ? Colors.white
-                          : Colors.black87,
-                    ),
+                    labelStyle: TextStyle(color: _selectedActivityMode == 'all' ? Colors.white : Colors.black87),
                     onSelected: (selected) {
                       if (selected) {
                         setState(() => _selectedActivityMode = 'all');
@@ -1533,17 +1196,10 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                   ),
                   const SizedBox(width: 4),
                   ChoiceChip(
-                    label: const Text(
-                      '📝 Posted',
-                      style: TextStyle(fontSize: 11),
-                    ),
+                    label: const Text('📝 Posted', style: TextStyle(fontSize: 11)),
                     selected: _selectedActivityMode == 'posted',
                     selectedColor: Colors.indigo,
-                    labelStyle: TextStyle(
-                      color: _selectedActivityMode == 'posted'
-                          ? Colors.white
-                          : Colors.black87,
-                    ),
+                    labelStyle: TextStyle(color: _selectedActivityMode == 'posted' ? Colors.white : Colors.black87),
                     onSelected: (selected) {
                       if (selected) {
                         setState(() => _selectedActivityMode = 'posted');
@@ -1553,17 +1209,10 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                   ),
                   const SizedBox(width: 4),
                   ChoiceChip(
-                    label: const Text(
-                      '🤝 Claimed',
-                      style: TextStyle(fontSize: 11),
-                    ),
+                    label: const Text('🤝 Claimed', style: TextStyle(fontSize: 11)),
                     selected: _selectedActivityMode == 'claimed',
                     selectedColor: Colors.indigo,
-                    labelStyle: TextStyle(
-                      color: _selectedActivityMode == 'claimed'
-                          ? Colors.white
-                          : Colors.black87,
-                    ),
+                    labelStyle: TextStyle(color: _selectedActivityMode == 'claimed' ? Colors.white : Colors.black87),
                     onSelected: (selected) {
                       if (selected) {
                         setState(() => _selectedActivityMode = 'claimed');
@@ -1573,17 +1222,10 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                   ),
                   const SizedBox(width: 4),
                   ChoiceChip(
-                    label: const Text(
-                      '🔖 Saved',
-                      style: TextStyle(fontSize: 11),
-                    ),
+                    label: const Text('🔖 Saved', style: TextStyle(fontSize: 11)),
                     selected: _selectedActivityMode == 'saved',
                     selectedColor: Colors.indigo,
-                    labelStyle: TextStyle(
-                      color: _selectedActivityMode == 'saved'
-                          ? Colors.white
-                          : Colors.black87,
-                    ),
+                    labelStyle: TextStyle(color: _selectedActivityMode == 'saved' ? Colors.white : Colors.black87),
                     onSelected: (selected) {
                       if (selected) {
                         setState(() => _selectedActivityMode = 'saved');
@@ -1593,15 +1235,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                   ),
                   const Spacer(),
                   TextButton.icon(
-                    icon: const Icon(
-                      Icons.refresh,
-                      size: 14,
-                      color: Colors.redAccent,
-                    ),
-                    label: const Text(
-                      'Reset',
-                      style: TextStyle(fontSize: 11, color: Colors.redAccent),
-                    ),
+                    icon: const Icon(Icons.refresh, size: 14, color: Colors.redAccent),
+                    label: const Text('Reset', style: TextStyle(fontSize: 11, color: Colors.redAccent)),
                     onPressed: _resetFilters,
                   ),
                 ],
@@ -1617,13 +1252,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                       decoration: InputDecoration(
                         hintText: 'Search requests...',
                         prefixIcon: const Icon(Icons.search, size: 20),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 0,
-                          horizontal: 12,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       onChanged: (val) {
                         _searchQuery = val;
@@ -1635,17 +1265,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                   DropdownButton<String>(
                     value: _selectedZone,
                     underline: const SizedBox(),
-                    items: _zones
-                        .map(
-                          (z) => DropdownMenuItem(
-                            value: z,
-                            child: Text(
-                              z,
-                              style: const TextStyle(fontSize: 11),
-                            ),
-                          ),
-                        )
-                        .toList(),
+                    items: _zones.map((z) => DropdownMenuItem(value: z, child: Text(z, style: const TextStyle(fontSize: 11)))).toList(),
                     onChanged: (val) {
                       if (val != null) {
                         setState(() => _selectedZone = val);
@@ -1658,34 +1278,10 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     value: _selectedSort,
                     underline: const SizedBox(),
                     items: const [
-                      DropdownMenuItem(
-                        value: 'newest',
-                        child: Text(
-                          '🕒 Newest',
-                          style: TextStyle(fontSize: 11),
-                        ),
-                      ),
-                      DropdownMenuItem(
-                        value: 'reward',
-                        child: Text(
-                          '🪙 Reward',
-                          style: TextStyle(fontSize: 11),
-                        ),
-                      ),
-                      DropdownMenuItem(
-                        value: 'upvotes',
-                        child: Text(
-                          '👍 Upvotes',
-                          style: TextStyle(fontSize: 11),
-                        ),
-                      ),
-                      DropdownMenuItem(
-                        value: 'urgency',
-                        child: Text(
-                          '⚡ Urgency',
-                          style: TextStyle(fontSize: 11),
-                        ),
-                      ),
+                      DropdownMenuItem(value: 'newest', child: Text('🕒 Newest', style: TextStyle(fontSize: 11))),
+                      DropdownMenuItem(value: 'reward', child: Text('🪙 Reward', style: TextStyle(fontSize: 11))),
+                      DropdownMenuItem(value: 'upvotes', child: Text('👍 Upvotes', style: TextStyle(fontSize: 11))),
+                      DropdownMenuItem(value: 'urgency', child: Text('⚡ Urgency', style: TextStyle(fontSize: 11))),
                     ],
                     onChanged: (val) {
                       if (val != null) {
@@ -1726,21 +1322,12 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                           return Padding(
                             padding: const EdgeInsets.only(right: 6),
                             child: ChoiceChip(
-                              label: Text(
-                                status,
-                                style: const TextStyle(fontSize: 11),
-                              ),
+                              label: Text(status, style: const TextStyle(fontSize: 11)),
                               selected: isSelected,
                               selectedColor: Colors.indigo,
                               labelStyle: TextStyle(
-                                color: isSelected
-                                    ? Colors.white
-                                    : (isDark
-                                          ? Colors.white70
-                                          : Colors.black87),
-                                fontWeight: isSelected
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
+                                color: isSelected ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
+                                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                               ),
                               onSelected: (selected) {
                                 if (selected) {
@@ -1760,12 +1347,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
 
               // Request Cards List
               if (_isLoading)
-                const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(32),
-                    child: CircularProgressIndicator(),
-                  ),
-                )
+                const Center(child: Padding(padding: EdgeInsets.all(32), child: CircularProgressIndicator()))
               else if (_requests.isEmpty)
                 const Center(
                   child: Padding(
@@ -1774,10 +1356,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                       children: [
                         Icon(Icons.search_off, size: 48, color: Colors.grey),
                         SizedBox(height: 8),
-                        Text(
-                          'No help requests found.',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                        Text('No help requests found.', style: TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ),
@@ -1799,10 +1378,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Colors.indigo,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text(
-          'Post Request',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
+        label: const Text('Post Request', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         onPressed: _showCreateRequestDialog,
       ),
     );
@@ -1811,22 +1387,8 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
   Widget _buildStatItem(String label, String value, Color color) {
     return Column(
       children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontWeight: FontWeight.w900,
-            fontSize: 16,
-            color: color,
-          ),
-        ),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 10,
-            color: Colors.grey,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        Text(value, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: color)),
+        Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
       ],
     );
   }
@@ -1840,6 +1402,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
     final duration = req.estimatedDuration ?? '15-30 mins';
     final upvotes = req.upvotes ?? 0;
     final proofNote = req.completionProofNote ?? '';
+    final code = req.shareableCode ?? 'HH-FAVOR';
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -1853,13 +1416,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Chip(
-                  label: Text(
-                    req.category,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  label: Text(req.category, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
                   padding: EdgeInsets.zero,
                   visualDensity: VisualDensity.compact,
                   backgroundColor: Colors.indigo.shade50,
@@ -1868,59 +1425,39 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                   children: [
                     if (req.isEmergency) ...[
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: Colors.redAccent,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Text(
                           '⚡ SOS',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 9,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
                         ),
                       ),
                       const SizedBox(width: 4),
                     ],
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 2,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: urgencyColor.withAlpha(30),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
                         req.urgency,
-                        style: TextStyle(
-                          color: urgencyColor,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(color: urgencyColor, fontSize: 10, fontWeight: FontWeight.bold),
                       ),
                     ),
                     const SizedBox(width: 6),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 2,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: Colors.grey.withAlpha(30),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
                         req.status,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
@@ -1935,23 +1472,13 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
             const SizedBox(height: 4),
             Row(
               children: [
-                const Icon(
-                  Icons.location_on_outlined,
-                  size: 14,
-                  color: Colors.grey,
-                ),
+                const Icon(Icons.location_on_outlined, size: 14, color: Colors.grey),
                 const SizedBox(width: 4),
-                Text(
-                  '${req.location} ($zoneName)',
-                  style: const TextStyle(fontSize: 11, color: Colors.grey),
-                ),
+                Text('${req.location} ($zoneName)', style: const TextStyle(fontSize: 11, color: Colors.grey)),
                 const SizedBox(width: 8),
                 const Icon(Icons.timer_outlined, size: 14, color: Colors.grey),
                 const SizedBox(width: 2),
-                Text(
-                  duration,
-                  style: const TextStyle(fontSize: 11, color: Colors.grey),
-                ),
+                Text(duration, style: const TextStyle(fontSize: 11, color: Colors.grey)),
               ],
             ),
             const SizedBox(height: 8),
@@ -1971,23 +1498,13 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.teal.shade200),
                 ),
-                child: Text(
-                  'Proof Note: $proofNote',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.teal.shade900,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                child: Text('Proof Note: $proofNote', style: TextStyle(fontSize: 11, color: Colors.teal.shade900, fontWeight: FontWeight.w600)),
               ),
             ],
             const SizedBox(height: 8),
             TextButton.icon(
               icon: const Icon(Icons.chat_bubble_outline, size: 16),
-              label: const Text(
-                'Comments / Q&A',
-                style: TextStyle(fontSize: 12),
-              ),
+              label: const Text('Comments / Q&A', style: TextStyle(fontSize: 12)),
               onPressed: () => _showCommentsBottomSheet(req),
             ),
             const Divider(),
@@ -1996,89 +1513,58 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
               children: [
                 Text(
                   '🪙 +${req.rewardPoints} pts',
-                  style: const TextStyle(
-                    color: Colors.amber,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold),
                 ),
                 if (req.status == 'Open')
                   Row(
                     children: [
                       IconButton(
-                        icon: const Icon(
-                          Icons.bookmark_border,
-                          color: Colors.indigo,
-                          size: 20,
-                        ),
+                        icon: const Icon(Icons.share_outlined, color: Colors.indigo, size: 20),
+                        tooltip: 'Share Favor',
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Favor share code copied: $code 🔗')),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.bookmark_border, color: Colors.indigo, size: 20),
                         tooltip: 'Save Favor',
                         onPressed: () async {
-                          final isAdded = await client.helpRequest
-                              .bookmarkHelpRequest(
-                                requestId: req.id!,
-                                userEmail: _getUserEmail(),
-                              );
+                          final isAdded = await client.helpRequest.bookmarkHelpRequest(
+                            requestId: req.id!,
+                            userEmail: _getUserEmail(),
+                          );
                           if (mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  isAdded
-                                      ? 'Favor saved to bookmarks! 🔖'
-                                      : 'Removed from bookmarks.',
-                                ),
-                              ),
+                              SnackBar(content: Text(isAdded ? 'Favor saved to bookmarks! 🔖' : 'Removed from bookmarks.')),
                             );
                           }
                           _loadData();
                         },
                       ),
                       OutlinedButton.icon(
-                        icon: const Icon(
-                          Icons.thumb_up_alt_outlined,
-                          size: 14,
-                          color: Colors.teal,
-                        ),
-                        label: Text(
-                          '$upvotes',
-                          style: const TextStyle(fontSize: 11),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          visualDensity: VisualDensity.compact,
-                        ),
+                        icon: const Icon(Icons.thumb_up_alt_outlined, size: 14, color: Colors.teal),
+                        label: Text('$upvotes', style: const TextStyle(fontSize: 11)),
+                        style: OutlinedButton.styleFrom(visualDensity: VisualDensity.compact),
                         onPressed: () async {
-                          await client.helpRequest.upvoteHelpRequest(
-                            requestId: req.id!,
-                          );
+                          await client.helpRequest.upvoteHelpRequest(requestId: req.id!);
                           _loadData();
                         },
                       ),
                       const SizedBox(width: 4),
                       IconButton(
-                        icon: const Icon(
-                          Icons.cancel_outlined,
-                          color: Colors.redAccent,
-                          size: 20,
-                        ),
+                        icon: const Icon(Icons.cancel_outlined, color: Colors.redAccent, size: 20),
                         tooltip: 'Cancel Request',
                         onPressed: () async {
-                          await client.helpRequest.cancelHelpRequest(
-                            requestId: req.id!,
-                          );
+                          await client.helpRequest.cancelHelpRequest(requestId: req.id!);
                           _loadData();
                         },
                       ),
                       OutlinedButton.icon(
-                        icon: const Icon(
-                          Icons.flash_on,
-                          size: 14,
-                          color: Colors.amber,
-                        ),
-                        label: const Text(
-                          '+10',
-                          style: TextStyle(fontSize: 11),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          visualDensity: VisualDensity.compact,
-                        ),
+                        icon: const Icon(Icons.flash_on, size: 14, color: Colors.amber),
+                        label: const Text('+10', style: TextStyle(fontSize: 11)),
+                        style: OutlinedButton.styleFrom(visualDensity: VisualDensity.compact),
                         onPressed: () async {
                           await client.helpRequest.boostRewardPoints(
                             requestId: req.id!,
@@ -2109,18 +1595,9 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                   Row(
                     children: [
                       OutlinedButton.icon(
-                        icon: const Icon(
-                          Icons.message_outlined,
-                          size: 14,
-                          color: Colors.indigo,
-                        ),
-                        label: const Text(
-                          'Chat',
-                          style: TextStyle(fontSize: 11),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          visualDensity: VisualDensity.compact,
-                        ),
+                        icon: const Icon(Icons.message_outlined, size: 14, color: Colors.indigo),
+                        label: const Text('Chat', style: TextStyle(fontSize: 11)),
+                        style: OutlinedButton.styleFrom(visualDensity: VisualDensity.compact),
                         onPressed: () => _showChatBottomSheet(req),
                       ),
                       const SizedBox(width: 6),
@@ -2140,31 +1617,16 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                     children: [
                       if (req.helperUserId != null) ...[
                         OutlinedButton.icon(
-                          icon: const Icon(
-                            Icons.star,
-                            size: 14,
-                            color: Colors.amber,
-                          ),
-                          label: const Text(
-                            'Rate',
-                            style: TextStyle(fontSize: 11),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            visualDensity: VisualDensity.compact,
-                          ),
-                          onPressed: () =>
-                              _showRatingDialog(req.id!, req.helperUserId!),
+                          icon: const Icon(Icons.star, size: 14, color: Colors.amber),
+                          label: const Text('Rate', style: TextStyle(fontSize: 11)),
+                          style: OutlinedButton.styleFrom(visualDensity: VisualDensity.compact),
+                          onPressed: () => _showRatingDialog(req.id!, req.helperUserId!),
                         ),
                         const SizedBox(width: 4),
                         OutlinedButton.icon(
                           icon: const Icon(Icons.card_giftcard, size: 14),
-                          label: const Text(
-                            'Tip',
-                            style: TextStyle(fontSize: 11),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            visualDensity: VisualDensity.compact,
-                          ),
+                          label: const Text('Tip', style: TextStyle(fontSize: 11)),
+                          style: OutlinedButton.styleFrom(visualDensity: VisualDensity.compact),
                           onPressed: () async {
                             await client.helpRequest.tipHelper(
                               helperUserId: req.helperUserId!,
@@ -2172,11 +1634,7 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                             );
                             if (mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Tipped 15 bonus points to helper! 🎁',
-                                  ),
-                                ),
+                                const SnackBar(content: Text('Tipped 15 bonus points to helper! 🎁')),
                               );
                             }
                             _loadData();
@@ -2184,25 +1642,11 @@ class _HelpHubScreenState extends State<HelpHubScreen> {
                         ),
                       ],
                       const SizedBox(width: 8),
-                      const Text(
-                        'Completed ✓',
-                        style: TextStyle(
-                          color: Colors.teal,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
-                      ),
+                      const Text('Completed ✓', style: TextStyle(color: Colors.teal, fontWeight: FontWeight.bold, fontSize: 12)),
                     ],
                   )
                 else
-                  const Text(
-                    'Cancelled',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
+                  const Text('Cancelled', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12)),
               ],
             ),
           ],

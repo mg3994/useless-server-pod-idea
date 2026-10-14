@@ -26,6 +26,7 @@ abstract class UserProfile
     this.ratingAverage,
     this.ratingCount,
     this.skills,
+    this.unlockedBadges,
   });
 
   factory UserProfile({
@@ -40,6 +41,7 @@ abstract class UserProfile
     double? ratingAverage,
     int? ratingCount,
     String? skills,
+    String? unlockedBadges,
   }) = _UserProfileImpl;
 
   factory UserProfile.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -55,6 +57,7 @@ abstract class UserProfile
       ratingAverage: (jsonSerialization['ratingAverage'] as num?)?.toDouble(),
       ratingCount: jsonSerialization['ratingCount'] as int?,
       skills: jsonSerialization['skills'] as String?,
+      unlockedBadges: jsonSerialization['unlockedBadges'] as String?,
     );
   }
 
@@ -83,6 +86,8 @@ abstract class UserProfile
 
   String? skills;
 
+  String? unlockedBadges;
+
   /// Returns a shallow copy of this [UserProfile]
   /// with some or all fields replaced by the given arguments.
   @_isc.useResult
@@ -98,6 +103,7 @@ abstract class UserProfile
     double? ratingAverage,
     int? ratingCount,
     String? skills,
+    String? unlockedBadges,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -114,6 +120,7 @@ abstract class UserProfile
       if (ratingAverage != null) 'ratingAverage': ratingAverage,
       if (ratingCount != null) 'ratingCount': ratingCount,
       if (skills != null) 'skills': skills,
+      if (unlockedBadges != null) 'unlockedBadges': unlockedBadges,
     };
   }
 
@@ -132,6 +139,7 @@ abstract class UserProfile
       if (ratingAverage != null) 'ratingAverage': ratingAverage,
       if (ratingCount != null) 'ratingCount': ratingCount,
       if (skills != null) 'skills': skills,
+      if (unlockedBadges != null) 'unlockedBadges': unlockedBadges,
     };
   }
 
@@ -156,6 +164,7 @@ class _UserProfileImpl extends UserProfile {
     double? ratingAverage,
     int? ratingCount,
     String? skills,
+    String? unlockedBadges,
   }) : super._(
          id: id,
          userId: userId,
@@ -168,6 +177,7 @@ class _UserProfileImpl extends UserProfile {
          ratingAverage: ratingAverage,
          ratingCount: ratingCount,
          skills: skills,
+         unlockedBadges: unlockedBadges,
        );
 
   /// Returns a shallow copy of this [UserProfile]
@@ -186,6 +196,7 @@ class _UserProfileImpl extends UserProfile {
     Object? ratingAverage = _Undefined,
     Object? ratingCount = _Undefined,
     Object? skills = _Undefined,
+    Object? unlockedBadges = _Undefined,
   }) {
     return UserProfile(
       id: id is int? ? id : this.id,
@@ -201,6 +212,9 @@ class _UserProfileImpl extends UserProfile {
           : this.ratingAverage,
       ratingCount: ratingCount is int? ? ratingCount : this.ratingCount,
       skills: skills is String? ? skills : this.skills,
+      unlockedBadges: unlockedBadges is String?
+          ? unlockedBadges
+          : this.unlockedBadges,
     );
   }
 }

@@ -32,6 +32,7 @@ abstract class HelpRequest
     this.estimatedDuration,
     this.upvotes,
     this.completionProofNote,
+    this.shareableCode,
     this.expiresAt,
     required this.createdAt,
     this.updatedAt,
@@ -55,6 +56,7 @@ abstract class HelpRequest
     String? estimatedDuration,
     int? upvotes,
     String? completionProofNote,
+    String? shareableCode,
     DateTime? expiresAt,
     required DateTime createdAt,
     DateTime? updatedAt,
@@ -81,6 +83,7 @@ abstract class HelpRequest
       estimatedDuration: jsonSerialization['estimatedDuration'] as String?,
       upvotes: jsonSerialization['upvotes'] as int?,
       completionProofNote: jsonSerialization['completionProofNote'] as String?,
+      shareableCode: jsonSerialization['shareableCode'] as String?,
       expiresAt: jsonSerialization['expiresAt'] == null
           ? null
           : _isc.DateTimeJsonExtension.fromJson(jsonSerialization['expiresAt']),
@@ -130,6 +133,8 @@ abstract class HelpRequest
 
   String? completionProofNote;
 
+  String? shareableCode;
+
   DateTime? expiresAt;
 
   DateTime createdAt;
@@ -157,6 +162,7 @@ abstract class HelpRequest
     String? estimatedDuration,
     int? upvotes,
     String? completionProofNote,
+    String? shareableCode,
     DateTime? expiresAt,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -183,6 +189,7 @@ abstract class HelpRequest
       if (upvotes != null) 'upvotes': upvotes,
       if (completionProofNote != null)
         'completionProofNote': completionProofNote,
+      if (shareableCode != null) 'shareableCode': shareableCode,
       if (expiresAt != null) 'expiresAt': expiresAt?.toJson(),
       'createdAt': createdAt.toJson(),
       if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
@@ -211,6 +218,7 @@ abstract class HelpRequest
       if (upvotes != null) 'upvotes': upvotes,
       if (completionProofNote != null)
         'completionProofNote': completionProofNote,
+      if (shareableCode != null) 'shareableCode': shareableCode,
       if (expiresAt != null) 'expiresAt': expiresAt?.toJson(),
       'createdAt': createdAt.toJson(),
       if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
@@ -244,6 +252,7 @@ class _HelpRequestImpl extends HelpRequest {
     String? estimatedDuration,
     int? upvotes,
     String? completionProofNote,
+    String? shareableCode,
     DateTime? expiresAt,
     required DateTime createdAt,
     DateTime? updatedAt,
@@ -265,6 +274,7 @@ class _HelpRequestImpl extends HelpRequest {
          estimatedDuration: estimatedDuration,
          upvotes: upvotes,
          completionProofNote: completionProofNote,
+         shareableCode: shareableCode,
          expiresAt: expiresAt,
          createdAt: createdAt,
          updatedAt: updatedAt,
@@ -292,6 +302,7 @@ class _HelpRequestImpl extends HelpRequest {
     Object? estimatedDuration = _Undefined,
     Object? upvotes = _Undefined,
     Object? completionProofNote = _Undefined,
+    Object? shareableCode = _Undefined,
     Object? expiresAt = _Undefined,
     DateTime? createdAt,
     Object? updatedAt = _Undefined,
@@ -320,6 +331,9 @@ class _HelpRequestImpl extends HelpRequest {
       completionProofNote: completionProofNote is String?
           ? completionProofNote
           : this.completionProofNote,
+      shareableCode: shareableCode is String?
+          ? shareableCode
+          : this.shareableCode,
       expiresAt: expiresAt is DateTime? ? expiresAt : this.expiresAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt is DateTime? ? updatedAt : this.updatedAt,

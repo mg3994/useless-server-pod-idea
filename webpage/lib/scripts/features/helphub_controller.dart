@@ -43,79 +43,55 @@ class HelpHubController {
 
     // Reset Filters Button
     final resetBtn = web.document.querySelector('#reset-filters-btn');
-    resetBtn?.addEventListener(
-      'click',
-      ((web.Event e) {
-        e.preventDefault();
-        _resetFilters();
-      }).toJS,
-    );
+    resetBtn?.addEventListener('click', ((web.Event e) {
+      e.preventDefault();
+      _resetFilters();
+    }).toJS);
 
     // SOS Modal Events
     final openSosBtn = web.document.querySelector('#open-sos-modal-btn');
-    openSosBtn?.addEventListener(
-      'click',
-      ((web.Event e) {
-        e.preventDefault();
-        _toggleModal('sos-modal', show: true);
-      }).toJS,
-    );
+    openSosBtn?.addEventListener('click', ((web.Event e) {
+      e.preventDefault();
+      _toggleModal('sos-modal', show: true);
+    }).toJS);
 
     final closeSosBtn = web.document.querySelector('#close-sos-modal-btn');
-    closeSosBtn?.addEventListener(
-      'click',
-      ((web.Event e) {
-        e.preventDefault();
-        _toggleModal('sos-modal', show: false);
-      }).toJS,
-    );
+    closeSosBtn?.addEventListener('click', ((web.Event e) {
+      e.preventDefault();
+      _toggleModal('sos-modal', show: false);
+    }).toJS);
 
     final submitSosBtn = web.document.querySelector('#submit-sos-btn');
-    submitSosBtn?.addEventListener(
-      'click',
-      ((web.Event e) {
-        e.preventDefault();
-        _submitEmergencySos();
-      }).toJS,
-    );
+    submitSosBtn?.addEventListener('click', ((web.Event e) {
+      e.preventDefault();
+      _submitEmergencySos();
+    }).toJS);
 
     // Chat Modal Events
     final closeChatBtn = web.document.querySelector('#close-chat-modal-btn');
-    closeChatBtn?.addEventListener(
-      'click',
-      ((web.Event e) {
-        e.preventDefault();
-        _toggleModal('chat-modal', show: false);
-      }).toJS,
-    );
+    closeChatBtn?.addEventListener('click', ((web.Event e) {
+      e.preventDefault();
+      _toggleModal('chat-modal', show: false);
+    }).toJS);
 
     final submitChatBtn = web.document.querySelector('#submit-chat-btn');
-    submitChatBtn?.addEventListener(
-      'click',
-      ((web.Event e) {
-        e.preventDefault();
-        _submitChatMessage();
-      }).toJS,
-    );
+    submitChatBtn?.addEventListener('click', ((web.Event e) {
+      e.preventDefault();
+      _submitChatMessage();
+    }).toJS);
 
     // Proof Modal Events
     final closeProofBtn = web.document.querySelector('#close-proof-modal-btn');
-    closeProofBtn?.addEventListener(
-      'click',
-      ((web.Event e) {
-        e.preventDefault();
-        _toggleModal('proof-modal', show: false);
-      }).toJS,
-    );
+    closeProofBtn?.addEventListener('click', ((web.Event e) {
+      e.preventDefault();
+      _toggleModal('proof-modal', show: false);
+    }).toJS);
 
     final submitProofBtn = web.document.querySelector('#submit-proof-btn');
-    submitProofBtn?.addEventListener(
-      'click',
-      ((web.Event e) {
-        e.preventDefault();
-        _submitCompletionProof();
-      }).toJS,
-    );
+    submitProofBtn?.addEventListener('click', ((web.Event e) {
+      e.preventDefault();
+      _submitCompletionProof();
+    }).toJS);
 
     // Toggle emergency filter button
     final emergencyBtn = web.document.querySelector('#toggle-emergency-btn');
@@ -151,9 +127,7 @@ class HelpHubController {
       }).toJS,
     );
 
-    final closeEditProfileBtn = web.document.querySelector(
-      '#close-edit-profile-modal-btn',
-    );
+    final closeEditProfileBtn = web.document.querySelector('#close-edit-profile-modal-btn');
     closeEditProfileBtn?.addEventListener(
       'click',
       ((web.Event e) {
@@ -162,9 +136,7 @@ class HelpHubController {
       }).toJS,
     );
 
-    final submitEditProfileBtn = web.document.querySelector(
-      '#submit-edit-profile-btn',
-    );
+    final submitEditProfileBtn = web.document.querySelector('#submit-edit-profile-btn');
     submitEditProfileBtn?.addEventListener(
       'click',
       ((web.Event e) {
@@ -193,9 +165,7 @@ class HelpHubController {
     );
 
     // Close rating modal
-    final closeRatingBtn = web.document.querySelector(
-      '#close-rating-modal-btn',
-    );
+    final closeRatingBtn = web.document.querySelector('#close-rating-modal-btn');
     closeRatingBtn?.addEventListener(
       'click',
       ((web.Event e) {
@@ -296,8 +266,9 @@ class HelpHubController {
       }).toJS,
     );
 
-    final zoneSelect =
-        web.document.querySelector('#zone-filter') as web.HTMLSelectElement?;
+    final zoneSelect = web.document.querySelector(
+      '#zone-filter',
+    ) as web.HTMLSelectElement?;
     zoneSelect?.addEventListener(
       'change',
       ((web.Event e) {
@@ -345,25 +316,19 @@ class HelpHubController {
     currentSortBy = 'newest';
     emergencyOnly = false;
 
-    final searchInput =
-        web.document.querySelector('#search-input') as web.HTMLInputElement?;
+    final searchInput = web.document.querySelector('#search-input') as web.HTMLInputElement?;
     if (searchInput != null) searchInput.value = '';
 
-    final catSelect = web.document.querySelector(
-      '#category-filter',
-    ) as web.HTMLSelectElement?;
+    final catSelect = web.document.querySelector('#category-filter') as web.HTMLSelectElement?;
     if (catSelect != null) catSelect.value = 'All';
 
-    final zoneSelect =
-        web.document.querySelector('#zone-filter') as web.HTMLSelectElement?;
+    final zoneSelect = web.document.querySelector('#zone-filter') as web.HTMLSelectElement?;
     if (zoneSelect != null) zoneSelect.value = 'All';
 
-    final statusSelect =
-        web.document.querySelector('#status-filter') as web.HTMLSelectElement?;
+    final statusSelect = web.document.querySelector('#status-filter') as web.HTMLSelectElement?;
     if (statusSelect != null) statusSelect.value = 'All';
 
-    final sortSelect =
-        web.document.querySelector('#sort-filter') as web.HTMLSelectElement?;
+    final sortSelect = web.document.querySelector('#sort-filter') as web.HTMLSelectElement?;
     if (sortSelect != null) sortSelect.value = 'newest';
 
     loadHelpRequests();
@@ -390,58 +355,37 @@ class HelpHubController {
       loadHelpRequests();
     }
 
-    tabAll?.addEventListener(
-      'click',
-      ((web.Event e) => updateTabStyles('all')).toJS,
-    );
-    tabPosted?.addEventListener(
-      'click',
-      ((web.Event e) => updateTabStyles('posted')).toJS,
-    );
-    tabClaimed?.addEventListener(
-      'click',
-      ((web.Event e) => updateTabStyles('claimed')).toJS,
-    );
-    tabSaved?.addEventListener(
-      'click',
-      ((web.Event e) => updateTabStyles('saved')).toJS,
-    );
+    tabAll?.addEventListener('click', ((web.Event e) => updateTabStyles('all')).toJS);
+    tabPosted?.addEventListener('click', ((web.Event e) => updateTabStyles('posted')).toJS);
+    tabClaimed?.addEventListener('click', ((web.Event e) => updateTabStyles('claimed')).toJS);
+    tabSaved?.addEventListener('click', ((web.Event e) => updateTabStyles('saved')).toJS);
   }
 
   void _bindTagChips() {
     final tagChips = web.document.querySelectorAll('.tag-chip');
     for (var i = 0; i < tagChips.length; i++) {
       final chip = tagChips.item(i) as web.HTMLElement?;
-      chip?.addEventListener(
-        'click',
-        ((web.Event e) {
-          final tag = chip.getAttribute('data-tag');
-          if (tag != null) {
-            final searchInput = web.document.querySelector(
-              '#search-input',
-            ) as web.HTMLInputElement?;
-            if (searchInput != null) {
-              searchInput.value = tag;
-              currentSearch = tag;
-              loadHelpRequests();
-            }
+      chip?.addEventListener('click', ((web.Event e) {
+        final tag = chip.getAttribute('data-tag');
+        if (tag != null) {
+          final searchInput = web.document.querySelector('#search-input') as web.HTMLInputElement?;
+          if (searchInput != null) {
+            searchInput.value = tag;
+            currentSearch = tag;
+            loadHelpRequests();
           }
-        }).toJS,
-      );
+        }
+      }).toJS);
     }
   }
 
   Future<void> loadCommunityStats() async {
     try {
       final stats = await client.helpRequest.getCommunityStats();
-      web.document.querySelector('#stat-open-count')?.textContent =
-          (stats['openCount'] ?? 0).toString();
-      web.document.querySelector('#stat-progress-count')?.textContent =
-          (stats['inProgressCount'] ?? 0).toString();
-      web.document.querySelector('#stat-completed-count')?.textContent =
-          (stats['completedCount'] ?? 0).toString();
-      web.document.querySelector('#stat-points-count')?.textContent =
-          (stats['totalPointsAwarded'] ?? 0).toString();
+      web.document.querySelector('#stat-open-count')?.textContent = (stats['openCount'] ?? 0).toString();
+      web.document.querySelector('#stat-progress-count')?.textContent = (stats['inProgressCount'] ?? 0).toString();
+      web.document.querySelector('#stat-completed-count')?.textContent = (stats['completedCount'] ?? 0).toString();
+      web.document.querySelector('#stat-points-count')?.textContent = (stats['totalPointsAwarded'] ?? 0).toString();
     } catch (e) {
       // Ignore
     }
@@ -456,17 +400,12 @@ class HelpHubController {
       container.textContent = '';
 
       if (activities.isEmpty) {
-        container.insertAdjacentHTML(
-          'beforeend',
-          '<p class="text-xs text-surface-400 py-2">No recent timeline activity.</p>'
-              .toJS,
-        );
+        container.insertAdjacentHTML('beforeend', '<p class="text-xs text-surface-400 py-2">No recent timeline activity.</p>'.toJS);
         return;
       }
 
       for (final a in activities) {
-        final actHtml =
-            '''
+        final actHtml = '''
           <div class="p-2 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200/50 dark:border-surface-700/50">
             <div class="font-bold text-indigo-900 dark:text-indigo-200">${_escapeHtml(a.title)}</div>
             <div class="text-[11px] text-surface-600 dark:text-surface-300 mt-0.5">${_escapeHtml(a.message)}</div>
@@ -490,23 +429,16 @@ class HelpHubController {
     if (container == null) return;
 
     try {
-      final messages = await client.helpRequest.getChatMessages(
-        requestId: requestId,
-      );
+      final messages = await client.helpRequest.getChatMessages(requestId: requestId);
       container.textContent = '';
 
       if (messages.isEmpty) {
-        container.insertAdjacentHTML(
-          'beforeend',
-          '<p class="text-xs text-surface-400 text-center py-4">No direct messages yet. Coordinate details here!</p>'
-              .toJS,
-        );
+        container.insertAdjacentHTML('beforeend', '<p class="text-xs text-surface-400 text-center py-4">No direct messages yet. Coordinate details here!</p>'.toJS);
         return;
       }
 
       for (final m in messages) {
-        final msgHtml =
-            '''
+        final msgHtml = '''
           <div class="p-2.5 rounded-xl bg-surface-50 dark:bg-surface-800 border border-indigo-100 dark:border-indigo-900">
             <div class="flex items-center justify-between mb-1">
               <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400">${_escapeHtml(m.senderEmail)}</span>
@@ -525,8 +457,7 @@ class HelpHubController {
   Future<void> _submitChatMessage() async {
     if (activeChatRequestId == null) return;
 
-    final inputEl =
-        web.document.querySelector('#chat-input') as web.HTMLInputElement?;
+    final inputEl = web.document.querySelector('#chat-input') as web.HTMLInputElement?;
     final text = inputEl?.value.trim() ?? '';
     if (text.isEmpty) return;
 
@@ -552,9 +483,7 @@ class HelpHubController {
   Future<void> _submitCompletionProof() async {
     if (activeProofRequestId == null) return;
 
-    final inputEl = web.document.querySelector(
-      '#proof-note-input',
-    ) as web.HTMLTextAreaElement?;
+    final inputEl = web.document.querySelector('#proof-note-input') as web.HTMLTextAreaElement?;
     final note = inputEl?.value.trim() ?? 'Favor completed successfully.';
 
     try {
@@ -578,12 +507,9 @@ class HelpHubController {
   }
 
   Future<void> _submitEmergencySos() async {
-    final titleEl =
-        web.document.querySelector('#sos-title') as web.HTMLInputElement?;
-    final locEl =
-        web.document.querySelector('#sos-location') as web.HTMLInputElement?;
-    final descEl =
-        web.document.querySelector('#sos-desc') as web.HTMLTextAreaElement?;
+    final titleEl = web.document.querySelector('#sos-title') as web.HTMLInputElement?;
+    final locEl = web.document.querySelector('#sos-location') as web.HTMLInputElement?;
+    final descEl = web.document.querySelector('#sos-desc') as web.HTMLTextAreaElement?;
 
     final title = titleEl?.value.trim() ?? '';
     final location = locEl?.value.trim() ?? '';
@@ -610,9 +536,7 @@ class HelpHubController {
       if (descEl != null) descEl.value = '';
 
       _toggleModal('sos-modal', show: false);
-      web.window.alert(
-        '⚡ Emergency SOS Broadcast Sent! Helpers nearby have been notified.',
-      );
+      web.window.alert('⚡ Emergency SOS Broadcast Sent! Helpers nearby have been notified.');
 
       await loadHelpRequests();
       await loadCommunityStats();
@@ -648,9 +572,7 @@ class HelpHubController {
       web.document.querySelector('#profile-rating-badge')?.textContent =
           '⭐ ${ratingAvg.toStringAsFixed(1)}';
 
-      final skillsContainer = web.document.querySelector(
-        '#profile-skills-tags',
-      );
+      final skillsContainer = web.document.querySelector('#profile-skills-tags');
       if (skillsContainer != null && profile.skills != null) {
         skillsContainer.textContent = '';
         final skillsList = profile.skills!.split(',');
@@ -690,12 +612,8 @@ class HelpHubController {
 
     try {
       final profile = await client.helpRequest.getUserProfile(email: email);
-      final nameInput = web.document.querySelector(
-        '#edit-profile-name-input',
-      ) as web.HTMLInputElement?;
-      final skillsInput = web.document.querySelector(
-        '#edit-profile-skills-input',
-      ) as web.HTMLInputElement?;
+      final nameInput = web.document.querySelector('#edit-profile-name-input') as web.HTMLInputElement?;
+      final skillsInput = web.document.querySelector('#edit-profile-skills-input') as web.HTMLInputElement?;
 
       if (nameInput != null) nameInput.value = profile.displayName;
       if (skillsInput != null) skillsInput.value = profile.skills ?? 'General';
@@ -710,12 +628,8 @@ class HelpHubController {
     final userEmailEl = web.document.querySelector('#user-email');
     final email = userEmailEl?.textContent ?? 'guest@helphub.com';
 
-    final nameInput = web.document.querySelector(
-      '#edit-profile-name-input',
-    ) as web.HTMLInputElement?;
-    final skillsInput = web.document.querySelector(
-      '#edit-profile-skills-input',
-    ) as web.HTMLInputElement?;
+    final nameInput = web.document.querySelector('#edit-profile-name-input') as web.HTMLInputElement?;
+    final skillsInput = web.document.querySelector('#edit-profile-skills-input') as web.HTMLInputElement?;
 
     final name = nameInput?.value.trim() ?? '';
     final skills = skillsInput?.value.trim() ?? '';
@@ -761,9 +675,7 @@ class HelpHubController {
 
   Future<void> _openNotificationsModal() async {
     _toggleModal('notifications-modal', show: true);
-    final container = web.document.querySelector(
-      '#notifications-list-container',
-    );
+    final container = web.document.querySelector('#notifications-list-container');
     if (container == null) return;
 
     try {
@@ -779,15 +691,13 @@ class HelpHubController {
       if (notifications.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 text-center py-4">No notifications yet.</p>'
-              .toJS,
+          '<p class="text-xs text-surface-400 text-center py-4">No notifications yet.</p>'.toJS,
         );
         return;
       }
 
       for (final notif in notifications) {
-        final notifHtml =
-            '''
+        final notifHtml = '''
           <div class="p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200/60 dark:border-surface-700/60 flex flex-col gap-1">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold text-indigo-900 dark:text-indigo-200">${_escapeHtml(notif.title)}</span>
@@ -799,9 +709,7 @@ class HelpHubController {
         container.insertAdjacentHTML('beforeend', notifHtml.toJS);
 
         if (!notif.isRead && notif.id != null) {
-          await client.helpRequest.markNotificationRead(
-            notificationId: notif.id!,
-          );
+          await client.helpRequest.markNotificationRead(notificationId: notif.id!);
         }
       }
 
@@ -846,8 +754,7 @@ class HelpHubController {
       if (topUsers.isEmpty) {
         container.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 col-span-full">No leaderboard entries yet.</p>'
-              .toJS,
+          '<p class="text-xs text-surface-400 col-span-full">No leaderboard entries yet.</p>'.toJS,
         );
         return;
       }
@@ -894,25 +801,19 @@ class HelpHubController {
         searchQuery: currentSearch,
         sortBy: currentSortBy,
         myEmailFilter: currentActivityMode != 'all' ? email : null,
-        myActivityMode: currentActivityMode != 'all'
-            ? currentActivityMode
-            : null,
+        myActivityMode: currentActivityMode != 'all' ? currentActivityMode : null,
       );
 
       container.textContent = '';
 
       if (requests.isEmpty) {
-        container.insertAdjacentHTML(
-          'beforeend',
-          '''
+        container.insertAdjacentHTML('beforeend', '''
             <div class="col-span-full py-12 text-center text-surface-500 dark:text-surface-400">
               <span class="text-4xl block mb-2">🔍</span>
               <p class="text-base font-semibold">No help requests found.</p>
               <p class="text-xs">Be the first to create one!</p>
             </div>
-          '''
-              .toJS,
-        );
+          '''.toJS);
         return;
       }
 
@@ -958,12 +859,16 @@ class HelpHubController {
     final duration = req.estimatedDuration ?? '15-30 mins';
     final upvotes = req.upvotes ?? 0;
     final proofNote = req.completionProofNote ?? '';
+    final code = req.shareableCode ?? '';
 
     String actionButtonHtml = '';
     if (req.status == 'Open') {
       actionButtonHtml =
           '''
         <div class="flex items-center gap-1">
+          <button class="share-btn px-2 py-1 text-[11px] font-bold rounded-lg text-indigo-600 bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition-colors" data-code="$code">
+            🔗 Share
+          </button>
           <button class="bookmark-btn px-2 py-1 text-[11px] font-bold rounded-lg text-indigo-600 bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition-colors" data-id="${req.id}">
             🔖 Save
           </button>
@@ -1011,8 +916,7 @@ class HelpHubController {
 
     String proofHtml = '';
     if (proofNote.isNotEmpty && req.status == 'Completed') {
-      proofHtml =
-          '''
+      proofHtml = '''
         <div class="mt-2 text-[11px] p-2 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 rounded-lg border border-emerald-200 dark:border-emerald-800">
           <strong>Proof Note:</strong> ${_escapeHtml(proofNote)}
         </div>
@@ -1057,6 +961,15 @@ class HelpHubController {
   }
 
   void _bindCardActionButtons() {
+    final shareBtns = web.document.querySelectorAll('.share-btn');
+    for (var i = 0; i < shareBtns.length; i++) {
+      final btn = shareBtns.item(i) as web.HTMLElement?;
+      btn?.addEventListener('click', ((web.Event e) {
+        final code = btn.getAttribute('data-code') ?? 'HH-FAVOR';
+        web.window.alert('Favor share code copied: $code 🔗');
+      }).toJS);
+    }
+
     final bookmarkBtns = web.document.querySelectorAll('.bookmark-btn');
     for (var i = 0; i < bookmarkBtns.length; i++) {
       final btn = bookmarkBtns.item(i) as web.HTMLElement?;
@@ -1070,16 +983,10 @@ class HelpHubController {
               final userEmailEl = web.document.querySelector('#user-email');
               final email = userEmailEl?.textContent ?? 'user@helphub.com';
 
-              client.helpRequest
-                  .bookmarkHelpRequest(requestId: id, userEmail: email)
-                  .then((isAdded) {
-                    web.window.alert(
-                      isAdded
-                          ? 'Favor saved to bookmarks! 🔖'
-                          : 'Removed from bookmarks.',
-                    );
-                    loadHelpRequests();
-                  });
+              client.helpRequest.bookmarkHelpRequest(requestId: id, userEmail: email).then((isAdded) {
+                web.window.alert(isAdded ? 'Favor saved to bookmarks! 🔖' : 'Removed from bookmarks.');
+                loadHelpRequests();
+              });
             }
           }
         }).toJS,
@@ -1171,12 +1078,10 @@ class HelpHubController {
           if (idStr != null) {
             final id = int.tryParse(idStr);
             if (id != null) {
-              client.helpRequest
-                  .boostRewardPoints(requestId: id, boostAmount: 10)
-                  .then((_) {
-                    loadHelpRequests();
-                    loadNotifications();
-                  });
+              client.helpRequest.boostRewardPoints(requestId: id, boostAmount: 10).then((_) {
+                loadHelpRequests();
+                loadNotifications();
+              });
             }
           }
         }).toJS,
@@ -1276,12 +1181,8 @@ class HelpHubController {
   Future<void> _submitRating() async {
     if (activeRatingRequestId == null || activeRatingToUserId == null) return;
 
-    final selectEl = web.document.querySelector(
-      '#rating-score-select',
-    ) as web.HTMLSelectElement?;
-    final feedbackEl = web.document.querySelector(
-      '#rating-feedback-input',
-    ) as web.HTMLTextAreaElement?;
+    final selectEl = web.document.querySelector('#rating-score-select') as web.HTMLSelectElement?;
+    final feedbackEl = web.document.querySelector('#rating-feedback-input') as web.HTMLTextAreaElement?;
 
     final rating = int.tryParse(selectEl?.value ?? '5') ?? 5;
     final feedback = feedbackEl?.value.trim();
@@ -1321,8 +1222,7 @@ class HelpHubController {
       if (comments.isEmpty) {
         listEl.insertAdjacentHTML(
           'beforeend',
-          '<p class="text-xs text-surface-400 text-center py-4">No comments yet. Be the first to start the discussion!</p>'
-              .toJS,
+          '<p class="text-xs text-surface-400 text-center py-4">No comments yet. Be the first to start the discussion!</p>'.toJS,
         );
         return;
       }
