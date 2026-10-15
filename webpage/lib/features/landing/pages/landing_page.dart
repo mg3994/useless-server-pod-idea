@@ -1,14 +1,14 @@
 import 'package:blogger_theme/blogger_theme.dart';
 
-/// Renders the top navigation bar with HelpHub branding and navigation links.
+/// Renders the top navigation bar with HelpHub branding and navigation links using UnoCSS.
 Component navbar() {
   return header(
     {
-      'class': 'navbar sticky top-0 z-40 bg-surface-50/90 dark:bg-surface-900/90 backdrop-blur border-b border-surface-200 dark:border-surface-800 px-4 py-3',
+      'class': 'navbar sticky top-0 z-40 bg-surface-50/90 dark:bg-surface-900/90 backdrop-blur border-b border-surface-200/50 dark:border-surface-800/50 px-4 py-3',
     },
     [
       div(
-        {'class': 'max-w-7xl mx-auto flex items-center justify-between'},
+        {'class': 'max-w-7xl mx-auto flex items-center justify-between w-full'},
         [
           // Brand Logo
           a(
@@ -20,7 +20,7 @@ Component navbar() {
             [
               div(
                 {
-                  'class': 'w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20',
+                  'class': 'w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-500 to-accent-500 flex items-center justify-center text-white shadow-md shadow-primary-500/20',
                 },
                 [
                   span({'class': 'text-xl font-black'}, [Text('H')]),
@@ -31,13 +31,13 @@ Component navbar() {
                 [
                   span(
                     {
-                      'class': 'text-lg font-bold text-surface-900 dark:text-white leading-none tracking-tight',
+                      'class': 'text-lg font-extrabold text-surface-900 dark:text-white leading-none tracking-tight',
                     },
                     [Text('HelpHub')],
                   ),
                   span(
                     {
-                      'class': 'text-xs text-indigo-600 dark:text-indigo-400 font-medium tracking-wide',
+                      'class': 'text-xs text-primary-600 dark:text-primary-400 font-semibold tracking-wide',
                     },
                     [Text('Campus & Local Network')],
                   ),
@@ -48,45 +48,45 @@ Component navbar() {
 
           // Center Links
           nav(
-            {'class': 'hidden md:flex items-center gap-6'},
+            {'class': 'hidden md:flex items-center gap-5'},
             [
               a(
                 {
                   'href': '#feed',
                   'id': 'nav-feed',
-                  'class': 'text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700',
+                  'class': 'text-sm font-semibold text-primary-600 dark:text-primary-400 hover:text-primary-700',
                 },
-                [Text('Live Request Feed')],
+                [Text('Live Feed')],
               ),
               a(
                 {
                   'href': '#tools-registry',
                   'id': 'nav-tools-link',
-                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400',
                 },
-                [Text('🔧 Tool Registry')],
+                [Text('🔧 Tools')],
               ),
               a(
                 {
                   'href': '#volunteer-drives',
                   'id': 'nav-volunteer-link',
-                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400',
                 },
-                [Text('🧹 Volunteer Drives')],
+                [Text('🧹 Drives')],
               ),
               a(
                 {
                   'href': '#skill-marketplace',
                   'id': 'nav-skills-link',
-                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400',
                 },
-                [Text('🌱 Skills & Items')],
+                [Text('🌱 Skills')],
               ),
               a(
                 {
                   'href': '#community-circles',
                   'id': 'nav-groups-link',
-                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400',
                 },
                 [Text('🚲 Circles')],
               ),
@@ -94,7 +94,7 @@ Component navbar() {
                 {
                   'href': '#carpool-rideshare',
                   'id': 'nav-carpool-link',
-                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400',
                 },
                 [Text('🚗 Carpool')],
               ),
@@ -102,7 +102,7 @@ Component navbar() {
                 {
                   'href': '#lost-found-board',
                   'id': 'nav-lostfound-link',
-                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400',
                 },
                 [Text('🔎 Lost & Found')],
               ),
@@ -110,17 +110,17 @@ Component navbar() {
                 {
                   'href': '#study-sessions',
                   'id': 'nav-study-link',
-                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400',
                 },
-                [Text('📚 Study Groups')],
+                [Text('📚 Study')],
               ),
               a(
                 {
                   'href': '#food-pantry',
                   'id': 'nav-food-link',
-                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-indigo-600 dark:hover:text-indigo-400',
+                  'class': 'text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400',
                 },
-                [Text('🍲 Food Share')],
+                [Text('🍲 Pantry')],
               ),
             ],
           ),
@@ -132,7 +132,7 @@ Component navbar() {
               button(
                 {
                   'id': 'notifications-bell-btn',
-                  'class': 'p-2 rounded-lg text-surface-500 hover:text-surface-900 dark:hover:text-white hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors relative cursor-pointer',
+                  'class': 'icon-btn relative cursor-pointer',
                   'type': 'button',
                   'title': 'Notifications',
                 },
@@ -151,7 +151,7 @@ Component navbar() {
               button(
                 {
                   'id': 'dark-mode-toggle',
-                  'class': 'p-2 rounded-lg text-surface-500 hover:text-surface-900 dark:hover:text-white hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors',
+                  'class': 'icon-btn',
                   'type': 'button',
                   'title': 'Toggle dark mode',
                 },
@@ -169,7 +169,7 @@ Component navbar() {
                     {
                       'href': '#',
                       'id': 'nav-login',
-                      'class': 'px-3 py-1.5 text-sm font-medium text-surface-700 dark:text-surface-200 hover:text-indigo-600 dark:hover:text-indigo-400',
+                      'class': 'btn-ghost text-sm',
                     },
                     [Text('Log in')],
                   ),
@@ -177,7 +177,7 @@ Component navbar() {
                     {
                       'href': '#',
                       'id': 'nav-signup',
-                      'class': 'px-4 py-1.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition-all',
+                      'class': 'btn-primary px-4 py-2 text-sm',
                     },
                     [Text('Sign up')],
                   ),
@@ -191,7 +191,7 @@ Component navbar() {
                 [
                   div(
                     {
-                      'class': 'flex items-center gap-2 bg-indigo-50 dark:bg-indigo-950/50 px-3 py-1 rounded-full border border-indigo-200 dark:border-indigo-800',
+                      'class': 'flex items-center gap-2 bg-primary-50 dark:bg-primary-950/50 px-3 py-1 rounded-full border border-primary-200 dark:border-primary-800',
                     },
                     [
                       span({
@@ -200,14 +200,14 @@ Component navbar() {
                       }, []),
                       span({
                         'id': 'user-email',
-                        'class': 'text-xs text-indigo-900 dark:text-indigo-200 font-semibold',
+                        'class': 'text-xs text-primary-900 dark:text-primary-200 font-semibold',
                       }, []),
                     ],
                   ),
                   button(
                     {
                       'id': 'nav-signout',
-                      'class': 'px-3 py-1.5 text-xs font-medium text-surface-500 hover:text-red-600 dark:text-surface-400',
+                      'class': 'btn-ghost text-xs hover:text-red-600',
                     },
                     [Text('Sign out')],
                   ),
@@ -221,7 +221,7 @@ Component navbar() {
   );
 }
 
-/// Renders the main Hero and Feed UI for HelpHub.
+/// Renders the main Hero and Feed UI for HelpHub using UnoCSS utilities.
 Component landingHero() {
   return div(
     {
@@ -232,7 +232,7 @@ Component landingHero() {
       // Hero Header Banner
       div(
         {
-          'class': 'bg-gradient-to-b from-indigo-900/10 to-transparent py-12 px-4 border-b border-surface-200/50 dark:border-surface-800/50',
+          'class': 'bg-gradient-to-b from-primary-500/10 to-transparent py-14 px-4 border-b border-surface-200/50 dark:border-surface-800/50',
         },
         [
           div(
@@ -244,7 +244,7 @@ Component landingHero() {
               button(
                 {
                   'id': 'open-sos-modal-btn',
-                  'class': 'inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-600 text-white text-xs font-extrabold mb-4 border border-rose-500 shadow-md shadow-rose-600/30 hover:bg-rose-700 transition-all cursor-pointer animate-pulse',
+                  'class': 'inline-flex items-center gap-2 px-5 py-2 rounded-full bg-rose-600 text-white text-xs font-extrabold mb-5 border border-rose-500 shadow-md shadow-rose-600/30 hover:bg-rose-700 transition-all cursor-pointer animate-pulse',
                 },
                 [
                   span({'class': 'text-sm'}, [Text('⚡')]),
@@ -253,13 +253,13 @@ Component landingHero() {
               ),
               h1(
                 {
-                  'class': 'text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight mb-4',
+                  'class': 'text-4xl md:text-5xl lg:text-6xl font-black text-surface-900 dark:text-white tracking-tight mb-4',
                 },
                 [
                   Text('Need a quick favor? '),
                   span(
                     {
-                      'class': 'text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-500',
+                      'class': 'gradient-text',
                     },
                     [Text('HelpHub')],
                   ),
@@ -268,7 +268,7 @@ Component landingHero() {
               ),
               p(
                 {
-                  'class': 'text-base md:text-lg text-surface-600 dark:text-surface-300 max-w-2xl mb-6 leading-relaxed',
+                  'class': 'text-base md:text-lg text-surface-600 dark:text-surface-300 max-w-2xl mb-8 leading-relaxed',
                 },
                 [
                   Text(
@@ -279,13 +279,13 @@ Component landingHero() {
               div(
                 {
                   'class':
-                      'flex flex-wrap items-center justify-center gap-3 mb-8',
+                      'flex flex-wrap items-center justify-center gap-4 mb-10',
                 },
                 [
                   button(
                     {
                       'id': 'open-create-modal-btn',
-                      'class': 'px-6 py-3 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-lg shadow-indigo-500/25 transition-all flex items-center gap-2 cursor-pointer',
+                      'class': 'btn-primary text-sm font-bold',
                     },
                     [
                       span({'class': 'text-lg'}, [Text('➕')]),
@@ -295,7 +295,7 @@ Component landingHero() {
                   a(
                     {
                       'href': '#feed',
-                      'class': 'px-6 py-3 text-sm font-semibold text-surface-700 dark:text-surface-200 bg-surface-200/70 dark:bg-surface-800/70 hover:bg-surface-300 dark:hover:bg-surface-700 rounded-xl transition-all',
+                      'class': 'btn-secondary text-sm font-semibold',
                     },
                     [Text('Browse Live Requests')],
                   ),
@@ -306,20 +306,20 @@ Component landingHero() {
               div(
                 {
                   'id': 'community-stats-bar',
-                  'class': 'grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-white/80 dark:bg-surface-900/80 border border-surface-200 dark:border-surface-800 backdrop-blur w-full max-w-3xl shadow-sm',
+                  'class': 'grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 rounded-2xl glass-card w-full max-w-3xl shadow-sm',
                 },
                 [
                   div([
                     span(
                       {
                         'id': 'stat-open-count',
-                        'class': 'block text-lg font-black text-emerald-600 dark:text-emerald-400',
+                        'class': 'block text-xl font-black text-emerald-600 dark:text-emerald-400',
                       },
                       [Text('0')],
                     ),
                     span(
                       {
-                        'class': 'text-[11px] text-surface-500 font-semibold uppercase',
+                        'class': 'text-[11px] text-surface-500 font-bold uppercase tracking-wider',
                       },
                       [Text('Open Favors')],
                     ),
@@ -328,13 +328,13 @@ Component landingHero() {
                     span(
                       {
                         'id': 'stat-progress-count',
-                        'class': 'block text-lg font-black text-amber-500',
+                        'class': 'block text-xl font-black text-accent-500',
                       },
                       [Text('0')],
                     ),
                     span(
                       {
-                        'class': 'text-[11px] text-surface-500 font-semibold uppercase',
+                        'class': 'text-[11px] text-surface-500 font-bold uppercase tracking-wider',
                       },
                       [Text('In Progress')],
                     ),
@@ -343,13 +343,13 @@ Component landingHero() {
                     span(
                       {
                         'id': 'stat-completed-count',
-                        'class': 'block text-lg font-black text-indigo-600 dark:text-indigo-400',
+                        'class': 'block text-xl font-black text-primary-600 dark:text-primary-400',
                       },
                       [Text('0')],
                     ),
                     span(
                       {
-                        'class': 'text-[11px] text-surface-500 font-semibold uppercase',
+                        'class': 'text-[11px] text-surface-500 font-bold uppercase tracking-wider',
                       },
                       [Text('Completed')],
                     ),
@@ -358,13 +358,13 @@ Component landingHero() {
                     span(
                       {
                         'id': 'stat-points-count',
-                        'class': 'block text-lg font-black text-amber-500',
+                        'class': 'block text-xl font-black text-accent-500',
                       },
                       [Text('0')],
                     ),
                     span(
                       {
-                        'class': 'text-[11px] text-surface-500 font-semibold uppercase',
+                        'class': 'text-[11px] text-surface-500 font-bold uppercase tracking-wider',
                       },
                       [Text('Pts Exchanged')],
                     ),
@@ -378,12 +378,12 @@ Component landingHero() {
 
       // Community Announcements Banner
       div(
-        {'class': 'max-w-6xl mx-auto px-4 mt-6'},
+        {'class': 'max-w-6xl mx-auto px-4 mt-8'},
         [
           div(
             {
               'id': 'announcements-container',
-              'class': 'p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200/60 dark:border-indigo-800/60 flex items-start gap-3',
+              'class': 'p-4 rounded-2xl bg-primary-50 dark:bg-primary-950/40 border border-primary-200/60 dark:border-primary-800/60 flex items-start gap-3 shadow-sm',
             },
             [
               span({'class': 'text-2xl'}, [Text('📢')]),
@@ -392,14 +392,14 @@ Component landingHero() {
                 [
                   h4(
                     {
-                      'class': 'text-sm font-bold text-indigo-900 dark:text-indigo-200',
+                      'class': 'text-sm font-bold text-primary-900 dark:text-primary-200',
                     },
                     [Text('Community Announcement')],
                   ),
                   p(
                     {
                       'class':
-                          'text-xs text-indigo-700 dark:text-indigo-300 mt-0.5',
+                          'text-xs text-primary-700 dark:text-primary-300 mt-0.5',
                     },
                     [
                       Text(
@@ -416,19 +416,19 @@ Component landingHero() {
 
       // Profile Bar & Stats Card
       div(
-        {'class': 'max-w-6xl mx-auto px-4 mt-6'},
+        {'class': 'max-w-6xl mx-auto px-4 mt-8'},
         [
           div(
             {
-              'class': 'p-5 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4',
+              'class': 'p-5 rounded-2xl card flex flex-col md:flex-row md:items-center justify-between gap-5',
             },
             [
               div(
-                {'class': 'flex items-center gap-3'},
+                {'class': 'flex items-center gap-4'},
                 [
                   div(
                     {
-                      'class': 'w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl font-bold relative group',
+                      'class': 'w-14 h-14 rounded-2xl bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 flex items-center justify-center text-2xl font-black relative shadow-inner',
                     },
                     [
                       span({'id': 'profile-avatar-char'}, [Text('👤')]),
@@ -448,14 +448,14 @@ Component landingHero() {
                         span(
                           {
                             'id': 'profile-rating-badge',
-                            'class': 'text-xs font-bold text-amber-500 bg-amber-50 dark:bg-amber-950/50 px-2 py-0.5 rounded-md border border-amber-200 dark:border-amber-800',
+                            'class': 'text-xs font-bold text-accent-600 bg-accent-50 dark:bg-accent-950/50 px-2 py-0.5 rounded-md border border-accent-200 dark:border-accent-800',
                           },
                           [Text('⭐ 5.0')],
                         ),
                         button(
                           {
                             'id': 'open-edit-profile-btn',
-                            'class': 'text-[11px] font-semibold text-indigo-600 hover:underline border border-indigo-200 dark:border-indigo-800 px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/50',
+                            'class': 'text-[11px] font-semibold text-primary-600 hover:underline border border-primary-200 dark:border-primary-800 px-2.5 py-0.5 rounded-md bg-primary-50 dark:bg-primary-950/50 cursor-pointer',
                           },
                           [Text('✏️ Edit')],
                         ),
@@ -464,19 +464,19 @@ Component landingHero() {
                     p(
                       {
                         'id': 'profile-badge',
-                        'class': 'text-xs text-indigo-600 dark:text-indigo-400 font-medium',
+                        'class': 'text-xs text-primary-600 dark:text-primary-400 font-semibold mt-0.5',
                       },
                       [Text('🌱 Community Rookie')],
                     ),
                     div(
                       {
                         'id': 'profile-skills-tags',
-                        'class': 'flex flex-wrap gap-1 mt-1',
+                        'class': 'flex flex-wrap gap-1.5 mt-1.5',
                       },
                       [
                         span(
                           {
-                            'class': 'text-[10px] px-1.5 py-0.5 bg-surface-100 dark:bg-surface-800 rounded font-medium text-surface-600 dark:text-surface-300',
+                            'class': 'text-[10px] px-2 py-0.5 bg-surface-100 dark:bg-surface-800 rounded-md font-semibold text-surface-600 dark:text-surface-300',
                           },
                           [Text('🛠️ General')],
                         ),
@@ -492,7 +492,7 @@ Component landingHero() {
                 [
                   div(
                     {
-                      'class': 'flex justify-between text-[11px] font-semibold text-surface-500 mb-1',
+                      'class': 'flex justify-between text-[11px] font-bold text-surface-500 mb-1.5',
                     },
                     [
                       Text('Next Rank Progress'),
@@ -501,12 +501,12 @@ Component landingHero() {
                   ),
                   div(
                     {
-                      'class': 'w-full bg-surface-100 dark:bg-surface-800 rounded-full h-2 overflow-hidden',
+                      'class': 'w-full bg-surface-100 dark:bg-surface-800 rounded-full h-2.5 overflow-hidden',
                     },
                     [
                       div({
                         'id': 'milestone-bar',
-                        'class': 'bg-indigo-600 h-2 rounded-full transition-all duration-500',
+                        'class': 'bg-primary-500 h-2.5 rounded-full transition-all duration-500',
                         'style': 'width: 20%',
                       }, []),
                     ],
@@ -521,13 +521,13 @@ Component landingHero() {
                     span(
                       {
                         'id': 'profile-points',
-                        'class': 'block text-xl font-black text-amber-500',
+                        'class': 'block text-xl font-black text-accent-500',
                       },
                       [Text('50')],
                     ),
                     span(
                       {
-                        'class': 'text-xs text-surface-500 dark:text-surface-400 uppercase font-semibold',
+                        'class': 'text-[11px] text-surface-500 dark:text-surface-400 uppercase font-bold tracking-wider',
                       },
                       [Text('Reward Points')],
                     ),
@@ -545,7 +545,7 @@ Component landingHero() {
                     ),
                     span(
                       {
-                        'class': 'text-xs text-surface-500 dark:text-surface-400 uppercase font-semibold',
+                        'class': 'text-[11px] text-surface-500 dark:text-surface-400 uppercase font-bold tracking-wider',
                       },
                       [Text('Favors Done')],
                     ),
@@ -557,13 +557,13 @@ Component landingHero() {
                     span(
                       {
                         'id': 'profile-requested',
-                        'class': 'block text-xl font-black text-indigo-500',
+                        'class': 'block text-xl font-black text-primary-500',
                       },
                       [Text('0')],
                     ),
                     span(
                       {
-                        'class': 'text-xs text-surface-500 dark:text-surface-400 uppercase font-semibold',
+                        'class': 'text-[11px] text-surface-500 dark:text-surface-400 uppercase font-bold tracking-wider',
                       },
                       [Text('Requested')],
                     ),
@@ -577,14 +577,14 @@ Component landingHero() {
 
       // Tool & Equipment Borrowing Registry Section
       div(
-        {'id': 'tools-registry', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        {'id': 'tools-registry', 'class': 'max-w-6xl mx-auto px-4 mt-12'},
         [
           div(
             {'class': 'flex items-center justify-between mb-4'},
             [
               h2(
                 {
-                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2.5',
                 },
                 [
                   span({'class': 'text-2xl'}, [Text('🔧')]),
@@ -595,21 +595,21 @@ Component landingHero() {
           ),
           div({
             'id': 'borrow-items-container',
-            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5',
           }, []),
         ],
       ),
 
       // Peer Study Groups & Tutoring Section
       div(
-        {'id': 'study-sessions', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        {'id': 'study-sessions', 'class': 'max-w-6xl mx-auto px-4 mt-12'},
         [
           div(
             {'class': 'flex items-center justify-between mb-4'},
             [
               h2(
                 {
-                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2.5',
                 },
                 [
                   span({'class': 'text-2xl'}, [Text('📚')]),
@@ -620,21 +620,21 @@ Component landingHero() {
           ),
           div({
             'id': 'study-container',
-            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5',
           }, []),
         ],
       ),
 
       // Campus Pantry / Food Share Section
       div(
-        {'id': 'food-pantry', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        {'id': 'food-pantry', 'class': 'max-w-6xl mx-auto px-4 mt-12'},
         [
           div(
             {'class': 'flex items-center justify-between mb-4'},
             [
               h2(
                 {
-                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2.5',
                 },
                 [
                   span({'class': 'text-2xl'}, [Text('🍲')]),
@@ -645,21 +645,21 @@ Component landingHero() {
           ),
           div({
             'id': 'food-container',
-            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5',
           }, []),
         ],
       ),
 
       // Carpool & Rideshare Section
       div(
-        {'id': 'carpool-rideshare', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        {'id': 'carpool-rideshare', 'class': 'max-w-6xl mx-auto px-4 mt-12'},
         [
           div(
             {'class': 'flex items-center justify-between mb-4'},
             [
               h2(
                 {
-                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2.5',
                 },
                 [
                   span({'class': 'text-2xl'}, [Text('🚗')]),
@@ -670,21 +670,21 @@ Component landingHero() {
           ),
           div({
             'id': 'carpool-container',
-            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5',
           }, []),
         ],
       ),
 
       // Lost & Found Board Section
       div(
-        {'id': 'lost-found-board', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        {'id': 'lost-found-board', 'class': 'max-w-6xl mx-auto px-4 mt-12'},
         [
           div(
             {'class': 'flex items-center justify-between mb-4'},
             [
               h2(
                 {
-                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2.5',
                 },
                 [
                   span({'class': 'text-2xl'}, [Text('🔎')]),
@@ -695,21 +695,21 @@ Component landingHero() {
           ),
           div({
             'id': 'lost-found-container',
-            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5',
           }, []),
         ],
       ),
 
       // Community Volunteer Events Drives Section
       div(
-        {'id': 'volunteer-drives', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        {'id': 'volunteer-drives', 'class': 'max-w-6xl mx-auto px-4 mt-12'},
         [
           div(
             {'class': 'flex items-center justify-between mb-4'},
             [
               h2(
                 {
-                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2.5',
                 },
                 [
                   span({'class': 'text-2xl'}, [Text('🧹')]),
@@ -720,21 +720,21 @@ Component landingHero() {
           ),
           div({
             'id': 'volunteer-events-container',
-            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5',
           }, []),
         ],
       ),
 
       // Skill Offers & Item Sharing Marketplace Section
       div(
-        {'id': 'skill-marketplace', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        {'id': 'skill-marketplace', 'class': 'max-w-6xl mx-auto px-4 mt-12'},
         [
           div(
             {'class': 'flex items-center justify-between mb-4'},
             [
               h2(
                 {
-                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2.5',
                 },
                 [
                   span({'class': 'text-2xl'}, [Text('🌱')]),
@@ -744,7 +744,7 @@ Component landingHero() {
               button(
                 {
                   'id': 'open-offer-modal-btn',
-                  'class': 'px-3 py-1.5 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-lg shadow-sm transition-all cursor-pointer',
+                  'class': 'px-3.5 py-1.5 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-sm transition-all cursor-pointer',
                 },
                 [Text('➕ Offer Skill or Item')],
               ),
@@ -752,21 +752,21 @@ Component landingHero() {
           ),
           div({
             'id': 'offers-container',
-            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5',
           }, []),
         ],
       ),
 
       // Community Circles / Local Groups Section
       div(
-        {'id': 'community-circles', 'class': 'max-w-6xl mx-auto px-4 mt-10'},
+        {'id': 'community-circles', 'class': 'max-w-6xl mx-auto px-4 mt-12'},
         [
           div(
             {'class': 'flex items-center justify-between mb-4'},
             [
               h2(
                 {
-                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                  'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2.5',
                 },
                 [
                   span({'class': 'text-2xl'}, [Text('🚲')]),
@@ -777,7 +777,7 @@ Component landingHero() {
           ),
           div({
             'id': 'groups-container',
-            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5',
           }, []),
         ],
       ),
@@ -786,12 +786,12 @@ Component landingHero() {
       div(
         {
           'id': 'leaderboard',
-          'class': 'max-w-6xl mx-auto px-4 mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6',
+          'class': 'max-w-6xl mx-auto px-4 mt-12 grid grid-cols-1 lg:grid-cols-3 gap-6',
         },
         [
           div(
             {
-              'class': 'lg:col-span-2 bg-gradient-to-r from-indigo-900/10 via-purple-900/10 to-transparent p-6 rounded-2xl border border-indigo-200/50 dark:border-indigo-800/50',
+              'class': 'lg:col-span-2 bg-gradient-to-r from-primary-900/10 via-accent-900/10 to-transparent p-6 rounded-2xl border border-primary-200/50 dark:border-primary-800/50',
             },
             [
               div(
@@ -799,7 +799,7 @@ Component landingHero() {
                 [
                   h2(
                     {
-                      'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                      'class': 'text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2.5',
                     },
                     [
                       span({'class': 'text-2xl'}, [Text('🏆')]),
@@ -808,7 +808,7 @@ Component landingHero() {
                   ),
                   span(
                     {
-                      'class': 'text-xs text-indigo-600 dark:text-indigo-400 font-semibold',
+                      'class': 'text-xs text-primary-600 dark:text-primary-400 font-bold',
                     },
                     [Text('Rankings update live')],
                   ),
@@ -816,7 +816,7 @@ Component landingHero() {
               ),
               div({
                 'id': 'leaderboard-container',
-                'class': 'grid grid-cols-1 sm:grid-cols-2 gap-3',
+                'class': 'grid grid-cols-1 sm:grid-cols-2 gap-4',
               }, []),
             ],
           ),
@@ -825,7 +825,7 @@ Component landingHero() {
           div(
             {
               'id': 'activity-stream',
-              'class': 'p-5 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-sm flex flex-col justify-between',
+              'class': 'card p-5 flex flex-col justify-between',
             },
             [
               h3(
@@ -839,7 +839,7 @@ Component landingHero() {
               ),
               div({
                 'id': 'activity-stream-container',
-                'class': 'space-y-2.5 max-h-48 overflow-y-auto text-xs',
+                'class': 'space-y-3 max-h-52 overflow-y-auto text-xs',
               }, []),
             ],
           ),
@@ -848,21 +848,21 @@ Component landingHero() {
 
       // Filter & Feed Section
       div(
-        {'id': 'feed', 'class': 'max-w-6xl mx-auto px-4 mt-8'},
+        {'id': 'feed', 'class': 'max-w-6xl mx-auto px-4 mt-12'},
         [
           // Filter Controls
           div(
             {
-              'class': 'flex flex-col md:flex-row md:items-center justify-between gap-4 mb-3',
+              'class': 'flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4',
             },
             [
               h2(
                 {
-                  'class': 'text-2xl font-bold text-surface-900 dark:text-white flex items-center gap-2',
+                  'class': 'text-2xl font-bold text-surface-900 dark:text-white flex items-center gap-2.5',
                 },
                 [
                   span({
-                    'class': 'w-3 h-3 rounded-full bg-emerald-500 animate-ping',
+                    'class': 'w-3.5 h-3.5 rounded-full bg-emerald-500 animate-ping',
                   }, []),
                   Text('Live Requests Feed'),
                 ],
@@ -872,13 +872,13 @@ Component landingHero() {
               div(
                 {
                   'id': 'activity-mode-tabs',
-                  'class': 'inline-flex p-1 bg-surface-200/60 dark:bg-surface-800/60 rounded-xl gap-1 text-xs font-semibold',
+                  'class': 'inline-flex p-1 bg-surface-200/60 dark:bg-surface-800/60 rounded-xl gap-1 text-xs font-bold',
                 },
                 [
                   button(
                     {
                       'id': 'tab-all',
-                      'class': 'px-3 py-1.5 rounded-lg bg-indigo-600 text-white transition-all cursor-pointer',
+                      'class': 'px-3.5 py-1.5 rounded-lg bg-primary-600 text-white transition-all cursor-pointer',
                       'data-mode': 'all',
                     },
                     [Text('🌐 All Favors')],
@@ -886,7 +886,7 @@ Component landingHero() {
                   button(
                     {
                       'id': 'tab-posted',
-                      'class': 'px-3 py-1.5 rounded-lg text-surface-600 dark:text-surface-300 hover:text-indigo-600 transition-all cursor-pointer',
+                      'class': 'px-3.5 py-1.5 rounded-lg text-surface-600 dark:text-surface-300 hover:text-primary-600 transition-all cursor-pointer',
                       'data-mode': 'posted',
                     },
                     [Text('📝 My Posted')],
@@ -894,7 +894,7 @@ Component landingHero() {
                   button(
                     {
                       'id': 'tab-claimed',
-                      'class': 'px-3 py-1.5 rounded-lg text-surface-600 dark:text-surface-300 hover:text-indigo-600 transition-all cursor-pointer',
+                      'class': 'px-3.5 py-1.5 rounded-lg text-surface-600 dark:text-surface-300 hover:text-primary-600 transition-all cursor-pointer',
                       'data-mode': 'claimed',
                     },
                     [Text('🤝 My Claimed')],
@@ -902,7 +902,7 @@ Component landingHero() {
                   button(
                     {
                       'id': 'tab-saved',
-                      'class': 'px-3 py-1.5 rounded-lg text-surface-600 dark:text-surface-300 hover:text-indigo-600 transition-all cursor-pointer',
+                      'class': 'px-3.5 py-1.5 rounded-lg text-surface-600 dark:text-surface-300 hover:text-primary-600 transition-all cursor-pointer',
                       'data-mode': 'saved',
                     },
                     [Text('🔖 Saved')],
@@ -914,7 +914,7 @@ Component landingHero() {
 
           // Quick Popular Search Tags
           div(
-            {'class': 'flex flex-wrap items-center justify-between gap-2 mb-4'},
+            {'class': 'flex flex-wrap items-center justify-between gap-3 mb-5'},
             [
               div(
                 {'class': 'flex flex-wrap items-center gap-2'},
@@ -925,28 +925,28 @@ Component landingHero() {
                   ),
                   button(
                     {
-                      'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
+                      'class': 'tag-chip px-3 py-1 text-xs font-semibold rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-primary-50 hover:text-primary-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
                       'data-tag': 'ladder',
                     },
                     [Text('🛠️ #Tools')],
                   ),
                   button(
                     {
-                      'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
+                      'class': 'tag-chip px-3 py-1 text-xs font-semibold rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-primary-50 hover:text-primary-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
                       'data-tag': 'grocery',
                     },
                     [Text('🛵 #Grocery')],
                   ),
                   button(
                     {
-                      'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
+                      'class': 'tag-chip px-3 py-1 text-xs font-semibold rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-primary-50 hover:text-primary-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
                       'data-tag': 'math',
                     },
                     [Text('📚 #Study')],
                   ),
                   button(
                     {
-                      'class': 'tag-chip px-2.5 py-1 text-xs font-medium rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-indigo-50 hover:text-indigo-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
+                      'class': 'tag-chip px-3 py-1 text-xs font-semibold rounded-full bg-surface-100 dark:bg-surface-800 hover:bg-primary-50 hover:text-primary-600 border border-surface-200 dark:border-surface-700 transition-colors cursor-pointer',
                       'data-tag': 'cat',
                     },
                     [Text('🐱 #PetCare')],
@@ -957,7 +957,7 @@ Component landingHero() {
               button(
                 {
                   'id': 'reset-filters-btn',
-                  'class': 'px-3 py-1 text-xs font-semibold text-rose-600 hover:underline cursor-pointer border border-rose-200 dark:border-rose-900 rounded-lg bg-rose-50/50 dark:bg-rose-950/30',
+                  'class': 'px-3 py-1 text-xs font-bold text-rose-600 hover:underline cursor-pointer border border-rose-200 dark:border-rose-900 rounded-lg bg-rose-50/50 dark:bg-rose-950/30',
                 },
                 [Text('🔄 Reset Filters')],
               ),
@@ -972,7 +972,7 @@ Component landingHero() {
                 {
                   'id': 'toggle-emergency-btn',
                   'type': 'button',
-                  'class': 'px-3 py-2 text-xs font-bold rounded-xl border border-rose-300 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 flex items-center gap-1.5 transition-all cursor-pointer',
+                  'class': 'px-3.5 py-2 text-xs font-extrabold rounded-xl border border-rose-300 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 flex items-center gap-1.5 transition-all cursor-pointer',
                 },
                 [
                   span({'class': 'text-sm'}, [Text('🚨')]),
@@ -988,14 +988,14 @@ Component landingHero() {
                 'id': 'search-input',
                 'type': 'text',
                 'placeholder': 'Search requests...',
-                'class': 'px-3.5 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 focus:outline-none focus:border-indigo-500 w-40 md:w-48',
+                'class': 'px-3.5 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 focus:outline-none focus:border-primary-500 w-44 md:w-52',
               }),
 
               // Neighborhood Zone Dropdown
               select(
                 {
                   'id': 'zone-filter',
-                  'class': 'px-3 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-indigo-500',
+                  'class': 'px-3.5 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-primary-500',
                 },
                 [
                   option({'value': 'All'}, [Text('📍 All Zones')]),
@@ -1010,7 +1010,7 @@ Component landingHero() {
               select(
                 {
                   'id': 'category-filter',
-                  'class': 'px-3 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-indigo-500',
+                  'class': 'px-3.5 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-primary-500',
                 },
                 [
                   option({'value': 'All'}, [Text('All Categories')]),
@@ -1035,7 +1035,7 @@ Component landingHero() {
               select(
                 {
                   'id': 'status-filter',
-                  'class': 'px-3 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-indigo-500',
+                  'class': 'px-3.5 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-primary-500',
                 },
                 [
                   option({'value': 'All'}, [Text('All Statuses')]),
@@ -1049,7 +1049,7 @@ Component landingHero() {
               select(
                 {
                   'id': 'sort-filter',
-                  'class': 'px-3 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-indigo-500',
+                  'class': 'px-3.5 py-2 text-sm rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-surface-800 dark:text-surface-200 focus:outline-none focus:border-primary-500',
                 },
                 [
                   option({'value': 'newest'}, [Text('🕒 Newest First')]),
@@ -1064,7 +1064,7 @@ Component landingHero() {
           // Requests Grid Container
           div({
             'id': 'requests-container',
-            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5',
+            'class': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6',
           }, []),
         ],
       ),
@@ -1111,7 +1111,7 @@ Component _createRequestModal() {
           button(
             {
               'id': 'close-create-modal-btn',
-              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold',
+              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold cursor-pointer',
             },
             [Text('✕')],
           ),
@@ -1145,7 +1145,7 @@ Component _createRequestModal() {
                   'id': 'req-title',
                   'type': 'text',
                   'placeholder': 'e.g., Need jumper cables for car',
-                  'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                  'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500',
                 }),
               ]),
 
@@ -1162,7 +1162,7 @@ Component _createRequestModal() {
                     select(
                       {
                         'id': 'req-category',
-                        'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                        'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500',
                       },
                       [
                         option(
@@ -1199,7 +1199,7 @@ Component _createRequestModal() {
                     select(
                       {
                         'id': 'req-urgency',
-                        'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                        'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500',
                       },
                       [
                         option({'value': 'Normal'}, [Text('Normal')]),
@@ -1224,7 +1224,7 @@ Component _createRequestModal() {
                     select(
                       {
                         'id': 'req-zone',
-                        'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                        'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500',
                       },
                       [
                         option(
@@ -1254,7 +1254,7 @@ Component _createRequestModal() {
                     select(
                       {
                         'id': 'req-duration',
-                        'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                        'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500',
                       },
                       [
                         option({'value': '15-30 mins'}, [Text('15-30 mins')]),
@@ -1281,7 +1281,7 @@ Component _createRequestModal() {
                       'id': 'req-location',
                       'type': 'text',
                       'placeholder': 'e.g., Campus East Quad',
-                      'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                      'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500',
                     }),
                   ]),
 
@@ -1296,7 +1296,7 @@ Component _createRequestModal() {
                       'id': 'req-points',
                       'type': 'number',
                       'value': '25',
-                      'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                      'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500',
                     }),
                   ]),
                 ],
@@ -1314,7 +1314,7 @@ Component _createRequestModal() {
                   'rows': '3',
                   'placeholder':
                       'Provide details about what you need and time frame...',
-                  'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                  'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500',
                 }, []),
               ]),
 
@@ -1325,7 +1325,7 @@ Component _createRequestModal() {
                     {
                       'id': 'cancel-create-btn',
                       'type': 'button',
-                      'class': 'px-4 py-2 text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-surface-900',
+                      'class': 'px-4 py-2 text-sm font-medium text-surface-600 dark:text-surface-300 hover:text-surface-900 cursor-pointer',
                     },
                     [Text('Cancel')],
                   ),
@@ -1333,7 +1333,7 @@ Component _createRequestModal() {
                     {
                       'id': 'submit-create-btn',
                       'type': 'button',
-                      'class': 'px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md',
+                      'class': 'btn-primary text-sm px-5 py-2',
                     },
                     [Text('Publish Request')],
                   ),
@@ -1362,7 +1362,7 @@ Component _commentsModal() {
           button(
             {
               'id': 'close-comments-modal-btn',
-              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold',
+              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold cursor-pointer',
             },
             [Text('✕')],
           ),
@@ -1391,13 +1391,13 @@ Component _commentsModal() {
                 'id': 'comment-input',
                 'type': 'text',
                 'placeholder': 'Write a comment or question...',
-                'class': 'flex-1 px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                'class': 'flex-1 px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500',
               }),
               button(
                 {
                   'id': 'submit-comment-btn',
                   'type': 'button',
-                  'class': 'px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all',
+                  'class': 'btn-primary px-4 py-2 text-sm font-semibold',
                 },
                 [Text('Send')],
               ),
@@ -1418,13 +1418,13 @@ Component _chatModal() {
     [
       div(
         {
-          'class': 'bg-white dark:bg-surface-900 border border-indigo-300 dark:border-indigo-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative flex flex-col max-h-[85vh]',
+          'class': 'bg-white dark:bg-surface-900 border border-primary-300 dark:border-primary-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative flex flex-col max-h-[85vh]',
         },
         [
           button(
             {
               'id': 'close-chat-modal-btn',
-              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold',
+              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold cursor-pointer',
             },
             [Text('✕')],
           ),
@@ -1458,13 +1458,13 @@ Component _chatModal() {
                 'id': 'chat-input',
                 'type': 'text',
                 'placeholder': 'Type a direct message...',
-                'class': 'flex-1 px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                'class': 'flex-1 px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500',
               }),
               button(
                 {
                   'id': 'submit-chat-btn',
                   'type': 'button',
-                  'class': 'px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all',
+                  'class': 'btn-primary px-4 py-2 text-sm font-semibold',
                 },
                 [Text('Send')],
               ),
@@ -1491,7 +1491,7 @@ Component _proofModal() {
           button(
             {
               'id': 'close-proof-modal-btn',
-              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold',
+              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold cursor-pointer',
             },
             [Text('✕')],
           ),
@@ -1524,7 +1524,7 @@ Component _proofModal() {
             {
               'id': 'submit-proof-btn',
               'type': 'button',
-              'class': 'w-full py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all shadow-md',
+              'class': 'w-full py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all shadow-md cursor-pointer',
             },
             [Text('Confirm Favor Completion')],
           ),
@@ -1549,7 +1549,7 @@ Component _notificationsModal() {
           button(
             {
               'id': 'close-notif-modal-btn',
-              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold',
+              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold cursor-pointer',
             },
             [Text('✕')],
           ),
@@ -1592,7 +1592,7 @@ Component _ratingModal() {
           button(
             {
               'id': 'close-rating-modal-btn',
-              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold',
+              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold cursor-pointer',
             },
             [Text('✕')],
           ),
@@ -1616,7 +1616,7 @@ Component _ratingModal() {
           select(
             {
               'id': 'rating-score-select',
-              'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500 mb-3',
+              'class': 'w-full px-3 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500 mb-3',
             },
             [
               option({'value': '5'}, [Text('⭐⭐⭐⭐⭐ (5/5) Excellent')]),
@@ -1631,14 +1631,14 @@ Component _ratingModal() {
             'id': 'rating-feedback-input',
             'rows': '2',
             'placeholder': 'Optional review feedback...',
-            'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500 mb-4',
+            'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500 mb-4',
           }, []),
 
           button(
             {
               'id': 'submit-rating-btn',
               'type': 'button',
-              'class': 'w-full py-2.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md',
+              'class': 'btn-primary w-full py-2.5 text-sm font-bold',
             },
             [Text('Submit Rating')],
           ),
@@ -1663,7 +1663,7 @@ Component _editProfileModal() {
           button(
             {
               'id': 'close-edit-profile-modal-btn',
-              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold',
+              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold cursor-pointer',
             },
             [Text('✕')],
           ),
@@ -1693,7 +1693,7 @@ Component _editProfileModal() {
                   'id': 'edit-profile-name-input',
                   'type': 'text',
                   'placeholder': 'e.g., Alex Rivers',
-                  'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                  'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500',
                 }),
               ]),
 
@@ -1708,7 +1708,7 @@ Component _editProfileModal() {
                   'id': 'edit-profile-skills-input',
                   'type': 'text',
                   'placeholder': 'e.g., Errands, Tutoring, Tech, Bike Repair',
-                  'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-indigo-500',
+                  'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500',
                 }),
               ]),
 
@@ -1716,7 +1716,7 @@ Component _editProfileModal() {
                 {
                   'id': 'submit-edit-profile-btn',
                   'type': 'button',
-                  'class': 'w-full mt-2 py-2.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md',
+                  'class': 'btn-primary w-full mt-2 py-2.5 text-sm font-bold',
                 },
                 [Text('Save Changes')],
               ),
@@ -1743,7 +1743,7 @@ Component _sosModal() {
           button(
             {
               'id': 'close-sos-modal-btn',
-              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold',
+              'class': 'absolute top-4 right-4 text-surface-400 hover:text-surface-700 dark:hover:text-white text-xl font-bold cursor-pointer',
             },
             [Text('✕')],
           ),
@@ -1847,17 +1847,17 @@ Component pageFooter() {
             [
               Text('© 2026 HelpHub Community Network. Powered by '),
               span(
-                {'class': 'font-semibold text-indigo-600 dark:text-indigo-400'},
+                {'class': 'font-semibold text-primary-600 dark:text-primary-400'},
                 [Text('Serverpod')],
               ),
               Text(', '),
               span(
-                {'class': 'font-semibold text-indigo-600 dark:text-indigo-400'},
+                {'class': 'font-semibold text-primary-600 dark:text-primary-400'},
                 [Text('Flutter')],
               ),
               Text(' & '),
               span(
-                {'class': 'font-semibold text-indigo-600 dark:text-indigo-400'},
+                {'class': 'font-semibold text-primary-600 dark:text-primary-400'},
                 [Text('UnoCSS')],
               ),
               Text('.'),

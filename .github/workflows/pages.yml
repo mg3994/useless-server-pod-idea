@@ -26,6 +26,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: webpage
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -47,10 +50,12 @@ jobs:
           echo "$FLUTTER_ROOT/bin" >> "$GITHUB_PATH"
           echo "$FLUTTER_ROOT/bin/cache/dart-sdk/bin" >> "$GITHUB_PATH"
 
+      - name: Install website_client Dependencies
+        run: dart pub get
+        working-directory: website_client
+
       - name: Build Webpage
         run: |
-          cd website_client && dart pub get
-          cd ../webpage
           npm install
           npm run build
           dart pub get

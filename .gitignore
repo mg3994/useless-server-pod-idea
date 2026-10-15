@@ -1,7 +1,11 @@
 # Files and directories created by pub
 .dart_tool/
+**/.dart_tool/
 .packages
 build/
+**/build/
+node_modules/
+**/node_modules/
 
 # Pubspec overrides
 pubspec_overrides.yaml
