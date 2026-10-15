@@ -29,19 +29,13 @@ void run(List<String> args) async {
       // staging and production they are sent through the Serverpod Cloud email
       // service. If you want to use a custom provider for sending emails, use
       // `EmailIdpConfigFromPasswords`.
-      ServerpodCloudEmailIdpConfig(
-        appDisplayName: 'website',
-      ),
+      ServerpodCloudEmailIdpConfig(appDisplayName: 'website'),
     ],
   );
 
   // Serve the greeting webpage.
   pod.webServer.addRoute(
-    StaticRoute.file(
-      File(
-        Uri(path: 'web/pages/greeting.html').toFilePath(),
-      ),
-    ),
+    StaticRoute.file(File(Uri(path: 'web/pages/greeting.html').toFilePath())),
     '/greeting',
   );
 
@@ -76,9 +70,7 @@ void run(List<String> args) async {
   } else {
     // If the flutter web app has not been built, serve the build app page.
     final defaultRoute = StaticRoute.file(
-      File(
-        Uri(path: 'web/pages/build_flutter_app.html').toFilePath(),
-      ),
+      File(Uri(path: 'web/pages/build_flutter_app.html').toFilePath()),
     );
 
     pod.webServer.addMiddleware(
@@ -89,10 +81,7 @@ void run(List<String> args) async {
       '/',
     );
 
-    pod.webServer.addRoute(
-      defaultRoute,
-      '/**',
-    );
+    pod.webServer.addRoute(defaultRoute, '/**');
   }
 
   // Configure cloud storage.

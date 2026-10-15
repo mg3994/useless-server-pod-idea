@@ -1,0 +1,14 @@
+class: CarpoolRide
+table: carpool_ride
+fields:
+  driverEmail: String
+  origin: String
+  destination: String
+  departureTime: String
+  availableSeats: int
+  contributionPoints: int
+  neighborhoodZone: String
+  notes: String?
+  passengerEmails: String?
+  isCompleted: bool
+  createdAt: DateTime

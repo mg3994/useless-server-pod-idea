@@ -1,0 +1,9 @@
+class: CommunityAnnouncement
+table: community_announcement
+fields:
+  title: String
+  content: String
+  category: String
+  authorEmail: String
+  isPinned: bool
+  createdAt: DateTime

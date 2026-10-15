@@ -1,0 +1,13 @@
+class: BorrowableItem
+table: helphub_borrowable_item
+fields:
+  title: String
+  description: String
+  category: String
+  ownerUserId: int
+  ownerEmail: String
+  depositRequired: String?
+  neighborhoodZone: String
+  isAvailable: bool
+  borrowedByEmail: String?
+  createdAt: DateTime

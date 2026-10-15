@@ -153,14 +153,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
-  intl:
-    dependency: "direct main"
-    description:
-      name: intl
-      sha256: "1ca20c894b1717686a2319b8548763d812bc0aabdac580420a44c5178c57a867"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.20.3"
   io:
     dependency: transitive
     description:
@@ -250,7 +242,7 @@ packages:
     source: hosted
     version: "2.2.1"
   serverpod_auth_core_client:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: serverpod_auth_core_client
       sha256: "7134c42b8ae0a36397d0e832f8e2679221eb2fe66c3b8435b3c1e9beb19440c6"
@@ -258,7 +250,7 @@ packages:
     source: hosted
     version: "4.1.0-beta.3"
   serverpod_auth_idp_client:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: serverpod_auth_idp_client
       sha256: ddd77e09d92f647979f566aeb376fdeafc9618a9eb67f21dc4ef9b37eca3789a
@@ -266,7 +258,7 @@ packages:
     source: hosted
     version: "4.1.0-beta.3"
   serverpod_client:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: serverpod_client
       sha256: "7ef8695dc9af88e50dab305d6741ad2f7539fdb6fd1d87fb7a3b05617d84a175"

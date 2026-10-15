@@ -1,0 +1,13 @@
+class: SkillOffer
+table: helphub_skill_offer
+fields:
+  title: String
+  description: String
+  category: String
+  offererUserId: int
+  offererEmail: String
+  availability: String
+  neighborhoodZone: String?
+  isAvailable: bool
+  claimedByEmail: String?
+  createdAt: DateTime

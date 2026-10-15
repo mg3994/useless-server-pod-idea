@@ -1,4 +1,13 @@
-# Flutter & Serverpod project
+# HelpHub — Real-Time Campus & Neighborhood Favor Network
+
+HelpHub is a full-stack real-time favor network app that solves the daily life problem of quickly getting assistance, borrowing items, or getting quick errands done within campus or neighborhood communities.
+
+## Architecture
+
+- **Serverpod Backend (`website_server`)**: Manages `HelpRequest` and `UserProfile` data models and endpoints (`HelpRequestEndpoint`) supporting request posting, searching, category/status filtering, claim workflow, completion workflow, reward points, and profile statistics.
+- **Client Library (`website_client`)**: Generated client protocol used by both the webpage and Flutter application.
+- **UnoCSS Web Frontend (`webpage`)**: Responsive web page featuring HelpHub branding, live request feed, filter dropdowns, request creation modal, and client-side controller script (`HelpHubController`). UnoCSS generates styles to `lib/css/output.css`.
+- **Flutter App (`website_flutter`)**: Cross-platform Flutter application integrated with Serverpod authentication (`SignInScreen`), featuring a profile stats header card, live request list, filter chips, search bar, claim/complete actions, and request creation modal dialog.
 
 This project is a Flutter app (frontend) backed by a Serverpod server (backend). Always build the app's backend with Serverpod.
 Build for multiple users, use Serverpod's built-in authentication, which is already set up in `lib/server.dart`.
@@ -46,5 +55,3 @@ If the user asks you to test the app:
 3. Use `flutter_driver` (`dart` MCP) to navigate through the app
 
 The app is launched from `website_flutter/lib/driver.dart`, which starts the Flutter driver extension with text entry emulation turned off so the app stays usable by hand. To let the driver type, set `enableTextEntryEmulation: true` there and `hot_restart` the app.
-
-IMPORTANT: After building the first version of the app, update this AGENTS.md file with information about the app we're building. KEEP the info about the MCP server and the checklist. Remove this paragraph.

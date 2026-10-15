@@ -1,0 +1,11 @@
+class: CommunityGroup
+table: helphub_community_group
+fields:
+  name: String
+  description: String
+  category: String
+  neighborhoodZone: String
+  memberCount: int
+  leaderEmail: String
+  membersList: String?
+  createdAt: DateTime

@@ -19,6 +19,36 @@ import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
 import 'package:website_client/src/protocol/greetings/greeting.dart'
     as _ik0mmf5h;
+import 'package:website_client/src/protocol/helphub/borrowable_item.dart'
+    as _if3ypwc4;
+import 'package:website_client/src/protocol/helphub/carpool_ride.dart'
+    as _ih37wqku;
+import 'package:website_client/src/protocol/helphub/community_announcement.dart'
+    as _if9166ew;
+import 'package:website_client/src/protocol/helphub/community_group.dart'
+    as _iux57j0g;
+import 'package:website_client/src/protocol/helphub/favor_chat_message.dart'
+    as _irf5posj;
+import 'package:website_client/src/protocol/helphub/hazard_report.dart'
+    as _i47xxilf;
+import 'package:website_client/src/protocol/helphub/help_request.dart'
+    as _ilm5roly;
+import 'package:website_client/src/protocol/helphub/lost_found_item.dart'
+    as _ijgap0jh;
+import 'package:website_client/src/protocol/helphub/request_comment.dart'
+    as _iq4ufam1;
+import 'package:website_client/src/protocol/helphub/request_rating.dart'
+    as _ib2k1m8u;
+import 'package:website_client/src/protocol/helphub/reward_redemption.dart'
+    as _is9hzthp;
+import 'package:website_client/src/protocol/helphub/skill_offer.dart'
+    as _ipzxy2lt;
+import 'package:website_client/src/protocol/helphub/user_notification.dart'
+    as _ihs35lap;
+import 'package:website_client/src/protocol/helphub/user_profile.dart'
+    as _if5f0yyd;
+import 'package:website_client/src/protocol/helphub/volunteer_event.dart'
+    as _ijz6y5wx;
 import 'protocol.dart' as _il2as5qe;
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
@@ -264,6 +294,662 @@ class EndpointGreeting extends _isc.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointHelpRequest extends _isc.EndpointRef {
+  EndpointHelpRequest(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'helpRequest';
+
+  /// Posts a new carpool rideshare offer or request.
+  _ida.Future<_ih37wqku.CarpoolRide> createCarpoolRide({
+    required String driverEmail,
+    required String origin,
+    required String destination,
+    required String departureTime,
+    required int availableSeats,
+    required int contributionPoints,
+    required String neighborhoodZone,
+    String? notes,
+  }) => caller.callServerEndpoint<_ih37wqku.CarpoolRide>(
+    'helpRequest',
+    'createCarpoolRide',
+    {
+      'driverEmail': driverEmail,
+      'origin': origin,
+      'destination': destination,
+      'departureTime': departureTime,
+      'availableSeats': availableSeats,
+      'contributionPoints': contributionPoints,
+      'neighborhoodZone': neighborhoodZone,
+      'notes': notes,
+    },
+  );
+
+  /// Gets available carpool rides.
+  _ida.Future<List<_ih37wqku.CarpoolRide>> getCarpoolRides() =>
+      caller.callServerEndpoint<List<_ih37wqku.CarpoolRide>>(
+        'helpRequest',
+        'getCarpoolRides',
+        {},
+      );
+
+  /// Books a seat on a carpool ride.
+  _ida.Future<_ih37wqku.CarpoolRide> bookCarpoolRide({
+    required int rideId,
+    required String passengerEmail,
+  }) => caller.callServerEndpoint<_ih37wqku.CarpoolRide>(
+    'helpRequest',
+    'bookCarpoolRide',
+    {
+      'rideId': rideId,
+      'passengerEmail': passengerEmail,
+    },
+  );
+
+  /// Posts a lost or found item alert.
+  _ida.Future<_ijgap0jh.LostFoundItem> createLostFoundItem({
+    required String title,
+    required String description,
+    required String category,
+    required String status,
+    required String location,
+    required String neighborhoodZone,
+    required String reporterEmail,
+  }) => caller.callServerEndpoint<_ijgap0jh.LostFoundItem>(
+    'helpRequest',
+    'createLostFoundItem',
+    {
+      'title': title,
+      'description': description,
+      'category': category,
+      'status': status,
+      'location': location,
+      'neighborhoodZone': neighborhoodZone,
+      'reporterEmail': reporterEmail,
+    },
+  );
+
+  /// Gets lost & found items.
+  _ida.Future<List<_ijgap0jh.LostFoundItem>> getLostFoundItems() =>
+      caller.callServerEndpoint<List<_ijgap0jh.LostFoundItem>>(
+        'helpRequest',
+        'getLostFoundItems',
+        {},
+      );
+
+  /// Resolves or claims a lost/found item.
+  _ida.Future<_ijgap0jh.LostFoundItem> resolveLostFoundItem({
+    required int itemId,
+    required String claimerEmail,
+  }) => caller.callServerEndpoint<_ijgap0jh.LostFoundItem>(
+    'helpRequest',
+    'resolveLostFoundItem',
+    {
+      'itemId': itemId,
+      'claimerEmail': claimerEmail,
+    },
+  );
+
+  /// Reports a neighborhood safety hazard or alert.
+  _ida.Future<_i47xxilf.HazardReport> createHazardReport({
+    required String title,
+    required String description,
+    required String severity,
+    required String location,
+    required String neighborhoodZone,
+    required String reporterEmail,
+  }) => caller.callServerEndpoint<_i47xxilf.HazardReport>(
+    'helpRequest',
+    'createHazardReport',
+    {
+      'title': title,
+      'description': description,
+      'severity': severity,
+      'location': location,
+      'neighborhoodZone': neighborhoodZone,
+      'reporterEmail': reporterEmail,
+    },
+  );
+
+  /// Gets active hazard reports.
+  _ida.Future<List<_i47xxilf.HazardReport>> getHazardReports() =>
+      caller.callServerEndpoint<List<_i47xxilf.HazardReport>>(
+        'helpRequest',
+        'getHazardReports',
+        {},
+      );
+
+  /// Resolves a hazard report.
+  _ida.Future<_i47xxilf.HazardReport> resolveHazardReport({
+    required int reportId,
+  }) => caller.callServerEndpoint<_i47xxilf.HazardReport>(
+    'helpRequest',
+    'resolveHazardReport',
+    {'reportId': reportId},
+  );
+
+  /// Redeems karma points for local partner perks or vouchers.
+  _ida.Future<_is9hzthp.RewardRedemption> redeemPerk({
+    required String perkTitle,
+    required int pointsCost,
+    required String partnerName,
+    required String userEmail,
+  }) => caller.callServerEndpoint<_is9hzthp.RewardRedemption>(
+    'helpRequest',
+    'redeemPerk',
+    {
+      'perkTitle': perkTitle,
+      'pointsCost': pointsCost,
+      'partnerName': partnerName,
+      'userEmail': userEmail,
+    },
+  );
+
+  /// Adds a borrowable tool/equipment item to the registry.
+  _ida.Future<_if3ypwc4.BorrowableItem> createBorrowableItem({
+    required String title,
+    required String description,
+    required String category,
+    required String ownerEmail,
+    String? depositRequired,
+    required String neighborhoodZone,
+  }) => caller.callServerEndpoint<_if3ypwc4.BorrowableItem>(
+    'helpRequest',
+    'createBorrowableItem',
+    {
+      'title': title,
+      'description': description,
+      'category': category,
+      'ownerEmail': ownerEmail,
+      'depositRequired': depositRequired,
+      'neighborhoodZone': neighborhoodZone,
+    },
+  );
+
+  /// Gets list of borrowable items.
+  _ida.Future<List<_if3ypwc4.BorrowableItem>> getBorrowableItems() =>
+      caller.callServerEndpoint<List<_if3ypwc4.BorrowableItem>>(
+        'helpRequest',
+        'getBorrowableItems',
+        {},
+      );
+
+  /// Requests to borrow an item.
+  _ida.Future<_if3ypwc4.BorrowableItem> requestBorrowItem({
+    required int itemId,
+    required String borrowerEmail,
+  }) => caller.callServerEndpoint<_if3ypwc4.BorrowableItem>(
+    'helpRequest',
+    'requestBorrowItem',
+    {
+      'itemId': itemId,
+      'borrowerEmail': borrowerEmail,
+    },
+  );
+
+  /// Creates a community volunteer event.
+  _ida.Future<_ijz6y5wx.VolunteerEvent> createVolunteerEvent({
+    required String title,
+    required String description,
+    required String organizerEmail,
+    required String eventDate,
+    required String location,
+    required String neighborhoodZone,
+    int? pointsReward,
+  }) => caller.callServerEndpoint<_ijz6y5wx.VolunteerEvent>(
+    'helpRequest',
+    'createVolunteerEvent',
+    {
+      'title': title,
+      'description': description,
+      'organizerEmail': organizerEmail,
+      'eventDate': eventDate,
+      'location': location,
+      'neighborhoodZone': neighborhoodZone,
+      'pointsReward': pointsReward,
+    },
+  );
+
+  /// Gets community volunteer events.
+  _ida.Future<List<_ijz6y5wx.VolunteerEvent>> getVolunteerEvents() =>
+      caller.callServerEndpoint<List<_ijz6y5wx.VolunteerEvent>>(
+        'helpRequest',
+        'getVolunteerEvents',
+        {},
+      );
+
+  /// Signs up a user for a volunteer event.
+  _ida.Future<_ijz6y5wx.VolunteerEvent> signUpVolunteerEvent({
+    required int eventId,
+    required String volunteerEmail,
+  }) => caller.callServerEndpoint<_ijz6y5wx.VolunteerEvent>(
+    'helpRequest',
+    'signUpVolunteerEvent',
+    {
+      'eventId': eventId,
+      'volunteerEmail': volunteerEmail,
+    },
+  );
+
+  /// Creates a new Skill/Item Offer.
+  _ida.Future<_ipzxy2lt.SkillOffer> createSkillOffer({
+    required String title,
+    required String description,
+    required String category,
+    required String offererEmail,
+    required String availability,
+    String? neighborhoodZone,
+  }) => caller.callServerEndpoint<_ipzxy2lt.SkillOffer>(
+    'helpRequest',
+    'createSkillOffer',
+    {
+      'title': title,
+      'description': description,
+      'category': category,
+      'offererEmail': offererEmail,
+      'availability': availability,
+      'neighborhoodZone': neighborhoodZone,
+    },
+  );
+
+  /// Gets all available skill/item offers.
+  _ida.Future<List<_ipzxy2lt.SkillOffer>> getSkillOffers({
+    String? category,
+    String? neighborhoodZone,
+  }) => caller.callServerEndpoint<List<_ipzxy2lt.SkillOffer>>(
+    'helpRequest',
+    'getSkillOffers',
+    {
+      'category': category,
+      'neighborhoodZone': neighborhoodZone,
+    },
+  );
+
+  /// Claims or requests an offered skill or item.
+  _ida.Future<_ipzxy2lt.SkillOffer> claimSkillOffer({
+    required int offerId,
+    required String claimerEmail,
+  }) => caller.callServerEndpoint<_ipzxy2lt.SkillOffer>(
+    'helpRequest',
+    'claimSkillOffer',
+    {
+      'offerId': offerId,
+      'claimerEmail': claimerEmail,
+    },
+  );
+
+  /// Creates a new local community group / circle.
+  _ida.Future<_iux57j0g.CommunityGroup> createCommunityGroup({
+    required String name,
+    required String description,
+    required String category,
+    required String neighborhoodZone,
+    required String leaderEmail,
+  }) => caller.callServerEndpoint<_iux57j0g.CommunityGroup>(
+    'helpRequest',
+    'createCommunityGroup',
+    {
+      'name': name,
+      'description': description,
+      'category': category,
+      'neighborhoodZone': neighborhoodZone,
+      'leaderEmail': leaderEmail,
+    },
+  );
+
+  /// Gets list of local community groups.
+  _ida.Future<List<_iux57j0g.CommunityGroup>> getCommunityGroups() =>
+      caller.callServerEndpoint<List<_iux57j0g.CommunityGroup>>(
+        'helpRequest',
+        'getCommunityGroups',
+        {},
+      );
+
+  /// Joins a community group.
+  _ida.Future<_iux57j0g.CommunityGroup> joinCommunityGroup({
+    required int groupId,
+    required String memberEmail,
+  }) => caller.callServerEndpoint<_iux57j0g.CommunityGroup>(
+    'helpRequest',
+    'joinCommunityGroup',
+    {
+      'groupId': groupId,
+      'memberEmail': memberEmail,
+    },
+  );
+
+  /// Bookmarks or un-bookmarks a help request for a user.
+  _ida.Future<bool> bookmarkHelpRequest({
+    required int requestId,
+    required String userEmail,
+  }) => caller.callServerEndpoint<bool>(
+    'helpRequest',
+    'bookmarkHelpRequest',
+    {
+      'requestId': requestId,
+      'userEmail': userEmail,
+    },
+  );
+
+  /// Gets recent community activity stream log.
+  _ida.Future<List<_ihs35lap.UserNotification>> getCommunityActivityStream() =>
+      caller.callServerEndpoint<List<_ihs35lap.UserNotification>>(
+        'helpRequest',
+        'getCommunityActivityStream',
+        {},
+      );
+
+  /// Sends a direct chat message for a claimed favor request.
+  _ida.Future<_irf5posj.FavorChatMessage> sendChatMessage({
+    required int requestId,
+    required String message,
+    required String senderEmail,
+  }) => caller.callServerEndpoint<_irf5posj.FavorChatMessage>(
+    'helpRequest',
+    'sendChatMessage',
+    {
+      'requestId': requestId,
+      'message': message,
+      'senderEmail': senderEmail,
+    },
+  );
+
+  /// Gets chat messages for a favor request.
+  _ida.Future<List<_irf5posj.FavorChatMessage>> getChatMessages({
+    required int requestId,
+  }) => caller.callServerEndpoint<List<_irf5posj.FavorChatMessage>>(
+    'helpRequest',
+    'getChatMessages',
+    {'requestId': requestId},
+  );
+
+  /// Completes a help request with an optional completion proof note.
+  _ida.Future<_ilm5roly.HelpRequest> completeHelpRequestWithProof({
+    required int requestId,
+    String? proofNote,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'completeHelpRequestWithProof',
+    {
+      'requestId': requestId,
+      'proofNote': proofNote,
+    },
+  );
+
+  /// Fetches community overall stats summary.
+  _ida.Future<Map<String, int>> getCommunityStats() =>
+      caller.callServerEndpoint<Map<String, int>>(
+        'helpRequest',
+        'getCommunityStats',
+        {},
+      );
+
+  /// Broadcasts an urgent high-priority emergency SOS request to the community.
+  _ida.Future<_ilm5roly.HelpRequest> broadcastEmergencySOS({
+    required String title,
+    required String description,
+    required String location,
+    required String creatorEmail,
+    String? neighborhoodZone,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'broadcastEmergencySOS',
+    {
+      'title': title,
+      'description': description,
+      'location': location,
+      'creatorEmail': creatorEmail,
+      'neighborhoodZone': neighborhoodZone,
+    },
+  );
+
+  /// Fetches all help requests, optionally filtered by category, status, zone, emergency mode, search query, or activity filter.
+  _ida.Future<List<_ilm5roly.HelpRequest>> getHelpRequests({
+    String? category,
+    String? status,
+    String? neighborhoodZone,
+    bool? isEmergency,
+    String? searchQuery,
+    String? sortBy,
+    String? myEmailFilter,
+    String? myActivityMode,
+  }) => caller.callServerEndpoint<List<_ilm5roly.HelpRequest>>(
+    'helpRequest',
+    'getHelpRequests',
+    {
+      'category': category,
+      'status': status,
+      'neighborhoodZone': neighborhoodZone,
+      'isEmergency': isEmergency,
+      'searchQuery': searchQuery,
+      'sortBy': sortBy,
+      'myEmailFilter': myEmailFilter,
+      'myActivityMode': myActivityMode,
+    },
+  );
+
+  /// Creates a new help request.
+  _ida.Future<_ilm5roly.HelpRequest> createHelpRequest({
+    required String title,
+    required String description,
+    required String category,
+    required String location,
+    required String urgency,
+    required int rewardPoints,
+    bool? isEmergency,
+    required String creatorEmail,
+    String? neighborhoodZone,
+    String? estimatedDuration,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'createHelpRequest',
+    {
+      'title': title,
+      'description': description,
+      'category': category,
+      'location': location,
+      'urgency': urgency,
+      'rewardPoints': rewardPoints,
+      'isEmergency': isEmergency,
+      'creatorEmail': creatorEmail,
+      'neighborhoodZone': neighborhoodZone,
+      'estimatedDuration': estimatedDuration,
+    },
+  );
+
+  /// Upvotes a help request.
+  _ida.Future<_ilm5roly.HelpRequest> upvoteHelpRequest({
+    required int requestId,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'upvoteHelpRequest',
+    {'requestId': requestId},
+  );
+
+  /// Cancels an open or in-progress help request.
+  _ida.Future<_ilm5roly.HelpRequest> cancelHelpRequest({
+    required int requestId,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'cancelHelpRequest',
+    {'requestId': requestId},
+  );
+
+  /// Boosts reward points for an open request.
+  _ida.Future<_ilm5roly.HelpRequest> boostRewardPoints({
+    required int requestId,
+    required int boostAmount,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'boostRewardPoints',
+    {
+      'requestId': requestId,
+      'boostAmount': boostAmount,
+    },
+  );
+
+  /// Claim a help request as a helper.
+  _ida.Future<_ilm5roly.HelpRequest> claimHelpRequest({
+    required int requestId,
+    required String helperEmail,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'claimHelpRequest',
+    {
+      'requestId': requestId,
+      'helperEmail': helperEmail,
+    },
+  );
+
+  /// Mark a help request as completed.
+  _ida.Future<_ilm5roly.HelpRequest> completeHelpRequest({
+    required int requestId,
+  }) => caller.callServerEndpoint<_ilm5roly.HelpRequest>(
+    'helpRequest',
+    'completeHelpRequest',
+    {'requestId': requestId},
+  );
+
+  /// Tips additional bonus points to a helper for exceptional help.
+  _ida.Future<bool> tipHelper({
+    required int helperUserId,
+    required int tipAmount,
+  }) => caller.callServerEndpoint<bool>(
+    'helpRequest',
+    'tipHelper',
+    {
+      'helperUserId': helperUserId,
+      'tipAmount': tipAmount,
+    },
+  );
+
+  /// Get user profile stats for Helphub
+  _ida.Future<_if5f0yyd.UserProfile> getUserProfile({required String email}) =>
+      caller.callServerEndpoint<_if5f0yyd.UserProfile>(
+        'helpRequest',
+        'getUserProfile',
+        {'email': email},
+      );
+
+  /// Updates user profile display name and skills tags.
+  _ida.Future<_if5f0yyd.UserProfile> updateUserProfile({
+    required String email,
+    required String displayName,
+    required String skills,
+  }) => caller.callServerEndpoint<_if5f0yyd.UserProfile>(
+    'helpRequest',
+    'updateUserProfile',
+    {
+      'email': email,
+      'displayName': displayName,
+      'skills': skills,
+    },
+  );
+
+  /// Adds a comment to a request.
+  _ida.Future<_iq4ufam1.RequestComment> addComment({
+    required int requestId,
+    required String content,
+    required String authorEmail,
+  }) => caller.callServerEndpoint<_iq4ufam1.RequestComment>(
+    'helpRequest',
+    'addComment',
+    {
+      'requestId': requestId,
+      'content': content,
+      'authorEmail': authorEmail,
+    },
+  );
+
+  /// Gets comments for a specific request.
+  _ida.Future<List<_iq4ufam1.RequestComment>> getComments({
+    required int requestId,
+  }) => caller.callServerEndpoint<List<_iq4ufam1.RequestComment>>(
+    'helpRequest',
+    'getComments',
+    {'requestId': requestId},
+  );
+
+  /// Submits rating and feedback for a completed request.
+  _ida.Future<_ib2k1m8u.RequestRating> submitRating({
+    required int requestId,
+    required int toUserId,
+    required int rating,
+    String? feedback,
+  }) => caller.callServerEndpoint<_ib2k1m8u.RequestRating>(
+    'helpRequest',
+    'submitRating',
+    {
+      'requestId': requestId,
+      'toUserId': toUserId,
+      'rating': rating,
+      'feedback': feedback,
+    },
+  );
+
+  /// Gets rating list for a user.
+  _ida.Future<List<_ib2k1m8u.RequestRating>> getHelperRatings({
+    required int toUserId,
+  }) => caller.callServerEndpoint<List<_ib2k1m8u.RequestRating>>(
+    'helpRequest',
+    'getHelperRatings',
+    {'toUserId': toUserId},
+  );
+
+  /// Get notifications for a user
+  _ida.Future<List<_ihs35lap.UserNotification>> getUserNotifications({
+    required String userEmail,
+  }) => caller.callServerEndpoint<List<_ihs35lap.UserNotification>>(
+    'helpRequest',
+    'getUserNotifications',
+    {'userEmail': userEmail},
+  );
+
+  /// Marks notification as read
+  _ida.Future<bool> markNotificationRead({required int notificationId}) =>
+      caller.callServerEndpoint<bool>(
+        'helpRequest',
+        'markNotificationRead',
+        {'notificationId': notificationId},
+      );
+
+  /// Fetches top community helpers leaderboard.
+  _ida.Future<List<_if5f0yyd.UserProfile>> getLeaderboard() =>
+      caller.callServerEndpoint<List<_if5f0yyd.UserProfile>>(
+        'helpRequest',
+        'getLeaderboard',
+        {},
+      );
+
+  /// Fetches community announcements.
+  _ida.Future<List<_if9166ew.CommunityAnnouncement>> getAnnouncements() =>
+      caller.callServerEndpoint<List<_if9166ew.CommunityAnnouncement>>(
+        'helpRequest',
+        'getAnnouncements',
+        {},
+      );
+
+  /// Creates a new community announcement.
+  _ida.Future<_if9166ew.CommunityAnnouncement> createAnnouncement({
+    required String title,
+    required String content,
+    required String category,
+    required String authorEmail,
+    bool? isPinned,
+  }) => caller.callServerEndpoint<_if9166ew.CommunityAnnouncement>(
+    'helpRequest',
+    'createAnnouncement',
+    {
+      'title': title,
+      'content': content,
+      'category': category,
+      'authorEmail': authorEmail,
+      'isPinned': isPinned,
+    },
+  );
+}
+
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _iaic.Caller(client);
@@ -305,6 +991,7 @@ class Client extends _isc.ServerpodClientShared {
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
     greeting = EndpointGreeting(this);
+    helpRequest = EndpointHelpRequest(this);
     modules = Modules(this);
   }
 
@@ -314,6 +1001,8 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointGreeting greeting;
 
+  late final EndpointHelpRequest helpRequest;
+
   late final Modules modules;
 
   @override
@@ -321,6 +1010,7 @@ class Client extends _isc.ServerpodClientShared {
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
     'greeting': greeting,
+    'helpRequest': helpRequest,
   };
 
   @override

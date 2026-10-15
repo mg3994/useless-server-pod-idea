@@ -1,0 +1,9 @@
+class: UserNotification
+table: user_notification
+fields:
+  recipientEmail: String
+  title: String
+  message: String
+  requestId: int?
+  isRead: bool
+  createdAt: DateTime

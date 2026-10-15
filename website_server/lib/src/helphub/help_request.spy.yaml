@@ -1,0 +1,23 @@
+class: HelpRequest
+table: help_request
+fields:
+  title: String
+  description: String
+  category: String
+  location: String
+  urgency: String
+  status: String
+  rewardPoints: int
+  isEmergency: bool
+  creatorUserId: int
+  creatorEmail: String
+  helperUserId: int?
+  helperEmail: String?
+  neighborhoodZone: String?
+  estimatedDuration: String?
+  upvotes: int?
+  completionProofNote: String?
+  shareableCode: String?
+  expiresAt: DateTime?
+  createdAt: DateTime
+  updatedAt: DateTime?

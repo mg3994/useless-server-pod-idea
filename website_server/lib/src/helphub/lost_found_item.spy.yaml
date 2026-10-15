@@ -1,0 +1,13 @@
+class: LostFoundItem
+table: lost_found_item
+fields:
+  title: String
+  description: String
+  category: String # e.g. Electronics, Keys, ID/Cards, Backpack
+  status: String # 'Lost' or 'Found'
+  location: String
+  neighborhoodZone: String
+  reporterEmail: String
+  claimedByEmail: String?
+  isResolved: bool
+  createdAt: DateTime

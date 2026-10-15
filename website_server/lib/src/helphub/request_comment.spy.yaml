@@ -1,0 +1,8 @@
+class: RequestComment
+table: request_comment
+fields:
+  requestId: int
+  authorUserId: int
+  authorEmail: String
+  content: String
+  createdAt: DateTime

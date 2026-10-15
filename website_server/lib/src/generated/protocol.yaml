@@ -11,3 +11,52 @@ jwtRefresh:
   - refreshAccessToken:
 greeting:
   - hello:
+helpRequest:
+  - createCarpoolRide:
+  - getCarpoolRides:
+  - bookCarpoolRide:
+  - createLostFoundItem:
+  - getLostFoundItems:
+  - resolveLostFoundItem:
+  - createHazardReport:
+  - getHazardReports:
+  - resolveHazardReport:
+  - redeemPerk:
+  - createBorrowableItem:
+  - getBorrowableItems:
+  - requestBorrowItem:
+  - createVolunteerEvent:
+  - getVolunteerEvents:
+  - signUpVolunteerEvent:
+  - createSkillOffer:
+  - getSkillOffers:
+  - claimSkillOffer:
+  - createCommunityGroup:
+  - getCommunityGroups:
+  - joinCommunityGroup:
+  - bookmarkHelpRequest:
+  - getCommunityActivityStream:
+  - sendChatMessage:
+  - getChatMessages:
+  - completeHelpRequestWithProof:
+  - getCommunityStats:
+  - broadcastEmergencySOS:
+  - getHelpRequests:
+  - createHelpRequest:
+  - upvoteHelpRequest:
+  - cancelHelpRequest:
+  - boostRewardPoints:
+  - claimHelpRequest:
+  - completeHelpRequest:
+  - tipHelper:
+  - getUserProfile:
+  - updateUserProfile:
+  - addComment:
+  - getComments:
+  - submitRating:
+  - getHelperRatings:
+  - getUserNotifications:
+  - markNotificationRead:
+  - getLeaderboard:
+  - getAnnouncements:
+  - createAnnouncement:
