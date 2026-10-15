@@ -1315,7 +1315,7 @@ Component _createRequestModal() {
                   'placeholder':
                       'Provide details about what you need and time frame...',
                   'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500',
-                }, []),
+                }, [Text(' ')]),
               ]),
 
               div(
@@ -1518,7 +1518,7 @@ Component _proofModal() {
             'placeholder':
                 'e.g., Returned item to Dorm A desk / Picked up groceries!',
             'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-emerald-500 mb-4',
-          }, []),
+          }, [Text(' ')]),
 
           button(
             {
@@ -1632,7 +1632,7 @@ Component _ratingModal() {
             'rows': '2',
             'placeholder': 'Optional review feedback...',
             'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-primary-500 mb-4',
-          }, []),
+          }, [Text(' ')]),
 
           button(
             {
@@ -1810,7 +1810,7 @@ Component _sosModal() {
                   'rows': '2',
                   'placeholder': 'Describe immediate help needed...',
                   'class': 'w-full px-3.5 py-2 text-sm rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 focus:outline-none focus:border-rose-500',
-                }, []),
+                }, [Text(' ')]),
               ]),
 
               button(
